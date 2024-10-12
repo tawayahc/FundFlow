@@ -3,27 +3,49 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Secure s
 import '../models/user_model.dart';
 
 class AuthenticationRepository {
-  final Dio _dio = Dio();
+  final Dio _dio = Dio(
+    BaseOptions(
+      baseUrl: 'http://10.0.2.2:8000/auth', // Update based on your environment
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    ),
+  );
   final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
   // FIX: Replace with your actual API endpoints
-  final String loginUrl = 'https://yourapi.com/login';
-  final String registerUrl = 'https://yourapi.com/register';
-  final String getUserUrl = 'https://yourapi.com/me';
-  final String logoutUrl = 'https://yourapi.com/logout';
+  final String loginUrl = '/login';
+  final String registerUrl = '/register';
+  final String getUserUrl = '/me';
 
   Future<User> login({required String email, required String password}) async {
-    final response = await _dio.post(loginUrl, data: {
-      'email': email,
-      'password': password,
-    });
+    try {
+      final response = await _dio.post(loginUrl, data: {
+        'email': email,
+        'password': password,
+      });
 
-    if (response.statusCode == 200) {
-      // Save token securely
-      await _secureStorage.write(key: 'token', value: response.data['token']);
-      return User.fromJson(response.data['user']);
-    } else {
-      throw Exception('Failed to log in');
+      print('Login Response: ${response.statusCode} ${response.data}');
+
+      if (response.statusCode == 200) {
+        // Save token securely
+        await _secureStorage.write(key: 'token', value: response.data['token']);
+        return User.fromJson(response.data['user']);
+      } else {
+        throw Exception('Failed to log in');
+      }
+    } on DioException catch (dioError) {
+      if (dioError.response != null) {
+        print('Dio error response: ${dioError.response?.data}');
+        throw Exception(
+            dioError.response?.data['errors'][0]['msg'] ?? 'Login failed');
+      } else {
+        print('Dio error: ${dioError.message}');
+        throw Exception('Network error');
+      }
+    } catch (e) {
+      print('Login Error: $e');
+      throw Exception('Login failed');
     }
   }
 
@@ -32,17 +54,29 @@ class AuthenticationRepository {
     required String password,
     required String name,
   }) async {
-    final response = await _dio.post(registerUrl, data: {
-      'email': email,
-      'password': password,
-      'name': name,
-    });
-
-    if (response.statusCode == 201) {
-      await _secureStorage.write(key: 'token', value: response.data['token']);
-      return User.fromJson(response.data['user']);
-    } else {
-      throw Exception('Failed to register');
+    try {
+      final response = await _dio.post(registerUrl, data: {
+        'email': email,
+        'password': password,
+        'name': name,
+      });
+      print('Register Response: ${response.statusCode} ${response.data}');
+      if (response.statusCode == 201) {
+        await _secureStorage.write(key: 'token', value: response.data['token']);
+        return User.fromJson(response.data['user']);
+      } else {
+        throw Exception('Failed to register');
+      }
+    } on DioException catch (dioError) {
+      if (dioError.response != null) {
+        print('Dio error response: ${dioError.response?.data}');
+      } else {
+        print('Dio error: ${dioError.message}');
+      }
+      throw Exception('Failed to register: ${dioError.message}');
+    } catch (e) {
+      print('Register Error: $e');
+      throw Exception('Failed to register: $e');
     }
   }
 
@@ -57,9 +91,14 @@ class AuthenticationRepository {
         if (response.statusCode == 200) {
           return User.fromJson(response.data);
         } else {
+          print('Failed to fetch user: ${response.statusCode}');
           return null;
         }
+      } on DioException catch (dioError) {
+        print('Dio error: ${dioError.response?.data}');
+        return null;
       } catch (e) {
+        print('Error fetching user: $e');
         return null;
       }
     }
@@ -67,17 +106,7 @@ class AuthenticationRepository {
   }
 
   Future<void> logout() async {
-    String? token = await _secureStorage.read(key: 'token');
-
-    if (token != null) {
-      try {
-        _dio.options.headers['Authorization'] = 'Bearer $token';
-        await _dio.post(logoutUrl);
-      } catch (e) {
-        // Handle error if needed
-      } finally {
-        await _secureStorage.delete(key: 'token');
-      }
-    }
+    await _secureStorage.delete(key: 'token');
+    // No need to call /logout on the server
   }
 }
