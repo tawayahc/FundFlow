@@ -7,6 +7,7 @@ import '../../../core/themes/app_styles.dart';
 import '../../auth/bloc/auth_bloc.dart';
 import '../../auth/bloc/auth_event.dart';
 import '../../auth/bloc/auth_state.dart';
+import '../../auth/ui/login_page.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -103,6 +104,12 @@ class HomePage extends StatelessWidget {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
+        } else if (state is Unauthenticated) {
+          // Redirect to the login page
+          Future.microtask(() => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const LoginPage())));
+          return const SizedBox
+              .shrink(); // Return an empty widget while redirecting
         } else {
           // If not authenticated, redirect to login or show a message
           return const Scaffold(
