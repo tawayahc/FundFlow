@@ -7,6 +7,9 @@ import 'features/auth/repository/auth_repository.dart';
 import 'features/auth/ui/auth_wrapper.dart';
 import 'features/auth/ui/login_page.dart';
 import 'features/auth/ui/registeration_page.dart';
+import 'features/auth/ui/forget_page_1.dart';
+import 'features/auth/ui/forget_page_2.dart';
+import 'features/auth/ui/forget_page_3.dart';
 import 'features/home/ui/home_page.dart';
 
 class MyApp extends StatelessWidget {
@@ -32,6 +35,9 @@ class MyApp extends StatelessWidget {
           routes: {
             '/login': (context) => LoginPage(),
             '/register': (context) => RegistrationPage(),
+            '/forget1': (context) => ForgetPage(),
+            '/forget2': (context) => VerificationPage(),
+            '/forget3': (context) => ResetPasswordPage(),
             '/home': (context) => HomePage(), // No need to pass user object
             // Add other routes here
           },

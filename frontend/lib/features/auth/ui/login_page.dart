@@ -54,8 +54,9 @@ class _LoginPageState extends State<LoginPage> {
                       color: Color(0xFF41486D),
                       size: 100
                     ),
+                  
                     Container(
-                      width: double.infinity,
+                      width: 328,
                       alignment: Alignment.topLeft,
                       child: const Text(
                         'Login',
@@ -67,49 +68,76 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 10,),
                     Form(
                       key: _formKey,
                       child: Column(
                         children: [
                           const SizedBox(height: 12),
-                          TextFormField(
-                            controller: _emailController,
-                            decoration: const InputDecoration(
-                              labelText: 'Email',
-                              prefixIcon: Icon(
-                                Icons.person,
-                                color: Color(0xFF41486D),
-                            ),),
-                            validator: (value) => value != null && value.contains('@')
-                                ? null
-                                : 'Enter a valid email',
-                          ),
-                          const SizedBox(height: 12),
-                          TextFormField(
-                            controller: _passwordController,
-                            decoration: const InputDecoration(
-                              labelText: 'Password',
-                              prefixIcon: Icon(
-                                Icons.lock,
-                                color: Color(0xFF41486D),
-                            ),),
-                            obscureText: true,
-                            validator: (value) => value != null && value.length >= 6
-                                ? null
-                                : 'Password must be at least 6 characters',
-                          ),
-                          const SizedBox(height: 12),
                           Container(
-                            width: double.infinity,
-                            alignment: Alignment.topRight,
-                            child: const Text(
-                              'Forget password?',
-                              style: TextStyle(
-                                fontSize: 15, // Font size
-                                color: Colors.red
-                                //letterSpacing: 2.0, // Spacing between letters
+                            height: 40,
+                            width: 328,
+                            child: TextFormField(
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                prefixIcon: Icon(
+                                  Icons.person,
+                                  color: Color(0xFF41486D),
                               ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: Color(0xFF41486D)
+                                  )
+                              )),
+                              validator: (value) => value != null && value.contains('@')
+                                  ? null
+                                  : 'Enter a valid email',
                             ),
+                          ),
+
+                          const SizedBox(height: 10),
+                          Container(
+                            height: 40,
+                            width: 328,
+                            child: TextFormField(
+                              controller: _passwordController,
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                prefixIcon: Icon(
+                                  Icons.lock,
+                                  color: Color(0xFF41486D),
+                              ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: Color(0xFF41486D)
+                                  )
+                              )),
+                              obscureText: true,
+                              validator: (value) => value != null && value.length >= 6
+                                  ? null
+                                  : 'Password must be at least 6 characters',
+                            ),
+                          ),
+                          
+                          const SizedBox(height: 5),
+                          Container(
+                            width: 328,
+                            alignment: Alignment.topRight,
+                            child: TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushNamed('/forget1');
+                                },
+                                child: const Text(
+                                  'Forget password?',
+                                  style: TextStyle(
+                                    fontSize: 15, // Font size
+                                    color: Colors.red
+                                  ),
+                                ),
+                              ),
                           ),
                           const SizedBox(height: 24),
                           ElevatedButton.icon(
@@ -127,13 +155,19 @@ class _LoginPageState extends State<LoginPage> {
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
                               backgroundColor: Color(0xFF41486D),
-                              minimumSize: const Size.fromHeight(50),
-                              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16), // Padding
+                              fixedSize: const Size(328, 40),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12), // Rounded corners
+                                borderRadius: BorderRadius.circular(22), // Rounded corners
                               ),
                             ),
-                            label: const Text('Login')),
+                            label: Text(
+                              'Login',
+                              style: TextStyle(
+                                fontSize: 16,
+                                //fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold
+                              ),)),
+                              
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
