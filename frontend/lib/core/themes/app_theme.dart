@@ -1,5 +1,5 @@
-//Example
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'app_styles.dart';
 
 class AppTheme {
@@ -10,12 +10,12 @@ class AppTheme {
       secondary: AppColors.secondary,
       secondaryContainer: AppColors.secondaryVariant,
       surface: AppColors.surface,
-      background: AppColors.background, // surface for background-related colors
+      background: AppColors.background,
       onError: AppColors.onError,
       error: AppColors.error,
       onPrimary: AppColors.onPrimary,
       onSecondary: AppColors.onSecondary,
-      onSurface: AppColors.onSurface, // Replaced onBackground with onSurface
+      onSurface: AppColors.onSurface,
       brightness: Brightness.light,
     );
 
@@ -23,24 +23,22 @@ class AppTheme {
       brightness: Brightness.light,
       primaryColor: AppColors.primary,
       colorScheme: colorScheme.copyWith(
-        surface: AppColors
-            .background, // Replacing deprecated 'background' with 'surface'
+        surface: AppColors.background,
       ),
-      fontFamily: 'Montserrat',
-      textTheme: const TextTheme(
+      textTheme: GoogleFonts.notoSansThaiTextTheme(const TextTheme(
         displayLarge: TextStyle(
           fontSize: AppFontSizes.headline1,
           fontWeight: FontWeight.bold,
-          color: AppColors.onSurface, // Replaced onBackground with onSurface
+          color: AppColors.onSurface,
         ),
         titleLarge: TextStyle(
           fontSize: AppFontSizes.headline6,
           fontWeight: FontWeight.w600,
-          color: AppColors.onSurface, // Replaced onBackground with onSurface
+          color: AppColors.onSurface,
         ),
         bodyLarge: TextStyle(
           fontSize: AppFontSizes.bodyText1,
-          color: AppColors.onSurface, // Replaced onBackground with onSurface
+          color: AppColors.onSurface,
         ),
         bodyMedium: TextStyle(
           fontSize: AppFontSizes.bodyText2,
@@ -51,7 +49,7 @@ class AppTheme {
           color: AppColors.onPrimary,
           fontWeight: FontWeight.bold,
         ),
-      ),
+      )),
       buttonTheme: const ButtonThemeData(
         buttonColor: AppColors.primary,
         shape: RoundedRectangleBorder(
@@ -81,13 +79,12 @@ class AppTheme {
       secondary: AppColors.secondaryVariant,
       secondaryContainer: AppColors.secondary,
       surface: AppColors.surface,
-      background:
-          Colors.black, // Replacing deprecated 'background' with 'surface'
+      background: Colors.black,
       error: AppColors.error,
       onError: AppColors.onError,
       onPrimary: AppColors.onPrimary,
       onSecondary: AppColors.onSecondary,
-      onSurface: AppColors.onSurface, // Replaced onBackground with onSurface
+      onSurface: AppColors.onSurface,
       brightness: Brightness.dark,
     );
 
@@ -95,24 +92,22 @@ class AppTheme {
       brightness: Brightness.dark,
       primaryColor: AppColors.primaryVariant,
       colorScheme: colorScheme.copyWith(
-        surface:
-            Colors.black, // Replacing deprecated 'background' with 'surface'
+        surface: Colors.black,
       ),
-      fontFamily: 'Montserrat',
-      textTheme: const TextTheme(
+      textTheme: GoogleFonts.notoSansThaiTextTheme(const TextTheme(
         displayLarge: TextStyle(
           fontSize: AppFontSizes.headline1,
           fontWeight: FontWeight.bold,
-          color: AppColors.onSurface, // Replaced onBackground with onSurface
+          color: AppColors.onSurface,
         ),
         titleLarge: TextStyle(
           fontSize: AppFontSizes.headline6,
           fontWeight: FontWeight.w600,
-          color: AppColors.onSurface, // Replaced onBackground with onSurface
+          color: AppColors.onSurface,
         ),
         bodyLarge: TextStyle(
           fontSize: AppFontSizes.bodyText1,
-          color: AppColors.onSurface, // Replaced onBackground with onSurface
+          color: AppColors.onSurface,
         ),
         bodyMedium: TextStyle(
           fontSize: AppFontSizes.bodyText2,
@@ -123,7 +118,7 @@ class AppTheme {
           color: AppColors.onPrimary,
           fontWeight: FontWeight.bold,
         ),
-      ),
+      )),
       buttonTheme: const ButtonThemeData(
         buttonColor: AppColors.primaryVariant,
         shape: RoundedRectangleBorder(

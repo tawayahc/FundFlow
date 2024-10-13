@@ -13,189 +13,215 @@ class VerificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    body: Center( // Wrap the Column with Center to center it
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center, // Horizontally center
-        children: [
-          const SizedBox(height: 71),
-          Container(
-            width: 328,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () => Navigator.of(context).pushNamed('/login'),
-                          child: Icon(
-                            Icons.arrow_back,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
+          },
+        ),
+        centerTitle: true,
+        title: const Text(
+          'ลืมรหัสผ่าน',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+           children: [
+            const Text(
+              'ใส่รหัสยืนยันตัวตน 6 หลัก',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF5A5A5A)),
+            ),
+            const SizedBox(height: 12),
+             Center(
+            child: Container(
+                width: 328,
+                child: Form(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: TextField(
+                          onChanged: (value) => {
+                            if(value.length == 1){
+                              FocusScope.of(context).nextFocus()
+                            }
+                          },
+                          style: Theme.of(context).textTheme.headlineMedium,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(1),
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(8),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),// กำหนด corner radius = 10
+                            ),
                           ),
+
                         ),
-                        Expanded( // This will take up the remaining space and center the text
-                          child: Text(
-                            'Forget ',
-                            textAlign: TextAlign.center, // Center the text inside the Expanded widget
-                            style: TextStyle(
-                              fontSize: 16, // Adjust the font size if needed
+                      ),
+                      SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: TextField(
+                          onChanged: (value) => {
+                            if(value.length == 1){
+                              FocusScope.of(context).nextFocus()
+                            }
+                          },
+                          style: Theme.of(context).textTheme.headlineMedium,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(1),
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(8),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10), // กำหนด corner radius = 10
                             ),
                           ),
                         ),
-                      ],
-                    )
+                      ),
+                      SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: TextField(
+                          onChanged: (value) => {
+                            if(value.length == 1){
+                              FocusScope.of(context).nextFocus()
+                            }
+                          },
+                          style: Theme.of(context).textTheme.headlineMedium,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(1),
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(8),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              // กำหนด corner radius = 10
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: TextField(
+                          onChanged: (value) => {
+                            if(value.length == 1){
+                              FocusScope.of(context).nextFocus()
+                            }
+                          },
+                          style: Theme.of(context).textTheme.headlineMedium,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(1),
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(8),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10), // กำหนด corner radius = 10
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: TextField(
+                          onChanged: (value) => {
+                            if(value.length == 1){
+                              FocusScope.of(context).nextFocus()
+                            }
+                          },
+                          style: Theme.of(context).textTheme.headlineMedium,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(1),
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(8),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10), // กำหนด corner radius = 10
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: TextField(
+                          onChanged: (value) => {
+                            if(value.length == 1){
+                              FocusScope.of(context).nextFocus()
+                            }
+                          },
+                          style: Theme.of(context).textTheme.headlineMedium,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(1),
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(8),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10), // กำหนด corner radius = 10
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),)
             ),
-          ),
-
-          const SizedBox(height: 71),
-          Container(
-            width: 328, // Sets the container width
-            alignment: Alignment.topLeft,
-            child: Text(
-                    'ใส่รหัสยืนยันตัวตน 6 หลัก',
-                    style: TextStyle(
-                      color: Color(0xFF41486D),
-                      fontSize: 18, // Font size
-                      fontWeight: FontWeight.bold, // Bold text
+        ),
+            const SizedBox(height: 30),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/forget3');
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
                   ),
-                  textAlign: TextAlign.left,
+                  backgroundColor: const Color(0xFF41486D), // ปุ่มสีน้ำเงินเข้ม
                 ),
-          ),
-          Container(
-            width: 328,
-            child: Form(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: TextField(
-                      onChanged: (value) => {
-                        if(value.length == 1){
-                          FocusScope.of(context).nextFocus()
-                        }
-                      },
-                      style: Theme.of(context).textTheme.headlineMedium,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(1),
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: TextField(
-                      onChanged: (value) => {
-                        if(value.length == 1){
-                          FocusScope.of(context).nextFocus()
-                        }
-                      },
-                      style: Theme.of(context).textTheme.headlineMedium,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(1),
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: TextField(
-                      onChanged: (value) => {
-                        if(value.length == 1){
-                          FocusScope.of(context).nextFocus()
-                        }
-                      },
-                      style: Theme.of(context).textTheme.headlineMedium,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(1),
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: TextField(
-                      onChanged: (value) => {
-                        if(value.length == 1){
-                          FocusScope.of(context).nextFocus()
-                        }
-                      },
-                      style: Theme.of(context).textTheme.headlineMedium,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(1),
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: TextField(
-                      onChanged: (value) => {
-                        if(value.length == 1){
-                          FocusScope.of(context).nextFocus()
-                        }
-                      },
-                      style: Theme.of(context).textTheme.headlineMedium,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(1),
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: TextField(
-                      onChanged: (value) => {
-                        if(value.length == 1){
-                          FocusScope.of(context).nextFocus()
-                        }
-                      },
-                      style: Theme.of(context).textTheme.headlineMedium,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(1),
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                    ),
-                  )
-                ],
-              ),)
-          ),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/forget3');
-              }, 
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Color(0xFF41486D),
-                fixedSize: const Size(328, 40),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(22), 
-                  ),
-                  ),
-                  label: Text(
-                    'ยืนยัน',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
-                      ),)),
-        ],
+                child: const Text(
+                  'ยืนยัน',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
   );
 }
 }
