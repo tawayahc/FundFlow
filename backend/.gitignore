@@ -1,0 +1,5 @@
+.env
+
+# Go Module
+go.sum
+go.work.sum
