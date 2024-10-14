@@ -8,4 +8,4 @@ Basic guide
 - rename file .env-test to .env
 
 - run docker 
-`` docker compose up ``
+`` docker compose up --build ``
