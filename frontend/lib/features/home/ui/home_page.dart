@@ -22,16 +22,23 @@ class HomePage extends StatelessWidget {
           print('User authenticated: ${user.name}');
           return Scaffold(
             appBar: AppBar(
-              title: Text('Welcome, ${user.name}'),
+              centerTitle: true, // ทำให้ข้อความอยู่ตรงกลาง
+              title: const Text('ตั้งค่า',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                  )),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.logout),
+                  icon: const Icon(Icons.arrow_back_ios),
                   onPressed: () {
-                    // Trigger logout event
+                    // Trigger logfout event
                     context
                         .read<AuthenticationBloc>()
                         .add(AuthenticationLogoutRequested());
                   },
+                  padding: EdgeInsets.zero, // เอา padding ออก
+                  alignment: Alignment.centerLeft, // จัดให้ไอคอนอยู่ซ้ายสุด
                 ),
               ],
             ),
@@ -67,10 +74,10 @@ class HomePage extends StatelessWidget {
                     // Navigation buttons
                     ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/account_management');
+                        Navigator.pushNamed(context, '/setting_page');
                       },
                       icon: const Icon(Icons.account_balance),
-                      label: const Text('Manage Accounts'),
+                      label: const Text('Setting'),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
                             vertical: 12, horizontal: 16),

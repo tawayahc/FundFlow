@@ -16,25 +16,49 @@ class AuthenticationBloc
     on<AuthenticationLogoutRequested>(_onLogoutRequested);
   }
 
+  // Future<void> _onAppStarted(
+  //   AppStarted event,
+  //   Emitter<AuthenticationState> emit,
+  // ) async {
+  //   print('AppStarted event triggered');
+  //   emit(AuthenticationLoading());
+  //   try {
+  //     final User? user = await authenticationRepository.getCurrentUser();
+  //     if (user != null) {
+  //       print('User is authenticated: ${user.name}');
+  //       emit(Authenticated(user: user));
+  //     } else {
+  //       print('User is unauthenticated');
+  //       emit(Unauthenticated());
+  //     }
+  //   } catch (e) {
+  //     print('Error during AppStarted: $e');
+  //     emit(Unauthenticated());
+  //   }
+  // }
+
   Future<void> _onAppStarted(
     AppStarted event,
     Emitter<AuthenticationState> emit,
   ) async {
-    print('AppStarted event triggered');
-    emit(AuthenticationLoading());
-    try {
-      final User? user = await authenticationRepository.getCurrentUser();
-      if (user != null) {
-        print('User is authenticated: ${user.name}');
-        emit(Authenticated(user: user));
-      } else {
-        print('User is unauthenticated');
-        emit(Unauthenticated());
-      }
-    } catch (e) {
-      print('Error during AppStarted: $e');
-      emit(Unauthenticated());
-    }
+    // Comment out the actual authentication logic for testing
+    // emit(AuthenticationLoading());
+
+    // Bypass the login check for testing purposes and emit an authenticated state
+    emit(Authenticated(
+        user: User(name: 'Test User', email: 'test@user.com', id: '')));
+
+    // Uncomment the below code when you want to restore the authentication logic
+    // try {
+    //   final User? user = await authenticationRepository.getCurrentUser();
+    //   if (user != null) {
+    //     emit(Authenticated(user: user));
+    //   } else {
+    //     emit(Unauthenticated());
+    //   }
+    // } catch (e) {
+    //   emit(Unauthenticated());
+    // }
   }
 
   Future<void> _onLoginRequested(

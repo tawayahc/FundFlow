@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/features/auth/ui/change_password.dart';
+import 'package:fundflow/features/auth/ui/delete_acc_page.dart';
+import 'package:fundflow/features/auth/ui/edit_email_page.dart';
+import 'package:fundflow/features/auth/ui/setting_page.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/auth/bloc/auth_event.dart';
@@ -31,13 +35,17 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme, // Apply the light theme
           darkTheme: AppTheme.darkTheme, // Apply the dark theme (optional)
           themeMode: ThemeMode.system, // Use system theme mode
-          home: AuthenticationWrapper(),
+          home: HomePage(),
           routes: {
             '/login': (context) => LoginPage(),
             '/register': (context) => RegistrationPage(),
             '/forget1': (context) => ForgetPage(),
             '/forget2': (context) => VerificationPage(),
             '/forget3': (context) => ResetPasswordPage(),
+            '/setting_page': (context) => SettingsPage(),
+            '/setting_page/edit_email': (context) => EditEmailPage(),
+            '/setting_page/change_password': (context) => ChangePasswordPage(),
+            '/setting_page/delete_acc': (context) => DeleteAccPage(),
             '/home': (context) => HomePage(), // No need to pass user object
             // Add other routes here
           },
