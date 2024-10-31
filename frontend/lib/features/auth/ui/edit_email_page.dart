@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/features/auth/ui/setting_page.dart';
+import 'package:fundflow/core/widgets/custom_button.dart';
+import 'package:fundflow/core/widgets/custom_input_box.dart';
 
 class EditEmailPage extends StatelessWidget {
   const EditEmailPage({Key? key}) : super(key: key); // เพิ่ม Key ใน Constructor
@@ -36,50 +38,17 @@ class EditEmailPage extends StatelessWidget {
                   color: Color(0xFF5A5A5A)),
             ),
             const SizedBox(height: 12),
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'อีเมล',
-                prefixIcon: Icon(
-                  Icons.email_outlined,
-                  color: Color(0xFFD0D0D0),
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: const BorderSide(
-                    color: Color(0xFFD0D0D0),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: const BorderSide(
-                    color: Color(0xFF41486D),
-                    width: 2.0,
-                  ),
-                ),
-              ),
+            CustomInputBox(
+              labelText: 'อีเมล',
+              prefixIcon:
+                  const Icon(Icons.email_outlined, color: Color(0xFFD0D0D0)),
             ),
             const SizedBox(height: 30),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // กลับไปหน้า SettingsPage
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  backgroundColor: const Color(0xFF41486D), // ปุ่มสีน้ำเงินเข้ม
-                ),
-                child: const Text(
-                  'ยืนยัน',
-                  style: TextStyle(fontSize: 18, color: Color(0xffffffff)),
-                ),
-              ),
+            CustomButton(
+              text: 'ยืนยัน',
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
           ],
         ),
