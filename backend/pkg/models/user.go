@@ -2,6 +2,7 @@ package models
 
 import (
 	"time"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 // Authentication model
@@ -26,4 +27,23 @@ type UserProfile struct {
 	DateOfBirth time.Time // Date of birth
 
 	AuthID uint // Foreign key for the one-to-one relationship
+}
+
+// Credentials struct for login (no email required for login)
+type Credentials struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+// Registration struct to include email during registration
+type Registration struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+// Claims for JWT token
+type Claims struct {
+	Username string `json:"username"`
+	jwt.RegisteredClaims
 }

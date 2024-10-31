@@ -17,6 +17,11 @@ func SetupRouter() *gin.Engine {
 	r.POST("/register", controllers.Register)
 	r.POST("/login", controllers.Login)
 
+	// OTP routes
+	r.POST("/claim-otp", controllers.GenerateOTP)
+	r.POST("/verify-otp", controllers.VerifyOTP)
+	r.POST("/reset-password", middleware.AuthMiddleware(), controllers.Repassword)
+
 	// Book routes with authentication
 	protected := r.Group("/books")
 	protected.Use(middleware.AuthMiddleware())
