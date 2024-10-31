@@ -3,6 +3,7 @@ package controllers
 import (
 	"book-management-system/pkg/config"
 	"book-management-system/pkg/models"
+	"book-management-system/pkg/utils"
 	"net/http"
 	"time"
 
@@ -11,35 +12,16 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// Credentials struct for login (no email required for login)
-type Credentials struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-// Registration struct to include email during registration
-type Registration struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-// Claims for JWT token
-type Claims struct {
-	Username string `json:"username"`
-	jwt.RegisteredClaims
-}
-
 // Register a new user (with email)
 func Register(c *gin.Context) {
-	var creds Registration // Use Registration struct to include email
+	var creds models.Registration // Use Registration struct to include email
 	if err := c.ShouldBindJSON(&creds); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	// Hash the password
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(creds.Password), bcrypt.DefaultCost)
+	hashedPassword, err := utils.HashPassword(creds.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error hashing password"})
 		return
@@ -75,7 +57,7 @@ func Register(c *gin.Context) {
 
 // Login a user and issue a JWT (email not required for login)
 func Login(c *gin.Context) {
-	var creds Credentials // Use Credentials struct for login (no email)
+	var creds models.Credentials // Use Credentials struct for login (no email)
 	if err := c.ShouldBindJSON(&creds); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return
@@ -107,7 +89,7 @@ func Login(c *gin.Context) {
 
 	// Generate JWT token
 	expirationTime := time.Now().Add(24 * time.Hour)
-	claims := &Claims{
+	claims := &models.Claims{
 		Username: creds.Username,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
