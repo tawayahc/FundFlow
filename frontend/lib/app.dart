@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/widgets/layout.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/auth/bloc/auth_event.dart';
@@ -34,7 +35,8 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme, // Apply the Poppins light theme
           darkTheme: AppTheme.darkTheme, // Apply the Poppins dark theme
           themeMode: ThemeMode.system,
-          home: const HomePage(), // Decide whether to show login or HomePage
+          home: const GlobalPadding(
+              child: HomePage()), // Decide whether to show login or HomePage
           routes: {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegistrationPage(),
