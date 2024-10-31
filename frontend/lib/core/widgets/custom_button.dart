@@ -1,32 +1,31 @@
-// Example
 import 'package:flutter/material.dart';
-import 'package:fundflow/core/themes/app_styles.dart';
 
 class CustomButton extends StatelessWidget {
-  final String label;
+  final String text;
   final VoidCallback onPressed;
-  final IconData? icon;
-  final Color? color;
 
   const CustomButton({
     Key? key,
-    required this.label,
+    required this.text,
     required this.onPressed,
-    this.icon,
-    this.color,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      icon: icon != null ? Icon(icon, color: AppColors.white) : SizedBox(),
-      label: Text(label, style: Theme.of(context).textTheme.labelLarge),
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color ?? AppColors.primary,
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: AppBorders.medium,
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+          backgroundColor: const Color(0xFF41486D), // ปุ่มสีน้ำเงินเข้ม
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 18, color: Color(0xffffffff)),
         ),
       ),
     );
