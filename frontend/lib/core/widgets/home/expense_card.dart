@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/layout.dart';
 import 'package:fundflow/features/home/models/expense.dart';
 
 class ExpenseCard extends StatelessWidget {
@@ -9,17 +11,16 @@ class ExpenseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
         border: Border.all(color: Colors.grey.shade300),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            color: AppColors.darkGrey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 1,
           ),
         ],
       ),
@@ -27,28 +28,41 @@ class ExpenseCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 8,
+            margin: const EdgeInsets.only(top: 15),
+            height: 10,
             decoration: BoxDecoration(
               color: expense.color,
-              borderRadius: BorderRadius.circular(4),
             ),
           ),
-          const SizedBox(height: 5),
-          Text(
-            expense.category,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+          Container(
+            margin: const EdgeInsets.only(top: 2),
+            height: 2,
+            decoration: BoxDecoration(
+              color: expense.color.withOpacity(0.5),
             ),
           ),
-          const SizedBox(height: 5),
-          Text(
-            '฿ ${expense.amount.toStringAsFixed(2)}',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: expense.color,
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  expense.category,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  '฿ ${formatter.format(expense.amount)}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: expense.color,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

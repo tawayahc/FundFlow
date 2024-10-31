@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/layout.dart';
 
 class CashBox extends StatelessWidget {
   final double cashBox;
@@ -41,17 +43,15 @@ class CashBox extends StatelessWidget {
                 'แคชบ๊อกซ์',
                 style: TextStyle(
                   fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  fontWeight: FontWeight.normal,
                 ),
               ),
-              const SizedBox(height: 5),
               Text(
-                '฿ ${cashBox.toStringAsFixed(2)}',
+                '฿ ${formatter.format(cashBox)}',
                 style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.darkBlue,
                 ),
               ),
             ],

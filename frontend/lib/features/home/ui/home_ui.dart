@@ -24,7 +24,6 @@ class HomeUI extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xff414141),
                 ),
               ),
               SizedBox(height: 10),
@@ -35,7 +34,6 @@ class HomeUI extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xff414141),
                 ),
               ),
               SizedBox(height: 10),

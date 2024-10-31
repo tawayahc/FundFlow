@@ -4,7 +4,7 @@ import 'package:fundflow/core/widgets/home/expense_card.dart';
 import 'package:fundflow/features/home/bloc/expense/expense_bloc.dart';
 import 'package:fundflow/features/home/bloc/expense/expense_state.dart';
 import 'package:fundflow/features/home/models/expense.dart';
-import 'package:fundflow/features/home/ui/cash_box.dart';
+import 'package:fundflow/core/widgets/home/cash_box.dart';
 
 class ExpenseSection extends StatelessWidget {
   const ExpenseSection({super.key});
@@ -19,7 +19,7 @@ class ExpenseSection extends StatelessWidget {
           return Column(
             children: [
               CashBox(cashBox: state.cashBox),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               ..._buildExpenseRows(state.expenses),
             ],
           );

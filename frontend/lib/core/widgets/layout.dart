@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class GlobalPadding extends StatelessWidget {
   final Widget child;
@@ -14,3 +15,5 @@ class GlobalPadding extends StatelessWidget {
     );
   }
 }
+
+final formatter = NumberFormat('#,##0.00');

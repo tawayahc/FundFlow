@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fundflow/core/widgets/layout.dart';
 import 'package:fundflow/features/home/models/bank.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:intl/intl.dart';
 
 class BankCard extends StatelessWidget {
   final Bank bank;
@@ -10,8 +10,6 @@ class BankCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = NumberFormat('#,##0.00');
-
     return Container(
       margin: const EdgeInsets.only(right: 16),
       width: 170, // Set the width to avoid overflow

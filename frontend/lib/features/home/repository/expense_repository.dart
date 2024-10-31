@@ -11,9 +11,20 @@ class ExpenseRepository {
     return {
       'cashBox': 17873.82,
       'expenses': [
-        Expense(category: 'ค่าอาหาร', amount: 10000.00, color: Colors.blue),
-        Expense(category: 'ค่าเดินทาง', amount: 2500.00, color: Colors.red),
-        Expense(category: 'ค่าของใช้', amount: 2000.00, color: Colors.orange),
+        //use this color for food 41486D
+
+        Expense(
+            category: 'ค่าอาหาร',
+            amount: 10000.00,
+            color: const Color(0xFF41486D)),
+        Expense(
+            category: 'ค่าเดินทาง',
+            amount: 2500.00,
+            color: const Color(0xFFFF9595)),
+        Expense(
+            category: 'ค่าของใช้',
+            amount: 2000.00,
+            color: const Color(0xFFFFB459)),
       ]
     };
   }
