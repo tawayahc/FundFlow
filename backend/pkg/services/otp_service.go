@@ -20,7 +20,7 @@ func GenerateOTP(email string) error {
 
 	otp := utils.GenerateRandomOTP()
 	otpStorage[email] = otp
-	otpExpiry[email] = time.Now().Add(10 * time.Minute)
+	otpExpiry[email] = time.Now().Add(5 * time.Minute)
 
 	// Store OTP in the database
 	otpRecord := models.OTP{Email: email, OTP: otp, Expired_at: otpExpiry[email]}
