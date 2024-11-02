@@ -20,8 +20,9 @@ func GenerateOTP(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate OTP"})
 		return
-
 	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "OTP generated successfully"})
 }
 
 func VerifyOTP(c *gin.Context) {
@@ -35,8 +36,8 @@ func VerifyOTP(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
-
 	}
+	c.JSON(http.StatusOK, gin.H{"message": "OTP verified successfully"})
 }
 
 func Repassword(c *gin.Context) {
