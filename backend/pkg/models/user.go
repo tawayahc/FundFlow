@@ -10,23 +10,24 @@ import (
 // Authentication model
 type Authentication struct {
 	gorm.Model
-	Username       string      `gorm:"unique;not null"` // Username, must be unique
-	Password       string      `gorm:"not null"`        // Hashed version of the password
-	LastLogin      time.Time   // Timestamp of last login
-	FailedAttempts int         // Number of failed login attempts
-	UserProfile    UserProfile `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:AuthID"` // One-to-one relation with UserProfile
+	Username       string       `gorm:"unique;not null"` // Username, must be unique
+	Password       string       `gorm:"not null"`        // Hashed version of the password
+	LastLogin      time.Time    // Timestamp of last login
+	FailedAttempts int          // Number of failed login attempts
+	UserProfile    *UserProfile `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:AuthID"` // One-to-one relation with UserProfile
 }
 
 // UserProfile model
 type UserProfile struct {
 	gorm.Model
-	AuthID      uint      `gorm:"unique;not null"` // Foreign key referencing Authentication
-	FirstName   string    // First name
-	LastName    string    // Last name
-	Email       string    `gorm:"unique;not null"` // Email must be unique
-	PhoneNumber string    // Phone
-	Address     string    // Address
-	DateOfBirth time.Time // Date of birth
+	AuthID         uint            `gorm:"unique;not null"` // Foreign key referencing Authentication
+	FirstName      string          // First name
+	LastName       string          // Last name
+	Email          string          `gorm:"unique;not null"` // Email must be unique
+	PhoneNumber    string          // Phone
+	Address        string          // Address
+	DateOfBirth    time.Time       // Date of birth
+	Authentication *Authentication `gorm:"foreignKey:AuthID"` // Belongs to Authentication
 }
 
 // Credentials struct for login (no email required for login)

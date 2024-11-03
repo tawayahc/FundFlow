@@ -28,6 +28,13 @@ func GenerateOTP(email string) error {
 		return errors.New("failed to store OTP")
 	}
 
+	// Send OTP to the user via email
+	fmt.Println("OTP:", otp)
+	err := utils.SendOTPEmail(email, otp)
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
 	return nil
 }
 
@@ -99,33 +106,47 @@ func CheckOtpVerification(email string) error {
 
 // UpdatePassword updates the password for a user based on their email
 func UpdatePassword(email string, newPassword string) error {
-	// Fetch the user profile based on the email
+	// Start a transaction to ensure atomicity
+	tx := config.DB.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// Fetch the user profile and related authentication in one query using Preload
 	var userProfile models.UserProfile
-	if err := config.DB.Where("email = ?", email).First(&userProfile).Error; err != nil {
+	if err := tx.Preload("Authentication").Where("email = ?", email).First(&userProfile).Error; err != nil {
+		tx.Rollback()
 		return errors.New("user not found")
 	}
 
-	// Fetch the authentication record based on the AuthID
-	var userAuth models.Authentication
-	if err := config.DB.Where("id = ?", userProfile.AuthID).First(&userAuth).Error; err != nil {
+	// Check if the related Authentication is loaded
+	if userProfile.Authentication == nil {
+		tx.Rollback()
 		return errors.New("user authentication record not found")
 	}
 
-	// Update the password
+	// Hash the new password
 	hashPassword, err := utils.HashPassword(newPassword)
 	if err != nil {
+		tx.Rollback()
 		return errors.New("failed to hash password")
 	}
 
-	userAuth.Password = hashPassword
-	if err := config.DB.Save(&userAuth).Error; err != nil {
+	// Update the password directly on the related Authentication record
+	userProfile.Authentication.Password = hashPassword
+	if err := tx.Save(&userProfile.Authentication).Error; err != nil {
+		tx.Rollback()
 		return errors.New("failed to update password")
 	}
 
-	// Delete the OTP record
-	if err := config.DB.Where("email = ?", email).Delete(&models.OTP{}).Error; err != nil {
+	// Delete the OTP record associated with the email
+	if err := tx.Where("email = ?", email).Delete(&models.OTP{}).Error; err != nil {
+		tx.Rollback()
 		return errors.New("failed to delete OTP record")
 	}
 
-	return nil
+	// Commit the transaction
+	return tx.Commit().Error
 }

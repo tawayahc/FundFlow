@@ -17,7 +17,7 @@ func GenerateOTP(c *gin.Context) {
 
 	err := services.GenerateOTP(otpRequest.Email)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate OTP"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
