@@ -34,14 +34,16 @@ class MyApp extends StatelessWidget {
           title: 'FundFlow',
           theme: AppTheme.lightTheme, // Apply the light theme
           darkTheme: AppTheme.darkTheme, // Apply the dark theme (optional)
-          themeMode: ThemeMode.system, // Use system theme mode
+          themeMode: ThemeMode.system,
+           // Use system theme mode
+           builder: (context, child) => GlobalPadding(child: child!),
           home: HomePage(),
           routes: {
             '/login': (context) => LoginPage(),
             '/register': (context) => RegistrationPage(),
             '/forget1': (context) => ForgetPage(),
             '/forget2': (context) => VerificationPage(),
-            '/forget3': (context) => ResetPasswordPage(),
+            '/forget3': (context) => ResetPasswordPage() ,
             '/setting_page': (context) => SettingsPage(),
             '/setting_page/edit_email': (context) => EditEmailPage(),
             '/setting_page/change_password': (context) => ChangePasswordPage(),
@@ -53,6 +55,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
+    
     // NOTE: Uncomment this block of code to test the page
     //   child: BlocProvider<AuthenticationBloc>(
     //     create: (context) => AuthenticationBloc(
@@ -72,5 +75,19 @@ class MyApp extends StatelessWidget {
     //     ),
     //   ),
     // );
+  }
+}
+class GlobalPadding extends StatelessWidget {
+  final Widget child;
+
+  const GlobalPadding({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color.fromARGB(255, 255, 255, 255),
+      padding: const EdgeInsets.all(42.0), // Global padding
+      child: child,
+    );
   }
 }
