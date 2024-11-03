@@ -11,14 +11,14 @@ class AppColors {
   // Neutral Colors
   static const Color white = Colors.white;
   static const Color black = Colors.black;
-  static const Color grey = Colors.grey;
+  static const Color grey = Colors.grey; 
   static const Color lightGrey = Color(0xFFE0E0E0);
 
   // Error Colors
   static const Color error = Colors.red;
 
   // Background Colors
-  static const Color background = Color(0xFFF5F5F5);
+  static const Color background = Colors.white;
   static const Color surface = Colors.white;
 
   // Additional Colors
