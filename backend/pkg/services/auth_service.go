@@ -29,7 +29,7 @@ func CreateUser(creds models.Registration) error {
     }
 
     // Create a new user profile
-    userProfile := models.UserProfile{Email: creds.Email, AuthID: userAuth.AuthID} // Assuming there's a foreign key
+    userProfile := models.UserProfile{Email: creds.Email, AuthID: userAuth.ID} // Assuming there's a foreign key
     if err := tx.Create(&userProfile).Error; err != nil {
         tx.Rollback() // Rollback the transaction in case of error
         return errors.New("email already exists")

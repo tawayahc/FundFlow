@@ -3,7 +3,6 @@ package controllers
 import (
 	"book-management-system/pkg/models"
 	"book-management-system/pkg/services"
-	"book-management-system/pkg/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -47,18 +46,17 @@ func Repassword(c *gin.Context) {
 		return
 	}
 
-	// Extract and validate JWT token
-	authHeader := c.GetHeader("Authorization")
-	token, err := utils.ValidateToken(authHeader)
+	// Check OTP verification
+	err := services.CheckOtpVerification(repasswordRequest.Email)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Update the user's password
-	err = services.UpdatePassword(token.Username, repasswordRequest.NewPassword)
+	// Update password
+	err = services.UpdatePassword(repasswordRequest.Email, repasswordRequest.NewPassword)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update password"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 

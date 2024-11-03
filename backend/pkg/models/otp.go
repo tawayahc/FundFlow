@@ -10,6 +10,7 @@ type OTP struct {
 	gorm.Model
 	Email      string
 	OTP        string
+	IsVerified bool
 	Expired_at time.Time
 }
 
@@ -23,5 +24,6 @@ type OTPVerifyRequest struct {
 }
 
 type RepasswordRequest struct {
+	Email       string `json:"email" binding:"required"`
 	NewPassword string `json:"new_password" binding:"required,min=8"`
 }

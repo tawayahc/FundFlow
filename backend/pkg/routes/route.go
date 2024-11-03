@@ -20,7 +20,7 @@ func SetupRouter() *gin.Engine {
 	// OTP routes
 	r.POST("/claim-otp", controllers.GenerateOTP)
 	r.POST("/verify-otp", controllers.VerifyOTP)
-	r.POST("/reset-password", middleware.AuthMiddleware(), controllers.Repassword)
+	r.POST("/reset-password", controllers.Repassword)
 
 	// Book routes with authentication
 	protected := r.Group("/books")

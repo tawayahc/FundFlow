@@ -62,19 +62,53 @@ func VerifyOTP(email string, otp string) error {
 		return errors.New("otp expired")
 	}
 
-	// If OTP is valid and not expired, delete the OTP from the database
-	if err := config.DB.Where("email = ?", email).Delete(&models.OTP{}).Error; err != nil {
-		return errors.New("failed to delete otp")
+	// If OTP is valid and not expired, mark it as verified
+	if err := config.DB.Model(&models.OTP{}).Where("email = ?", email).
+		Order("created_at desc"). // This ensures the latest OTP is selected
+		Limit(1).                 // Only retrieve the latest OTP
+		Update("is_verified", true).Error; err != nil {
+		return errors.New("failed to update OTP")
 	}
 
 	return nil
 }
 
-func UpdatePassword(username string, newPassword string) error {
-	// Fetch the user based on the username
-	var user models.Authentication
-	if err := config.DB.Where("username = ?", username).First(&user).Error; err != nil {
+func CheckOtpVerification(email string) error {
+	// Define a struct to hold the result from the database
+	var otpRecord struct {
+		IsVerified bool
+	}
+
+	// Query the OTP and expiration time in one database call
+	if err := config.DB.Model(&models.OTP{}).
+		Select("is_verified").
+		Where("email = ?", email).
+		Order("created_at desc"). // This ensures the latest OTP is selected
+		Limit(1).                 // Only retrieve the latest OTP
+		Scan(&otpRecord).Error; err != nil {
+		return errors.New("OTP not found")
+	}
+
+	// Check if the OTP matches
+	if !otpRecord.IsVerified {
+		return errors.New("otp hasn't verified")
+	}
+
+	return nil
+}
+
+// UpdatePassword updates the password for a user based on their email
+func UpdatePassword(email string, newPassword string) error {
+	// Fetch the user profile based on the email
+	var userProfile models.UserProfile
+	if err := config.DB.Where("email = ?", email).First(&userProfile).Error; err != nil {
 		return errors.New("user not found")
+	}
+
+	// Fetch the authentication record based on the AuthID
+	var userAuth models.Authentication
+	if err := config.DB.Where("id = ?", userProfile.AuthID).First(&userAuth).Error; err != nil {
+		return errors.New("user authentication record not found")
 	}
 
 	// Update the password
@@ -83,9 +117,14 @@ func UpdatePassword(username string, newPassword string) error {
 		return errors.New("failed to hash password")
 	}
 
-	user.Password = hashPassword
-	if err := config.DB.Save(&user).Error; err != nil {
+	userAuth.Password = hashPassword
+	if err := config.DB.Save(&userAuth).Error; err != nil {
 		return errors.New("failed to update password")
+	}
+
+	// Delete the OTP record
+	if err := config.DB.Where("email = ?", email).Delete(&models.OTP{}).Error; err != nil {
+		return errors.New("failed to delete OTP record")
 	}
 
 	return nil
