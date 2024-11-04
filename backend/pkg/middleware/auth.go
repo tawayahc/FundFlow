@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"book-management-system/pkg/config"
-	"book-management-system/pkg/controllers"
+	"book-management-system/pkg/models"
 	"net/http"
 	"strings"
 
@@ -29,7 +29,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		// Parse the JWT token
-		claims := &controllers.Claims{}
+		claims := &models.Claims{}
 		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 			return []byte(config.GetEnv("JWT_SECRET")), nil
 		})
