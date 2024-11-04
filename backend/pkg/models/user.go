@@ -33,14 +33,14 @@ type UserProfile struct {
 // Credentials struct for login (no email required for login)
 type Credentials struct {
 	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Password string `json:"password" binding:"required,min=8"`
 }
 
 // Registration struct to include email during registration
 type Registration struct {
 	Username string `json:"username" binding:"required"`
 	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Password string `json:"password" binding:"required,min=8"`
 }
 
 // Claims for JWT token

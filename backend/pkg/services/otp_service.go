@@ -18,6 +18,27 @@ func GenerateOTP(email string) error {
 		return errors.New("email not found")
 	}
 
+	var otpRecordCheck struct {
+		OTP        string
+		ExpiredAt  time.Time
+		IsVerified bool
+	}
+
+	// Check if the user has already requested an OTP within the last 5 minutes and it's not verified
+	if err := config.DB.Model(&models.OTP{}).
+		Select("otp, expired_at, is_verified").
+		Where("email = ?", email).
+		Order("created_at desc"). // This ensures the latest OTP is selected
+		Limit(1).                 // Only retrieve the latest OTP
+		Scan(&otpRecordCheck).Error; err == nil {
+
+		// Check if OTP was requested within the last 5 minutes and is unverified
+		if time.Since(otpRecordCheck.ExpiredAt) < 5*time.Minute && !otpRecordCheck.IsVerified {
+			return errors.New("OTP already requested within the last 5 minutes")
+		}
+	}
+
+	// Generate a new OTP and store it in memory with a 5-minute expiration
 	otp := utils.GenerateRandomOTP()
 	otpStorage[email] = otp
 	otpExpiry[email] = time.Now().Add(5 * time.Minute)
@@ -30,9 +51,8 @@ func GenerateOTP(email string) error {
 
 	// Send OTP to the user via email
 	fmt.Println("OTP:", otp)
-	err := utils.SendOTPEmail(email, otp)
-	if err != nil {
-		return errors.New(err.Error())
+	if err := utils.SendOTPEmail(email, otp); err != nil {
+		return errors.New("failed to send OTP email")
 	}
 
 	return nil
