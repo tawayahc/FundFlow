@@ -15,6 +15,7 @@ import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 import 'package:fundflow/features/home/ui/add_category.dart';
 import 'package:logger/logger.dart';
+import 'package:fundflow/features/transaction/ui/gallery_page.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/auth/bloc/auth_event.dart';
@@ -29,6 +30,11 @@ import 'features/home/repository/bank_repository.dart';
 import 'features/home/repository/category_repository.dart';
 import 'features/home/repository/profile_repository.dart';
 import 'features/home/ui/add_bank.dart';
+import 'features/home/ui/home_page.dart';
+import 'features/transaction/ui/transaction_page.dart';
+import 'features/transaction/bloc/transaction_bloc.dart';
+import 'features/transaction/repository/transaction_repository.dart';
+import 'package:dio/dio.dart';
 
 final logger = Logger(
   printer: PrettyPrinter(
@@ -76,18 +82,20 @@ class MyApp extends StatelessWidget {
             '/setting_page': (context) => const SettingsPage(),
             '/pocket_management': (context) => const CategoryPage(),
             '/setting_page/edit_email': (context) => EditEmailPage(),
-            '/setting_page/change_password': (context) => const ChangePasswordPage(),
+            '/setting_page/change_password': (context) =>
+                const ChangePasswordPage(),
             '/setting_page/delete_acc': (context) => const DeleteAccPage(),
             '/home': (context) => const BottomNavBar(),
             '/addBank': (context) => const AddBankPage(),
             '/addCategory': (context) => const AddCategoryPage(),
             '/manageBankAccount': (context) => const BankAccountPage(),
+            '/transaction_page': (context) => TransactionPage(),
+            '/gallery': (context) => GalleryPage(),
           },
           // builder: (context, child) => const BottomNavBar(), // Apply padding only to the body
           debugShowCheckedModeBanner: false,
         ),
       ),
-
     );
   }
 }
