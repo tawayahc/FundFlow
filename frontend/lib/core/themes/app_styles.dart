@@ -21,7 +21,7 @@ class AppColors {
   static const Color error = Colors.red;
 
   // Background Colors
-  static const Color background = Color(0xFFF5F5F5);
+  static const Color background = Colors.white;
   static const Color surface = Colors.white;
 
   // Additional Colors
