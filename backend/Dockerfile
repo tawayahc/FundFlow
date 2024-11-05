@@ -10,8 +10,8 @@ RUN go mod download
 # Copy the source code
 COPY . .
 
-# Build the Go application for Linux (Alpine) environment
-RUN GOOS=linux GOARCH=amd64 go build -o main cmd/app/main.go
+# Build the Go application with CGO disabled
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main cmd/app/main.go
 
 # Run Stage
 FROM alpine:latest
