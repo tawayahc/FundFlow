@@ -1,9 +1,9 @@
 package services
 
 import (
-	"book-management-system/pkg/config"
-	"book-management-system/pkg/models"
-	"book-management-system/pkg/utils"
+	"fundflow/pkg/config"
+	"fundflow/pkg/models"
+	"fundflow/pkg/utils"
 	"errors"
 	"time"
 

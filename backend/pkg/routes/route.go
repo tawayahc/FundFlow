@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"book-management-system/pkg/controllers"
-	"book-management-system/pkg/middleware"
+	"fundflow/pkg/controllers"
+	"fundflow/pkg/middleware"
 
 	"github.com/gin-gonic/gin"
 )

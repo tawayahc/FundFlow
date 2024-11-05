@@ -1,4 +1,4 @@
-module book-management-system
+module fundflow
 
 go 1.22
 
