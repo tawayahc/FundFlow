@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
-import 'package:fundflow/features/home/bloc/expense/expense_bloc.dart';
-import 'package:fundflow/features/home/bloc/expense/expense_event.dart';
+import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
+import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_bloc.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_event.dart';
 import 'package:fundflow/features/home/repository/bank_repository.dart';
-import 'package:fundflow/features/home/repository/expense_repository.dart';
+import 'package:fundflow/features/home/repository/category_repository.dart';
 import 'package:fundflow/features/home/repository/profile_repository.dart';
 import 'package:fundflow/features/home/ui/home_ui.dart'; // Import the new HomeUI
 
@@ -25,9 +25,9 @@ class HomePage extends StatelessWidget {
           )..add(LoadBanks()),
         ),
         BlocProvider(
-          create: (context) => ExpenseBloc(
-            expenseRepository: context.read<ExpenseRepository>(),
-          )..add(LoadExpenses()),
+          create: (context) => CategoryBloc(
+            categoryRepository: context.read<CategoryRepository>(),
+          )..add(LoadCategorys()),
         ),
         BlocProvider(
           create: (context) => ProfileBloc(

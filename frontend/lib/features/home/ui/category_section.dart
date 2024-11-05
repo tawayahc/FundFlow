@@ -1,55 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/core/widgets/home/expense_card.dart';
-import 'package:fundflow/features/home/bloc/expense/expense_bloc.dart';
-import 'package:fundflow/features/home/bloc/expense/expense_state.dart';
-import 'package:fundflow/features/home/models/expense.dart';
+import 'package:fundflow/core/widgets/home/category_card.dart';
+import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
+import 'package:fundflow/features/home/bloc/category/category_state.dart';
+import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/core/widgets/home/cash_box.dart';
 
-class ExpenseSection extends StatelessWidget {
-  const ExpenseSection({super.key});
+class CategorySection extends StatelessWidget {
+  const CategorySection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ExpenseBloc, ExpenseState>(
+    return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
-        if (state is ExpensesLoading) {
+        if (state is CategorysLoading) {
           return const CircularProgressIndicator();
-        } else if (state is ExpensesLoaded) {
+        } else if (state is CategorysLoaded) {
           return Column(
             children: [
               CashBox(cashBox: state.cashBox),
               const SizedBox(height: 10),
-              ..._buildExpenseRows(state.expenses),
+              ..._buildCategoryRows(state.categorys),
             ],
           );
         } else {
-          return const Text('Error loading expenses');
+          return const Text('Error loading categories');
         }
       },
     );
   }
 
-  // Function to group expenses in pairs and return rows
-  List<Widget> _buildExpenseRows(List<Expense> expenses) {
+  // Function to group categories in pairs and return rows
+  List<Widget> _buildCategoryRows(List<Category> categories) {
     List<Widget> rows = [];
 
-    for (int i = 0; i < expenses.length; i += 2) {
+    for (int i = 0; i < categories.length; i += 2) {
       List<Widget> rowChildren = [];
 
       // First card
       rowChildren.add(
         Expanded(
-          child: ExpenseCard(expense: expenses[i]),
+          child: CategoryCard(
+            categoryName: categories[i].category,
+            amount: categories[i].amount,
+            color: categories[i].color, // Pass amount and color from category
+          ),
         ),
       );
 
       // Second card or a spacer if only one card in the row
-      if (i + 1 < expenses.length) {
+      if (i + 1 < categories.length) {
         rowChildren.add(const SizedBox(width: 10)); // Space between cards
         rowChildren.add(
           Expanded(
-            child: ExpenseCard(expense: expenses[i + 1]),
+            child: CategoryCard(
+              categoryName: categories[i + 1].category,
+              amount: categories[i + 1].amount,
+              color: categories[i + 1]
+                  .color, // Pass amount and color from category
+            ),
           ),
         );
       } else {

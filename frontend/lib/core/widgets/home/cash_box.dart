@@ -60,12 +60,12 @@ class CashBox extends StatelessWidget {
           const Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Icon(Icons.info_outline, color: Colors.grey),
+              Icon(Icons.info_outline, color: Colors.grey, size: 15),
               Text(
                 'กดค้างและลาก\nเพื่อจัดสรร',
                 textAlign: TextAlign.right,
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 12,
                   color: Colors.grey,
                 ),
               ),

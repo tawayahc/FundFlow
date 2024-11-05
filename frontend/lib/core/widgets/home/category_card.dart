@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/layout.dart';
-import 'package:fundflow/features/home/models/expense.dart';
 
-class ExpenseCard extends StatelessWidget {
-  final Expense expense;
+class CategoryCard extends StatelessWidget {
+  final String categoryName;
+  final double amount;
+  final Color color;
 
-  const ExpenseCard({super.key, required this.expense});
+  const CategoryCard({
+    super.key,
+    required this.categoryName,
+    required this.amount,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +37,14 @@ class ExpenseCard extends StatelessWidget {
             margin: const EdgeInsets.only(top: 15),
             height: 10,
             decoration: BoxDecoration(
-              color: expense.color,
+              color: color,
             ),
           ),
           Container(
             margin: const EdgeInsets.only(top: 2),
             height: 2,
             decoration: BoxDecoration(
-              color: expense.color.withOpacity(0.5),
+              color: color.withOpacity(0.5),
             ),
           ),
           Padding(
@@ -47,7 +53,7 @@ class ExpenseCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  expense.category,
+                  categoryName,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.normal,
@@ -55,11 +61,11 @@ class ExpenseCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '฿ ${formatter.format(expense.amount)}',
+                  '฿ ${formatter.format(amount)}',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: expense.color,
+                    color: color,
                   ),
                 ),
               ],

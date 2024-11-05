@@ -53,9 +53,7 @@ class BankCard extends StatelessWidget {
                         style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
-                            height: 1.1,
-                            color:
-                                Color(0xff414141)), // Set text color to black
+                            height: 1.1), // Set text color to black
                         maxLines: 1,
                         minFontSize: 10, // Minimum size when shrinking
                         overflow: TextOverflow.ellipsis, // Ellipsis if too long
@@ -66,7 +64,6 @@ class BankCard extends StatelessWidget {
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
                           height: 1.1,
-                          color: Color(0xff414141), // Set text color to black
                         ),
                         maxLines: 1,
                         minFontSize: 10, // Minimum size when shrinking

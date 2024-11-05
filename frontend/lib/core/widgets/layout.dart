@@ -10,7 +10,7 @@ class GlobalPadding extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.all(25.0), // Global padding
+      padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 25),
       child: child,
     );
   }
