@@ -1,8 +1,8 @@
 package main
 
 import (
-	"book-management-system/pkg/config"
-	"book-management-system/pkg/routes"
+	"fundflow/pkg/config"
+	"fundflow/pkg/routes"
 )
 
 func main() {

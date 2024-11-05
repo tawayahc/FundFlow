@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"book-management-system/pkg/config"
-	"book-management-system/pkg/models"
+	"fundflow/pkg/config"
+	"fundflow/pkg/models"
 
 	"github.com/golang-jwt/jwt/v5"
 )

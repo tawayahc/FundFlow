@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"book-management-system/pkg/models" // Import your models
+	"fundflow/pkg/models" // Import your models
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

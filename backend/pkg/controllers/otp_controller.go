@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"book-management-system/pkg/models"
-	"book-management-system/pkg/services"
+	"fundflow/pkg/models"
+	"fundflow/pkg/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
