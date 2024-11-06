@@ -24,16 +24,20 @@ class _DeleteAccPageState extends State<DeleteAccPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
+          },
+        ),
         centerTitle: true,
         title: const Text(
-          'ลบบัญชี FundFlow',
+          'ลบบัญชี',
           style: TextStyle(
-            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

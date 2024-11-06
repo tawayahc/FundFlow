@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:fundflow/features/auth/ui/setting_page.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_input_box.dart';
+import 'package:fundflow/core/widgets/custom_button.dart';
+import 'package:fundflow/core/widgets/custom_password_input_box.dart';
 
 class EditEmailPage extends StatelessWidget {
-  const EditEmailPage({Key? key}) : super(key: key); // เพิ่ม Key ใน Constructor
+  final FocusNode _newEmailFocusNode = FocusNode(); // เพิ่ม FocusNode
+
+  EditEmailPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +42,8 @@ class EditEmailPage extends StatelessWidget {
                   color: Color(0xFF5A5A5A)),
             ),
             const SizedBox(height: 12),
-            CustomInputBox(
-              labelText: 'อีเมล',
-              prefixIcon:
-                  const Icon(Icons.email_outlined, color: Color(0xFFD0D0D0)),
-            ),
+            CustomPasswordInputBox(
+                labelText: 'อีเมล', focusNode: _newEmailFocusNode),
             const SizedBox(height: 30),
             CustomButton(
               text: 'ยืนยัน',
