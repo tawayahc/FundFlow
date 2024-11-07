@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/widgets/custom_input_box.dart';
+import 'package:fundflow/core/widgets/custom_password_input_box.dart';
+import 'package:fundflow/core/widgets/custom_button.dart';
 
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
@@ -14,8 +17,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   // Controllers for text fields
-  final TextEditingController _emailController = TextEditingController();
+ /* final TextEditingController _emailController = TextEditingController();*/
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   // Key for form validation
   final _formKey = GlobalKey<FormState>();
@@ -42,53 +46,113 @@ class _LoginPageState extends State<LoginPage> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  const SizedBox(height: 100),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(labelText: 'Email'),
-                    validator: (value) => value != null && value.contains('@')
-                        ? null
-                        : 'Enter a valid email',
+          return SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 30,),
+                // Circular avatar placeholder
+                const CircleAvatar(
+                  radius: 120,
+                  backgroundColor: Color(0xFF41486D),
+                ),
+                const SizedBox(height: 16,),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: const Text(
+                    'เข้าสู่ระบบ',
+                    style: TextStyle(
+                      color: Color(0xFF41486D),
+                      fontSize: 34, // Font size
+                      fontWeight: FontWeight.bold, // Bold text
+                      //letterSpacing: 2.0, // Spacing between letters
+                    ),
                   ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: const InputDecoration(labelText: 'Password'),
-                    obscureText: true,
-                    validator: (value) => value != null && value.length >= 6
-                        ? null
-                        : 'Password must be at least 6 characters',
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // Trigger login event
-                        context.read<AuthenticationBloc>().add(
-                              AuthenticationLoginRequested(
-                                email: _emailController.text,
-                                password: _passwordController.text,
+                ),
+                const SizedBox(height: 16,),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 12),
+            
+                      CustomInputBox(
+                        labelText: 'ชื่อบัญชีผู้ใช้', 
+                        prefixIcon: Icon(
+                          Icons.person,
+                          color: Color(0xFFD0D0D0),
+                        ),
+                      ),
+            
+                      const SizedBox(height: 12),
+                      
+                      CustomPasswordInputBox(
+                        labelText: 'รหัสผ่าน', 
+                        focusNode: FocusNode()
+                      ),
+                      
+                      //const SizedBox(height: 5),
+                     Align(
+                        alignment: Alignment.topRight,
+                        child: TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pushNamed('/forget1');
+                            },
+                            child: const Text(
+                              'ลืมรหัสผ่านใช่ไหม?',
+                              style: TextStyle(
+                                fontSize: 12, // Font size
+                                  color: Color(0xFFFF9595)
+                              ),
+                            ),
+                          ),
+                      ),
+                      const SizedBox(height: 12),
+                      
+                      CustomButton(
+                        text: 'เข้าสู่ระบบ', 
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                          // Trigger login event
+                          context.read<AuthenticationBloc>().add(
+                            AuthenticationLoginRequested(
+                              email: _nameController.text,
+                              password: _passwordController.text,
                               ),
                             );
-                      }
-                    },
-                    child: const Text('Login'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/register');
-                    },
-                    child: const Text('Don\'t have an account? Register'),
-                  ),
-                ],
+                        }
+                      },
+                      ),
+                      
+                          
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'มีบัญชีแล้วหรือยัง?',
+                            style: const TextStyle(
+                              color: Color(0xFF5A5A5A),
+                              fontSize: 12,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pushNamed('/register');
+                            },
+                            child: const Text(
+                              'สมัครสมาชิก',
+                              style: TextStyle(
+                                color: Color(0xFFFF9595),
+                                fontSize: 12,
+                              ),
+                              ),
+                          ),
+                        ],
+                      ),
+                    ],
+                ),
               ),
-            ),
+            ],),
           );
         },
       ),
