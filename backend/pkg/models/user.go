@@ -23,6 +23,7 @@ type UserProfile struct {
 	AuthID         uint            `gorm:"unique;not null"` // Foreign key referencing Authentication
 	FirstName      string          // First name
 	LastName       string          // Last name
+	UserProfilePic string          // Profile picture
 	Email          string          `gorm:"unique;not null"` // Email must be unique
 	PhoneNumber    string          // Phone
 	Address        string          // Address
