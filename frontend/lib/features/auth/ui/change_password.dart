@@ -3,15 +3,15 @@ import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_password_input_box.dart';
 
 class ChangePasswordPage extends StatefulWidget {
-  const ChangePasswordPage({Key? key}) : super(key: key);
+  const ChangePasswordPage({super.key});
 
   @override
   _ChangePasswordPageState createState() => _ChangePasswordPageState();
 }
 
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
-  FocusNode _oldPasswordFocusNode = FocusNode();
-  FocusNode _newPasswordFocusNode = FocusNode();
+  final FocusNode _oldPasswordFocusNode = FocusNode();
+  final FocusNode _newPasswordFocusNode = FocusNode();
 
   // Controllers for text fields
   final TextEditingController _oldPasswordController = TextEditingController();

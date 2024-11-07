@@ -19,7 +19,7 @@ class CustomInputBox extends StatefulWidget {
 class _CustomInputBoxState extends State<CustomInputBox> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 40,
       width: 328,
       child: TextFormField(

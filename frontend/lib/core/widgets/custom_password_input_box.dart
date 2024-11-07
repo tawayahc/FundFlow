@@ -41,7 +41,7 @@ class _CustomPasswordInputBoxState extends State<CustomPasswordInputBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 40,
       width: 328,
       child: TextFormField(

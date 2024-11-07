@@ -9,7 +9,7 @@ import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({Key? key}) : super(key: key);
+  const RegistrationPage({super.key});
 
   @override
   _RegistrationPageState createState() => _RegistrationPageState();
