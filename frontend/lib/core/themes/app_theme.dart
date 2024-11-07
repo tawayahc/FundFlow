@@ -29,24 +29,24 @@ class AppTheme {
         displayLarge: TextStyle(
           fontSize: AppFontSizes.headline1,
           fontWeight: FontWeight.bold,
-          color: AppColors.onSurface,
+          color: AppColors.darkGrey,
         ),
         titleLarge: TextStyle(
           fontSize: AppFontSizes.headline6,
           fontWeight: FontWeight.w600,
-          color: AppColors.onSurface,
+          color: AppColors.darkGrey,
         ),
         bodyLarge: TextStyle(
           fontSize: AppFontSizes.bodyText1,
-          color: AppColors.onSurface,
+          color: AppColors.darkGrey,
         ),
         bodyMedium: TextStyle(
           fontSize: AppFontSizes.bodyText2,
-          color: AppColors.grey,
+          color: AppColors.darkGrey,
         ),
         labelLarge: TextStyle(
           fontSize: AppFontSizes.button,
-          color: AppColors.onPrimary,
+          color: AppColors.darkGrey,
           fontWeight: FontWeight.bold,
         ),
       )),
@@ -98,24 +98,24 @@ class AppTheme {
         displayLarge: TextStyle(
           fontSize: AppFontSizes.headline1,
           fontWeight: FontWeight.bold,
-          color: AppColors.onSurface,
+          color: AppColors.darkGrey,
         ),
         titleLarge: TextStyle(
           fontSize: AppFontSizes.headline6,
           fontWeight: FontWeight.w600,
-          color: AppColors.onSurface,
+          color: AppColors.darkGrey,
         ),
         bodyLarge: TextStyle(
           fontSize: AppFontSizes.bodyText1,
-          color: AppColors.onSurface,
+          color: AppColors.darkGrey,
         ),
         bodyMedium: TextStyle(
           fontSize: AppFontSizes.bodyText2,
-          color: AppColors.grey,
+          color: AppColors.darkGrey,
         ),
         labelLarge: TextStyle(
           fontSize: AppFontSizes.button,
-          color: AppColors.onPrimary,
+          color: AppColors.darkGrey,
           fontWeight: FontWeight.bold,
         ),
       )),

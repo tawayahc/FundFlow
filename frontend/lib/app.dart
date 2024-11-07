@@ -1,93 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/features/auth/ui/change_password.dart';
-import 'package:fundflow/features/auth/ui/delete_acc_page.dart';
-import 'package:fundflow/features/auth/ui/edit_email_page.dart';
-import 'package:fundflow/features/auth/ui/setting_page.dart';
+import 'package:fundflow/core/widgets/layout.dart';
+import 'package:fundflow/features/home/ui/add_category.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/auth/bloc/auth_event.dart';
 import 'features/auth/repository/auth_repository.dart';
-import 'features/auth/ui/auth_wrapper.dart';
 import 'features/auth/ui/login_page.dart';
 import 'features/auth/ui/registeration_page.dart';
-import 'features/auth/ui/forget_page_1.dart';
-import 'features/auth/ui/forget_page_2.dart';
-import 'features/auth/ui/forget_page_3.dart';
-import 'features/home/ui/home_page.dart';
+import 'features/home/repository/bank_repository.dart';
+import 'features/home/repository/category_repository.dart';
+import 'features/home/repository/profile_repository.dart';
+import 'features/home/pages/home_page.dart';
+import 'features/home/ui/add_bank.dart';
 
 class MyApp extends StatelessWidget {
   final AuthenticationRepository authenticationRepository;
 
-  const MyApp({Key? key, required this.authenticationRepository})
-      : super(key: key);
+  const MyApp({super.key, required this.authenticationRepository});
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-      value: authenticationRepository,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider.value(value: authenticationRepository),
+        RepositoryProvider(create: (context) => BankRepository()),
+        RepositoryProvider(create: (context) => CategoryRepository()),
+        RepositoryProvider(create: (context) => ProfileRepository()),
+      ],
       child: BlocProvider<AuthenticationBloc>(
         create: (context) => AuthenticationBloc(
-          authenticationRepository: authenticationRepository,
-        )..add(AppStarted()), // Initialize authentication state
+            authenticationRepository: authenticationRepository)
+          ..add(AppStarted()), // Handle the authentication flow
         child: MaterialApp(
           title: 'FundFlow',
-          theme: AppTheme.lightTheme, // Apply the light theme
-          darkTheme: AppTheme.darkTheme, // Apply the dark theme (optional)
+          theme: AppTheme.lightTheme, // Apply the Poppins light theme
+          darkTheme: AppTheme.darkTheme, // Apply the Poppins dark theme
           themeMode: ThemeMode.system,
-           // Use system theme mode
-           builder: (context, child) => GlobalPadding(child: child!),
-          home: HomePage(),
+          builder: (context, child) => GlobalPadding(child: child!),
+          home: const HomePage(), // Decide whether to show login or HomePage
           routes: {
-            '/login': (context) => LoginPage(),
-            '/register': (context) => RegistrationPage(),
-            '/forget1': (context) => ForgetPage(),
-            '/forget2': (context) => VerificationPage(),
-            '/forget3': (context) => ResetPasswordPage() ,
-            '/setting_page': (context) => SettingsPage(),
-            '/setting_page/edit_email': (context) => EditEmailPage(),
-            '/setting_page/change_password': (context) => ChangePasswordPage(),
-            '/setting_page/delete_acc': (context) => DeleteAccPage(),
-            '/home': (context) => HomePage(), // No need to pass user object
-            // Add other routes here
+            '/login': (context) => const LoginPage(),
+            '/register': (context) => const RegistrationPage(),
+            '/home': (context) => const HomePage(),
+            '/addBank': (context) => const AddBankPage(),
+            '/addCategory': (context) => const AddCategoryPage(),
           },
           debugShowCheckedModeBanner: false,
         ),
       ),
-    );
-    
-    // NOTE: Uncomment this block of code to test the page
-    //   child: BlocProvider<AuthenticationBloc>(
-    //     create: (context) => AuthenticationBloc(
-    //       authenticationRepository: authenticationRepository,
-    //     )..add(AppStarted()), // Ensure you have an AppStarted event
-    //     child: MaterialApp(
-    //       title: 'FundFlow',
-    //       theme: AppTheme.lightTheme, // Apply the theme here
-    //       home: LoginPage(), // NOTE: Change this to the page you want to test
-    //       routes: {
-    //         '/login': (context) => LoginPage(),
-    //         '/register': (context) => RegistrationPage(),
-    //         '/home': (context) => HomePage(),
-    //         // Add other routes here
-    //       },
-    //       debugShowCheckedModeBanner: false,
-    //     ),
-    //   ),
-    // );
-  }
-}
-class GlobalPadding extends StatelessWidget {
-  final Widget child;
-
-  const GlobalPadding({super.key, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: const Color.fromARGB(255, 255, 255, 255),
-      padding: const EdgeInsets.all(42.0), // Global padding
-      child: child,
     );
   }
 }
