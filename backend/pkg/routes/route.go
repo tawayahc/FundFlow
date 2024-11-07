@@ -32,5 +32,14 @@ func SetupRouter() *gin.Engine {
 		protected.DELETE("/:id", controllers.DeleteBook)
 	}
 
+	// Setting routes with authentication
+	protectedSetting := r.Group("/settings")
+	protectedSetting.Use(middleware.AuthMiddleware())
+	{
+		protectedSetting.POST("/change-email", controllers.ChangeEmail)
+		protectedSetting.POST("/change-password", controllers.ChangePassword)
+		protectedSetting.DELETE("/delete-account", controllers.DeleteAccount)
+	}
+
 	return r
 }
