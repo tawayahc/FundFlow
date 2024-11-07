@@ -3,6 +3,7 @@ package middleware
 import (
 	"fundflow/pkg/config"
 	"fundflow/pkg/models"
+	"fundflow/pkg/utils"
 	"net/http"
 	"strings"
 
@@ -37,6 +38,13 @@ func AuthMiddleware() gin.HandlerFunc {
 		// Check for errors and validate the token
 		if err != nil || !token.Valid {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
+			c.Abort()
+			return
+		}
+
+		// Check that the username in the token is in the database
+		if err := utils.ValidateTokenUsername(claims.Username); err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
 			c.Abort()
 			return
 		}

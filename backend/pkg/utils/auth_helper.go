@@ -2,6 +2,8 @@ package utils
 
 import (
 	"errors"
+	"fundflow/pkg/config"
+	"fundflow/pkg/models"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -23,3 +25,20 @@ func ComparePasswords(hashedPassword string, password string) error {
 	}
 	return nil
 }
+
+// GetUserProfileByUsername retrieves the UserProfile given a username
+func GetUserProfileByUsername(username string) (*models.UserProfile, error) {
+	var auth models.Authentication
+	if err := config.DB.Where("username = ?", username).First(&auth).Error; err != nil {
+		return nil, errors.New("user not found")
+	}
+
+	var userProfile models.UserProfile
+	if err := config.DB.Where("auth_id = ?", auth.ID).First(&userProfile).Error; err != nil {
+		return nil, errors.New("user profile not found")
+	}
+
+	return &userProfile, nil
+}
+
+
