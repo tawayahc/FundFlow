@@ -4,23 +4,23 @@ import 'package:fundflow/features/auth/ui/change_password.dart';
 import 'package:fundflow/features/auth/ui/delete_acc_page.dart';
 import 'package:fundflow/features/auth/ui/edit_email_page.dart';
 import 'package:fundflow/features/auth/ui/setting_page.dart';
+import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/auth/bloc/auth_event.dart';
 import 'features/auth/repository/auth_repository.dart';
-import 'features/auth/ui/auth_wrapper.dart';
 import 'features/auth/ui/login_page.dart';
 import 'features/auth/ui/registeration_page.dart';
 import 'features/auth/ui/forget_page_1.dart';
 import 'features/auth/ui/forget_page_2.dart';
 import 'features/auth/ui/forget_page_3.dart';
 import 'features/home/ui/home_page.dart';
+import 'features/manageBankAccount/ui/bank_account_page.dart';
 
 class MyApp extends StatelessWidget {
   final AuthenticationRepository authenticationRepository;
 
-  const MyApp({Key? key, required this.authenticationRepository})
-      : super(key: key);
+  const MyApp({super.key, required this.authenticationRepository});
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
             '/forget2': (context) => VerificationPage(),
             '/forget3': (context) => ResetPasswordPage() ,
             '/setting_page': (context) => SettingsPage(),
+            '/pocket_management': (context) => CategoryPage(),
             '/setting_page/edit_email': (context) => EditEmailPage(),
             '/setting_page/change_password': (context) => ChangePasswordPage(),
             '/setting_page/delete_acc': (context) => DeleteAccPage(),

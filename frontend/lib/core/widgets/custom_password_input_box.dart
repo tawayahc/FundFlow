@@ -5,10 +5,10 @@ class CustomPasswordInputBox extends StatefulWidget {
   final FocusNode focusNode;
 
   const CustomPasswordInputBox({
-    Key? key,
+    super.key,
     required this.labelText,
     required this.focusNode,
-  }) : super(key: key);
+  });
 
   @override
   _CustomPasswordInputBoxState createState() => _CustomPasswordInputBoxState();
@@ -40,7 +40,7 @@ class _CustomPasswordInputBoxState extends State<CustomPasswordInputBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 40,
       width: 328,
       child: TextFormField(
