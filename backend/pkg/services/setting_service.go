@@ -26,15 +26,22 @@ func ChangeEmail(email string, userName string) error {
 }
 
 func ChangePassword(oldPassword string, newPassword string, userName string) error {
+	// Get userAuthentication from username
+	var userAuthentication models.Authentication
+	config.DB.Where("username = ?", userName).First(&userAuthentication)
 
-	// Check if the old password is correct
-	var user models.Authentication
-	if err := config.DB.Where("password = ?", oldPassword).First(&user).Error; err != nil {
-		return errors.New("incorrect old password")
+	// Validate the old password
+	if err := utils.ComparePasswords(userAuthentication.Password, oldPassword); err != nil {
+		return errors.New("invalid old password")
 	}
 
 	// Update the password
-	if err := config.DB.Model(&user).Update("password", newPassword).Error; err != nil {
+	hashedPassword, err := utils.HashPassword(newPassword)
+	if err != nil {
+		return errors.New("failed to hash password")
+	}
+
+	if err := config.DB.Model(&userAuthentication).Update("password", hashedPassword).Error; err != nil {
 		return errors.New("failed to update password")
 	}
 
