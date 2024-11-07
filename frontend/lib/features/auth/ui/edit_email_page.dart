@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fundflow/features/auth/ui/setting_page.dart';
-import 'package:fundflow/core/widgets/custom_button.dart';
-import 'package:fundflow/core/widgets/custom_input_box.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_password_input_box.dart';
 
 class EditEmailPage extends StatelessWidget {
   final FocusNode _newEmailFocusNode = FocusNode(); // เพิ่ม FocusNode
 
-  EditEmailPage({Key? key}) : super(key: key);
+  EditEmailPage({super.key});
 
   @override
   Widget build(BuildContext context) {

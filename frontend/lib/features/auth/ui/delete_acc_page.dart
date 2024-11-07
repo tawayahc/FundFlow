@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DeleteAccPage extends StatefulWidget {
-  const DeleteAccPage({Key? key}) : super(key: key);
+  const DeleteAccPage({super.key});
 
   @override
   _DeleteAccPageState createState() => _DeleteAccPageState();
@@ -9,9 +9,9 @@ class DeleteAccPage extends StatefulWidget {
 
 class _DeleteAccPageState extends State<DeleteAccPage> {
   bool _isOldPasswordVisible = false; // สำหรับจัดการการแสดงรหัสผ่านเดิม
-  bool _isNewPasswordVisible = false; // สำหรับจัดการการแสดงรหัสผ่านใหม่
-  FocusNode _oldPasswordFocusNode = FocusNode(); // สำหรับการจัดการ focus
-  FocusNode _newPasswordFocusNode = FocusNode(); // สำหรับการจัดการ focus
+  final bool _isNewPasswordVisible = false; // สำหรับจัดการการแสดงรหัสผ่านใหม่
+  final FocusNode _oldPasswordFocusNode = FocusNode(); // สำหรับการจัดการ focus
+  final FocusNode _newPasswordFocusNode = FocusNode(); // สำหรับการจัดการ focus
 
   @override
   void dispose() {

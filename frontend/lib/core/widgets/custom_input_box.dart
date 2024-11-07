@@ -6,15 +6,15 @@ class CustomInputBox extends StatelessWidget {
   final TextEditingController? controller;
 
   const CustomInputBox({
-    Key? key,
+    super.key,
     required this.labelText,
     required this.prefixIcon,
     this.controller,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 40,
       width: 328,
       child: TextFormField(

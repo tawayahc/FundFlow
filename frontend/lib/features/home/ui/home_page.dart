@@ -10,7 +10,7 @@ import '../../auth/bloc/auth_state.dart';
 import '../../auth/ui/login_page.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

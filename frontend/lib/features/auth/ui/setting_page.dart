@@ -3,11 +3,9 @@ import 'package:fundflow/features/auth/ui/change_password.dart';
 import 'package:fundflow/features/auth/ui/delete_acc_page.dart';
 import 'package:fundflow/features/auth/ui/edit_email_page.dart';
 import 'package:fundflow/features/auth/ui/login_page.dart';
-import 'package:fundflow/core/widgets/custom_button.dart';
-import 'package:fundflow/core/widgets/custom_password_input_box.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +14,7 @@ class SettingsPage extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
-            Navigator.pop(context); // ย้อนกลับไปยังหน้าก่อนหน้า
+            Navigator.pushNamed(context, '/change_category_name'); // ย้อนกลับไปยังหน้าก่อนหน้า
           },
         ),
         centerTitle: true,

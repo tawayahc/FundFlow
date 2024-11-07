@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 
-import '../bloc/auth_bloc.dart';
-import '../bloc/auth_event.dart';
-import '../bloc/auth_state.dart';
 
 
 class VerificationPage extends StatelessWidget {
-  VerificationPage({super.key});
+  const VerificationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +38,7 @@ class VerificationPage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
            Center(
-          child: Container(
+          child: SizedBox(
               width: 328,
               child: Form(
                 child: Row(

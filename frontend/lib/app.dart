@@ -8,6 +8,7 @@ import 'package:fundflow/features/auth/ui/forget_page_1.dart';
 import 'package:fundflow/features/auth/ui/forget_page_2.dart';
 import 'package:fundflow/features/auth/ui/forget_page_3.dart';
 import 'package:fundflow/features/auth/ui/setting_page.dart';
+import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 import 'package:fundflow/features/home/ui/add_category.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
@@ -15,6 +16,11 @@ import 'features/auth/bloc/auth_event.dart';
 import 'features/auth/repository/auth_repository.dart';
 import 'features/auth/ui/login_page.dart';
 import 'features/auth/ui/registeration_page.dart';
+import 'features/auth/ui/forget_page_1.dart';
+import 'features/auth/ui/forget_page_2.dart';
+import 'features/auth/ui/forget_page_3.dart';
+import 'features/home/ui/home_page.dart';
+import 'features/manageBankAccount/ui/bank_account_page.dart';
 import 'features/home/repository/bank_repository.dart';
 import 'features/home/repository/category_repository.dart';
 import 'features/home/repository/profile_repository.dart';
@@ -51,8 +57,9 @@ class MyApp extends StatelessWidget {
             '/register': (context) => const RegistrationPage(),
             '/forget1': (context) => ForgetPage(),
             '/forget2': (context) => VerificationPage(),
-            '/forget3': (context) => ResetPasswordPage(),
-            '/setting_page': (context) => const SettingsPage(),
+            '/forget3': (context) => ResetPasswordPage() ,
+            '/setting_page': (context) => SettingsPage(),
+            '/pocket_management': (context) => CategoryPage(),
             '/setting_page/edit_email': (context) => EditEmailPage(),
             '/setting_page/change_password': (context) =>
                 const ChangePasswordPage(),
