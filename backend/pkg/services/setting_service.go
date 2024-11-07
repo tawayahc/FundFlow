@@ -47,3 +47,16 @@ func ChangePassword(oldPassword string, newPassword string, userName string) err
 
 	return nil
 }
+
+func DeleteAccount(userName string) error {
+	// Get userAuthentication from username
+	var userAuthentication models.Authentication
+	config.DB.Where("username = ?", userName).First(&userAuthentication)
+
+	// Delete the userAuthentication
+	if err := config.DB.Unscoped().Delete(&userAuthentication).Error; err != nil {
+		return errors.New("failed to delete user")
+	}
+
+	return nil
+}
