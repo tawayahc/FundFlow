@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/layout.dart';
+import 'package:fundflow/features/auth/ui/change_password.dart';
+import 'package:fundflow/features/auth/ui/delete_acc_page.dart';
+import 'package:fundflow/features/auth/ui/edit_email_page.dart';
+import 'package:fundflow/features/auth/ui/forget_page_1.dart';
+import 'package:fundflow/features/auth/ui/forget_page_2.dart';
+import 'package:fundflow/features/auth/ui/forget_page_3.dart';
+import 'package:fundflow/features/auth/ui/setting_page.dart';
 import 'package:fundflow/features/home/ui/add_category.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
@@ -42,6 +49,14 @@ class MyApp extends StatelessWidget {
           routes: {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegistrationPage(),
+            '/forget1': (context) => ForgetPage(),
+            '/forget2': (context) => VerificationPage(),
+            '/forget3': (context) => ResetPasswordPage(),
+            '/setting_page': (context) => const SettingsPage(),
+            '/setting_page/edit_email': (context) => EditEmailPage(),
+            '/setting_page/change_password': (context) =>
+                const ChangePasswordPage(),
+            '/setting_page/delete_acc': (context) => const DeleteAccPage(),
             '/home': (context) => const HomePage(),
             '/addBank': (context) => const AddBankPage(),
             '/addCategory': (context) => const AddCategoryPage(),
