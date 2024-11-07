@@ -37,6 +37,7 @@ func SetupRouter() *gin.Engine {
 	protectedSetting.Use(middleware.AuthMiddleware())
 	{
 		protectedSetting.POST("/change-email", controllers.ChangeEmail)
+		protectedSetting.POST("/change-password", controllers.ChangePassword)
 	}
 
 	return r
