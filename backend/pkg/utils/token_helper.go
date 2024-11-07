@@ -22,3 +22,12 @@ func ExtractUsernameFromToken(authHeader string) (string, error) {
 
 	return claims.Username, nil
 }
+
+// Check that username in token was in database
+func ValidateTokenUsername(username string) error {
+	_, err := GetUserProfileByUsername(username)
+	if err != nil {
+		return errors.New("user not found")
+	}
+	return nil
+}
