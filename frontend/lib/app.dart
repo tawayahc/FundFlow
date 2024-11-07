@@ -24,7 +24,6 @@ import 'features/manageBankAccount/ui/bank_account_page.dart';
 import 'features/home/repository/bank_repository.dart';
 import 'features/home/repository/category_repository.dart';
 import 'features/home/repository/profile_repository.dart';
-import 'features/home/pages/home_page.dart';
 import 'features/home/ui/add_bank.dart';
 
 class MyApp extends StatelessWidget {
@@ -57,7 +56,7 @@ class MyApp extends StatelessWidget {
             '/register': (context) => const RegistrationPage(),
             '/forget1': (context) => ForgetPage(),
             '/forget2': (context) => VerificationPage(),
-            '/forget3': (context) => ResetPasswordPage() ,
+            '/forget3': (context) => ResetPasswordPage(),
             '/setting_page': (context) => SettingsPage(),
             '/pocket_management': (context) => CategoryPage(),
             '/setting_page/edit_email': (context) => EditEmailPage(),
