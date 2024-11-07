@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/features/home/ui/home_page.dart';
+import 'package:fundflow/features/home/pages/home_page.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_state.dart';
 import 'login_page.dart';
