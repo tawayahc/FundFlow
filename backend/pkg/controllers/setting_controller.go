@@ -46,3 +46,15 @@ func ChangePassword(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Password updated successfully"})
 }
+
+func DeleteAccount(c *gin.Context) {
+	userName, _ := utils.ExtractUsernameFromToken(c.GetHeader("Authorization"))
+
+	err := services.DeleteAccount(userName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Account deleted successfully"})
+}

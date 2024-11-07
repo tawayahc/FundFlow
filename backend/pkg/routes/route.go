@@ -38,6 +38,7 @@ func SetupRouter() *gin.Engine {
 	{
 		protectedSetting.POST("/change-email", controllers.ChangeEmail)
 		protectedSetting.POST("/change-password", controllers.ChangePassword)
+		protectedSetting.DELETE("/delete-account", controllers.DeleteAccount)
 	}
 
 	return r

@@ -27,7 +27,7 @@ type UserProfile struct {
 	PhoneNumber    string          // Phone
 	Address        string          // Address
 	DateOfBirth    time.Time       // Date of birth
-	Authentication *Authentication `gorm:"foreignKey:AuthID"` // Belongs to Authentication
+	Authentication *Authentication `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:AuthID"` // Belongs to Authentication
 }
 
 // Credentials struct for login (no email required for login)
