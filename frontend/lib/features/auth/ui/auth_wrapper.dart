@@ -4,9 +4,10 @@ import '../../home/pages/home_page.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_state.dart';
 import 'login_page.dart';
-import 'registeration_page.dart';
 
 class AuthenticationWrapper extends StatelessWidget {
+  const AuthenticationWrapper({super.key});
+
   @override
   Widget build(BuildContext context) {
     print('Building AuthenticationWrapper');

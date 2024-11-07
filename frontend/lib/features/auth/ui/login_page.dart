@@ -9,7 +9,7 @@ import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -130,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           const Text(
                             'มีบัญชีแล้วหรือยัง?',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Color(0xFF5A5A5A),
                               fontSize: 12,
                             ),
