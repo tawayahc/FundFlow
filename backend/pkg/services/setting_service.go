@@ -48,10 +48,15 @@ func ChangePassword(oldPassword string, newPassword string, userName string) err
 	return nil
 }
 
-func DeleteAccount(userName string) error {
+func DeleteAccount(userName string, password string) error {
 	// Get userAuthentication from username
 	var userAuthentication models.Authentication
 	config.DB.Where("username = ?", userName).First(&userAuthentication)
+
+	// Validate the password
+	if err := utils.ComparePasswords(userAuthentication.Password, password); err != nil {
+		return errors.New("invalid password")
+	}
 
 	// Delete the userAuthentication
 	if err := config.DB.Unscoped().Delete(&userAuthentication).Error; err != nil {

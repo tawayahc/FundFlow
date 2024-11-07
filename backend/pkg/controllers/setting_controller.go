@@ -48,9 +48,15 @@ func ChangePassword(c *gin.Context) {
 }
 
 func DeleteAccount(c *gin.Context) {
+	var deleteRequest models.DeleteAccountRequest
+	if err := c.ShouldBindJSON(&deleteRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	userName, _ := utils.ExtractUsernameFromToken(c.GetHeader("Authorization"))
 
-	err := services.DeleteAccount(userName)
+	err := services.DeleteAccount(userName, deleteRequest.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
