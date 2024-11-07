@@ -14,7 +14,7 @@ class SettingsPage extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
-            Navigator.pop(context); // ย้อนกลับไปยังหน้าก่อนหน้า
+            Navigator.pushNamed(context, '/change_category_name'); // ย้อนกลับไปยังหน้าก่อนหน้า
           },
         ),
         centerTitle: true,

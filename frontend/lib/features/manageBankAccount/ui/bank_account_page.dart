@@ -18,7 +18,7 @@ class BankAccountPage extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
-                Navigator.pop(context); // ย้อนกลับไปยังหน้าก่อนหน้า
+                Navigator.pushNamed(context, '/pocket_management'); // ย้อนกลับไปยังหน้าก่อนหน้า
               },
             ),
             //---------- **รูปธนาคาร

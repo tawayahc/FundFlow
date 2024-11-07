@@ -10,17 +10,19 @@ class CategoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pushNamed(context, '/home'); // ย้อนกลับไปยังหน้าก่อนหน้า
+          },
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSpacing.medium),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              onPressed: () {
-                Navigator.pop(context); // ย้อนกลับไปยังหน้าก่อนหน้า
-              },
-            ),
             //---------- **ชื่อ category
             Row(
               children: [
