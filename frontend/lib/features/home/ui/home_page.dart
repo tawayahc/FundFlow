@@ -19,7 +19,7 @@ class HomePage extends StatelessWidget {
       builder: (context, state) {
         if (state is Authenticated) {
           final user = state.user;
-          print('User authenticated: ${user.name}');
+          print('User authenticated: ${user.username}');
           return Scaffold(
             appBar: AppBar(
               centerTitle: true, // ทำให้ข้อความอยู่ตรงกลาง
@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
                         leading:
                             const Icon(Icons.person, color: AppColors.primary),
                         title: const Text('Name'),
-                        subtitle: Text(user.name),
+                        subtitle: Text(user.username),
                       ),
                     ),
                     Card(

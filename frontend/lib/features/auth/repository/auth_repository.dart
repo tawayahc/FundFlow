@@ -5,7 +5,7 @@ import '../models/user_model.dart';
 class AuthenticationRepository {
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: 'http://10.0.2.2:8000/auth', // Update based on your environment
+      baseUrl: 'http://10.0.2.2:8080/', // Update based on your environment
       headers: {
         'Content-Type': 'application/json',
       },
@@ -13,7 +13,6 @@ class AuthenticationRepository {
   );
   final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
-  // FIX: Replace with your actual API endpoints
   final String loginUrl = '/login';
   final String registerUrl = '/register';
   final String getUserUrl = '/me';
@@ -52,13 +51,13 @@ class AuthenticationRepository {
   Future<User> register({
     required String email,
     required String password,
-    required String name,
+    required String username,
   }) async {
     try {
       final response = await _dio.post(registerUrl, data: {
         'email': email,
         'password': password,
-        'name': name,
+        'username': username,
       });
       print('Register Response: ${response.statusCode} ${response.data}');
       if (response.statusCode == 201) {

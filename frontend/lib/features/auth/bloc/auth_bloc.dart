@@ -46,7 +46,10 @@ class AuthenticationBloc
 
     // Bypass the login check for testing purposes and emit an authenticated state
     emit(Authenticated(
-        user: User(name: 'Test User', email: 'test@user.com', id: '')));
+        user: User(
+      username: 'Test User',
+      email: 'test@user.com',
+    )));
 
     // Uncomment the below code when you want to restore the authentication logic
     // try {
@@ -86,7 +89,7 @@ class AuthenticationBloc
       final User user = await authenticationRepository.register(
         email: event.email,
         password: event.password,
-        name: event.name,
+        username: event.username,
       );
       emit(Authenticated(user: user));
     } catch (e) {

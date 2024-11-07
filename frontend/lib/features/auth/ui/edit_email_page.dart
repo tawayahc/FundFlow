@@ -6,7 +6,10 @@ import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_password_input_box.dart';
 
 class EditEmailPage extends StatelessWidget {
-  final FocusNode _newEmailFocusNode = FocusNode(); // เพิ่ม FocusNode
+  final FocusNode _newEmailFocusNode = FocusNode();
+
+  // Controllers for text fields
+  final TextEditingController _newEmailController = TextEditingController();
 
   EditEmailPage({Key? key}) : super(key: key);
 
@@ -43,7 +46,9 @@ class EditEmailPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             CustomPasswordInputBox(
-                labelText: 'อีเมล', focusNode: _newEmailFocusNode),
+                labelText: 'อีเมล',
+                focusNode: _newEmailFocusNode,
+                controller: _newEmailController),
             const SizedBox(height: 30),
             CustomButton(
               text: 'ยืนยัน',

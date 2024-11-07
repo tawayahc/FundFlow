@@ -7,15 +7,15 @@ import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 
-
 class ResetPasswordPage extends StatelessWidget {
   ResetPasswordPage({super.key});
+  // Controllers for text fields
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        
         leading: Row(
           children: [
             IconButton(
@@ -48,15 +48,15 @@ class ResetPasswordPage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           CustomPasswordInputBox(
-            labelText: 'รหัสผ่านใหม่', 
-            focusNode: FocusNode()
+            labelText: 'รหัสผ่านใหม่',
+            focusNode: FocusNode(),
+            controller: _passwordController,
           ),
-          
           const SizedBox(height: 30),
           SizedBox(
             width: double.infinity,
             child: CustomButton(
-              text: 'ยืนยัน', 
+              text: 'ยืนยัน',
               onPressed: () {
                 Navigator.pushNamed(context, '/login');
               },
