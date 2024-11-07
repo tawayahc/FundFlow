@@ -63,7 +63,7 @@ class ProfileSection extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.settings, color: Colors.black),
                     onPressed: () {
-                      // Handle settings icon press
+                      Navigator.pushNamed(context, '/setting_page');
                     },
                   ),
                 ],
