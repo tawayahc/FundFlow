@@ -76,3 +76,51 @@ class CategoryCard extends StatelessWidget {
     );
   }
 }
+
+class CustomDraggableCategoryCard extends StatefulWidget {
+  final String categoryName;
+  final double amount;
+  final Color color;
+
+  const CustomDraggableCategoryCard({
+    super.key,
+    required this.categoryName,
+    required this.amount,
+    required this.color,
+  });
+
+  @override
+  _CustomDraggableCategoryCardState createState() =>
+      _CustomDraggableCategoryCardState();
+}
+
+class _CustomDraggableCategoryCardState
+    extends State<CustomDraggableCategoryCard> {
+  Offset position = Offset.zero; // Initial position
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onPanUpdate: (details) {
+        setState(() {
+          // Update position based on the drag details
+          position += details.delta;
+        });
+      },
+      onPanEnd: (details) {
+        // Reset position to initial position when dragging ends
+        setState(() {
+          position = Offset.zero;
+        });
+      },
+      child: Transform.translate(
+        offset: position,
+        child: CategoryCard(
+          categoryName: widget.categoryName,
+          amount: widget.amount,
+          color: widget.color,
+        ),
+      ),
+    );
+  }
+}
