@@ -1,6 +1,9 @@
 // pages/home_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/features/auth/bloc/auth_bloc.dart';
+import 'package:fundflow/features/auth/bloc/auth_state.dart';
+import 'package:fundflow/features/auth/ui/login_page.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
@@ -35,7 +38,28 @@ class HomePage extends StatelessWidget {
           )..add(LoadProfile()),
         ),
       ],
-      child: const HomeUI(), // Use the HomeUI widget here
+      child: BlocListener<AuthenticationBloc, AuthenticationState>(
+        listener: (context, state) {
+          if (state is Unauthenticated) {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+              (route) => false,
+            );
+          } else if (state is AuthenticationFailure) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.error),
+                  backgroundColor: Colors.red,
+                ),
+              );
+          }
+        },
+        child: const HomeUI(),
+      ),
     );
   }
 }
