@@ -35,6 +35,16 @@ class _BankAccountPageState extends State<BankAccountPage>
     super.dispose();
   }
 
+  List<Transaction> get filteredTransactions {
+    if (_tabController.index == 0) {
+      // Show only income transactions
+      return transactions.where((transaction) => transaction.amount > 0).toList();
+    } else {
+      // Show only outcome transactions
+      return transactions.where((transaction) => transaction.amount < 0).toList();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -183,14 +193,14 @@ class _BankAccountPageState extends State<BankAccountPage>
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                           (context, index) {
-                        final transaction = transactions[index];
+                        final filteredItem = filteredTransactions[index];
                         return TransactionItem(
-                          amount: transaction.amount,
-                          category: transaction.category,
-                          type: transaction.type,
+                          amount: filteredItem.amount,
+                          category: filteredItem.category,
+                          type: filteredItem.type,
                         );
                       },
-                      childCount: transactions.length,
+                      childCount: filteredTransactions.length,
                     ),
                   ),
                 ],
