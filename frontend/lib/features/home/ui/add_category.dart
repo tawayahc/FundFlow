@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/home/category_card.dart';
+import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
+import 'package:fundflow/features/home/bloc/category/category_event.dart';
 
 class AddCategoryPage extends StatefulWidget {
   const AddCategoryPage({Key? key}) : super(key: key);
@@ -97,7 +100,15 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // Save the new category
+                  if (categoryName.isNotEmpty) {
+                    // Dispatch AddCategory event to the CategoryBloc
+                    context.read<CategoryBloc>().add(AddCategory(
+                          categoryName: categoryName,
+                          amount: 0.0, // Default amount or let user input
+                          color: selectedColor,
+                        ));
+                    Navigator.pop(context); // Return to the previous screen
+                  }
                 },
                 child: const Text('เพิ่มประเภทค่าใช้จ่าย'),
               ),

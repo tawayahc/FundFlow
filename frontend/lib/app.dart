@@ -8,6 +8,7 @@ import 'package:fundflow/features/auth/ui/forget_page_1.dart';
 import 'package:fundflow/features/auth/ui/forget_page_2.dart';
 import 'package:fundflow/features/auth/ui/forget_page_3.dart';
 import 'package:fundflow/features/auth/ui/setting_page.dart';
+import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 import 'package:fundflow/features/home/ui/add_category.dart';
@@ -40,10 +41,20 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(create: (context) => CategoryRepository()),
         RepositoryProvider(create: (context) => ProfileRepository()),
       ],
-      child: BlocProvider<AuthenticationBloc>(
-        create: (context) => AuthenticationBloc(
-            authenticationRepository: authenticationRepository)
-          ..add(AppStarted()), // Handle the authentication flow
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<AuthenticationBloc>(
+            create: (context) => AuthenticationBloc(
+              authenticationRepository: authenticationRepository,
+            )..add(AppStarted()), // Handle the authentication flow
+          ),
+          // Add CategoryBloc here
+          BlocProvider<CategoryBloc>(
+            create: (context) => CategoryBloc(
+              categoryRepository: CategoryRepository(), // Pass the repository
+            ),
+          ),
+        ],
         child: MaterialApp(
           title: 'FundFlow',
           theme: AppTheme.lightTheme, // Apply the Poppins light theme

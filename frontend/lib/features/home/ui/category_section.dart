@@ -23,8 +23,10 @@ class CategorySection extends StatelessWidget {
               ..._buildCategoryRows(state.categorys),
             ],
           );
+        } else if (state is CategoryError) {
+          return const Text('Failed to load categories');
         } else {
-          return const Text('Error loading categories');
+          return const Text('Unknown error');
         }
       },
     );
