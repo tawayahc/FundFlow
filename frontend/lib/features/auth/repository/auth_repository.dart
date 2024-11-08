@@ -4,15 +4,19 @@ import 'package:fundflow/app.dart';
 import '../models/user_model.dart';
 
 class AuthenticationRepository {
-  final Dio _dio = Dio(
-    BaseOptions(
-      baseUrl: 'http://10.0.2.2:8080/', // Update based on your environment
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    ),
-  );
+  final Dio _dio;
+  final String baseUrl;
   final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+
+  AuthenticationRepository({required this.baseUrl})
+      : _dio = Dio(
+          BaseOptions(
+            baseUrl: baseUrl, // Update based on your environment
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          ),
+        );
 
   Future<String> login(
       {required String username, required String password}) async {

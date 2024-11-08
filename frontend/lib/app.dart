@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/layout.dart';
 import 'package:fundflow/features/auth/ui/auth_wrapper.dart';
+import 'package:fundflow/features/setting/repository/settings_repository.dart';
 import 'package:fundflow/features/setting/ui/change_password.dart';
 import 'package:fundflow/features/setting/ui/delete_acc_page.dart';
 import 'package:fundflow/features/setting/ui/edit_email_page.dart';
@@ -37,9 +38,7 @@ final logger = Logger(
 );
 
 class MyApp extends StatelessWidget {
-  final AuthenticationRepository authenticationRepository;
-
-  const MyApp({super.key, required this.authenticationRepository});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +47,13 @@ class MyApp extends StatelessWidget {
     } else {
       Logger.level = Level.debug;
     }
+    const baseUrl = 'http://10.0.2.2:8080/';
+    final authenticationRepository = AuthenticationRepository(baseUrl: baseUrl);
+    final settingsRepository = SettingsRepository(baseUrl: baseUrl);
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authenticationRepository),
+        RepositoryProvider.value(value: settingsRepository),
         RepositoryProvider(create: (context) => BankRepository()),
         RepositoryProvider(create: (context) => CategoryRepository()),
         RepositoryProvider(create: (context) => ProfileRepository()),
