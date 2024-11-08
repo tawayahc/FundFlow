@@ -19,6 +19,11 @@ type CreateBankRequest struct {
 	BankName string `json:"bank_name" binding:"required"`
 }
 
+type UpdateBankRequest struct {
+	Name     string `json:"name"`
+	BankName string `json:"bank_name"`
+}
+
 type BankDetailDTO struct {
 	ID       uint    `json:"id"`
 	Name     string  `json:"name"`

@@ -37,8 +37,8 @@ func SetupRouter() *gin.Engine {
 	{
 		protectedCategory.GET("/all", controllers.GetCategories)
 		protectedCategory.POST("/create", controllers.CreateCategory)
-		protectedCategory.PUT("/update", controllers.UpdateCategory)
-		protectedCategory.DELETE("/delete", controllers.DeleteCategory)
+		protectedCategory.PUT("/:category_id", controllers.UpdateCategory)
+		protectedCategory.DELETE("/:category_id", controllers.DeleteCategory)
 	}
 
 	// Bank routes with authentication
@@ -48,6 +48,8 @@ func SetupRouter() *gin.Engine {
 		protectedBank.GET("/:id", controllers.GetBank)
 		protectedBank.GET("/all", controllers.GetBanks)
 		protectedBank.POST("/create", controllers.CreateBank)
+		protectedBank.PUT("/:bank_id", controllers.UpdateBank)
+		protectedBank.DELETE("/:bank_id", controllers.DeleteBank)
 	}
 
 	return r

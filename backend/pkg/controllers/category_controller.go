@@ -5,6 +5,7 @@ import (
 	"fundflow/pkg/services"
 	"fundflow/pkg/utils"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -40,25 +41,14 @@ func GetCategories(c *gin.Context) {
 	c.JSON(http.StatusOK, categories)
 }
 
-// Delete a category
-func DeleteCategory(c *gin.Context) {
-	var category models.DeleteCategoryRequest
-	if err := c.ShouldBindJSON(&category); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
-
-	if err := services.DeleteCategory(category.ID, claims.UserID); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"message": "Category deleted successfully"})
-}
-
+// Update a category
 func UpdateCategory(c *gin.Context) {
+	categoryID, err := strconv.ParseUint(c.Param("category_id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid category ID"})
+		return
+	}
+
 	var category models.UpdateCategoryRequest
 	if err := c.ShouldBindJSON(&category); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -67,10 +57,34 @@ func UpdateCategory(c *gin.Context) {
 
 	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	if err := services.UpdateCategory(category.CategoryID, category.NewName, category.NewColorCode, claims.UserID); err != nil {
+	if err := services.UpdateCategory(uint(categoryID), category.NewName, category.NewColorCode, claims.UserID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Category updated successfully"})
+}
+
+// Delete a category
+func DeleteCategory(c *gin.Context) {
+	categoryID, err := strconv.ParseUint(c.Param("category_id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid category ID"})
+		return
+	}
+
+	var category models.DeleteCategoryRequest
+	if err := c.ShouldBindJSON(&category); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
+
+	if err := services.DeleteCategory(uint(categoryID), claims.UserID); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Category deleted successfully"})
 }

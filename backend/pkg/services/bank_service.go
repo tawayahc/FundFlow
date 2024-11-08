@@ -42,3 +42,41 @@ func CreateBank(name string, bankName string, userID uint) error {
 
 	return nil
 }
+
+// UpdateBank updates a bank
+func UpdateBank(bankID uint, name string, bankName string, userID uint) error {
+	// Check if the bank exists
+	var bank models.BankDetail
+	if err := config.DB.Where("id = ? AND user_profile_id = ?", bankID, userID).First(&bank).Error; err != nil {
+		return errors.New("bank not found")
+	}
+
+	// Check repition name and bank name
+	var bankDetail models.BankDetail
+	if err := config.DB.Where("name = ? AND bank_name = ? AND user_profile_id = ?", name, bankName, userID).First(&bankDetail).Error; err == nil {
+		return errors.New("this name in this bank_name already exists")
+	}
+
+	// Update the bank
+	if err := config.DB.Model(&bank).Updates(models.BankDetail{Name: name, BankName: bankName}).Error; err != nil {
+		return errors.New("failed to update bank")
+	}
+
+	return nil
+}
+
+// DeleteBank deletes a bank
+func DeleteBank(bankID uint, userID uint) error {
+	// Check if the bank exists
+	var bank models.BankDetail
+	if err := config.DB.Where("id = ? AND user_profile_id = ?", bankID, userID).First(&bank).Error; err != nil {
+		return errors.New("bank not found")
+	}
+
+	// Delete the bank
+	if err := config.DB.Unscoped().Delete(&bank).Error; err != nil {
+		return errors.New("failed to delete bank")
+	}
+
+	return nil
+}

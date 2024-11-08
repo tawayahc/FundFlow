@@ -24,14 +24,12 @@ type DeleteCategoryRequest struct {
 }
 
 type UpdateCategoryRequest struct {
-	CategoryID   uint   `json:"category_id" binding:"required"`
 	NewName      string `json:"new_name" binding:"required"`
 	NewColorCode string `json:"new_color_code" binding:"required"`
 }
 
 // Data Transfer Object
 type CategoryDTO struct {
-	ID        uint   `json:"id"`
 	Name      string `json:"name"`
 	ColorCode string `json:"color_code"`
 }
