@@ -29,6 +29,9 @@ type UserProfile struct {
 	Address        string          // Address
 	DateOfBirth    time.Time       // Date of birth
 	Authentication *Authentication `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:AuthID"` // Belongs to Authentication
+	Transactions   []Transaction   `gorm:"foreignKey:UserProfileID"`                                       // One-to-many relation with Transaction
+	BankDetails    []BankDetail    `gorm:"foreignKey:UserProfileID"`                                       // One-to-many relation with BankDetail
+	Categories     []Category      `gorm:"foreignKey:UserProfileID"`                                       // One-to-many relation with Category
 }
 
 // Credentials struct for login (no email required for login)
