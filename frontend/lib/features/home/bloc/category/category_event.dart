@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 abstract class CategoryEvent {}
 
-class LoadCategorys extends CategoryEvent {}
+class LoadCategories extends CategoryEvent {}
 
 class AddCategory extends CategoryEvent {
   final String categoryName;

@@ -7,14 +7,14 @@ class CategoryRepository {
   final String apiUrl =
       'http://10.0.2.2:3000/api/categories'; // Or your local IP
 
-  Future<Map<String, dynamic>> getCategorys() async {
+  Future<Map<String, dynamic>> getCategories() async {
     try {
       final response = await _dio.get(apiUrl);
       if (response.statusCode == 200) {
         final data = response.data;
         return {
           'cashBox': (data['cashBox'] as num).toDouble(), // Cast to double
-          'categorys': (data['categorys'] as List)
+          'categories': (data['categories'] as List)
               .map((item) => Category(
                     category: item['category'],
                     amount:

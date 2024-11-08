@@ -13,14 +13,14 @@ class CategorySection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
-        if (state is CategorysLoading) {
+        if (state is CategoriesLoading) {
           return const CircularProgressIndicator();
-        } else if (state is CategorysLoaded) {
+        } else if (state is CategoriesLoaded) {
           return Column(
             children: [
               CashBox(cashBox: state.cashBox),
               const SizedBox(height: 10),
-              ..._buildCategoryRows(state.categorys),
+              ..._buildCategoryRows(state.categories),
             ],
           );
         } else if (state is CategoryError) {

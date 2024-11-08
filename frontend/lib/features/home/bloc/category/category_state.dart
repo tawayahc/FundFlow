@@ -3,13 +3,13 @@ import 'package:fundflow/features/home/models/category.dart';
 
 abstract class CategoryState {}
 
-class CategorysLoading extends CategoryState {}
+class CategoriesLoading extends CategoryState {}
 
-class CategorysLoaded extends CategoryState {
+class CategoriesLoaded extends CategoryState {
   final double cashBox;
-  final List<Category> categorys;
+  final List<Category> categories;
 
-  CategorysLoaded({required this.cashBox, required this.categorys});
+  CategoriesLoaded({required this.cashBox, required this.categories});
 }
 
 class CategoryError extends CategoryState {}

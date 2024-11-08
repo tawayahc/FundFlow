@@ -8,15 +8,16 @@ import 'package:fundflow/features/home/repository/category_repository.dart';
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   final CategoryRepository categoryRepository;
 
-  CategoryBloc({required this.categoryRepository}) : super(CategorysLoading()) {
+  CategoryBloc({required this.categoryRepository})
+      : super(CategoriesLoading()) {
     // Registering the event handler
-    on<LoadCategorys>((event, emit) async {
-      emit(CategorysLoading());
+    on<LoadCategories>((event, emit) async {
+      emit(CategoriesLoading());
       try {
-        final data = await categoryRepository.getCategorys();
-        emit(CategorysLoaded(
+        final data = await categoryRepository.getCategories();
+        emit(CategoriesLoaded(
           cashBox: data['cashBox'],
-          categorys: data['categorys'],
+          categories: data['categories'],
         ));
       } catch (error) {
         print("Error loading categories: $error");
@@ -33,9 +34,9 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
           color: event.color,
         ));
         // Reload categories after addition
-        add(LoadCategorys());
+        add(LoadCategories());
       } catch (error) {
-        emit(CategorysLoading()); // Handle error as needed
+        emit(CategoriesLoading()); // Handle error as needed
       }
     });
   }
