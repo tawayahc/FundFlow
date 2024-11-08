@@ -26,15 +26,15 @@ class CategoryPage extends StatelessWidget {
             //---------- **ชื่อ category
             Row(
               children: [
-                Spacer(),
-                Align(
+                const Spacer(),
+                const Align(
                   alignment: Alignment.center,
                   child: Text(
                     'หิว',
                     style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Align(
                   alignment: Alignment.centerRight,
                   child: IconButton(
