@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
             '/setting_page/edit_email': (context) =>
                 EditEmailPage(repository: settingsRepository),
             '/setting_page/change_password': (context) =>
-                const ChangePasswordPage(),
+                ChangePasswordPage(repository: settingsRepository),
             '/setting_page/delete_acc': (context) => const DeleteAccPage(),
             '/home': (context) => const HomePage(),
             '/addBank': (context) => const AddBankPage(),

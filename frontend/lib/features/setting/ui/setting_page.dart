@@ -108,11 +108,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ChangePasswordPage()),
-                  ); // ใช้ Navigator เพื่อไปหน้าเปลี่ยนอีเมล
+                  Navigator.pushNamed(context, "/setting_page/change_password");
                 },
               ),
               ListTile(
@@ -126,11 +122,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const DeleteAccPage()),
-                  ); // ใช้ Navigator เพื่อไปหน้าเปลี่ยนอีเมล
+                  Navigator.pushNamed(context, "/setting_page/delete_acc");
                 },
               ),
               const Divider(thickness: 0.5, color: Colors.grey),
