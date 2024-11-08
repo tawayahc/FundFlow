@@ -41,5 +41,13 @@ func SetupRouter() *gin.Engine {
 		protectedCategory.DELETE("/delete", controllers.DeleteCategory)
 	}
 
+	// Bank routes with authentication
+	protectedBank := r.Group("/banks")
+	protectedBank.Use(middleware.AuthMiddleware())
+	{
+		protectedBank.GET("/:id", controllers.GetBank)
+		protectedBank.POST("/create", controllers.CreateBank)
+	}
+
 	return r
 }
