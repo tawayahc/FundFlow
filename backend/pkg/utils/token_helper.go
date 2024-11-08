@@ -31,3 +31,18 @@ func ValidateTokenUsername(username string) error {
 	}
 	return nil
 }
+
+// Get UserProfile from token
+func GetUserProfileFromToken(authHeader string) (*models.UserProfile, error) {
+	username, err := ExtractUsernameFromToken(authHeader)
+	if err != nil {
+		return nil, err
+	}
+
+	userProfile, err := GetUserProfileByUsername(username)
+	if err != nil {
+		return nil, err
+	}
+
+	return userProfile, nil
+}
