@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class CustomPasswordInputBox extends StatefulWidget {
   final String labelText;
   final FocusNode focusNode;
+  final TextEditingController controller;
 
   const CustomPasswordInputBox({
-    super.key,
+    Key? key,
     required this.labelText,
     required this.focusNode,
-  });
+    required this.controller,
+  }) : super(key: key);
 
   @override
   _CustomPasswordInputBoxState createState() => _CustomPasswordInputBoxState();
@@ -32,8 +34,7 @@ class _CustomPasswordInputBoxState extends State<CustomPasswordInputBox> {
   void _handleFocusChange() {
     if (!widget.focusNode.hasFocus && _isPasswordVisible) {
       setState(() {
-        _isPasswordVisible =
-            false; // Hide password visibility icon on focus loss
+        _isPasswordVisible = false;
       });
     }
   }
@@ -46,6 +47,7 @@ class _CustomPasswordInputBoxState extends State<CustomPasswordInputBox> {
       child: TextFormField(
         obscureText: !_isPasswordVisible,
         focusNode: widget.focusNode,
+        controller: widget.controller,
         decoration: InputDecoration(
           labelText: widget.labelText,
           prefixIcon: const Icon(
@@ -55,7 +57,9 @@ class _CustomPasswordInputBoxState extends State<CustomPasswordInputBox> {
           suffixIcon: widget.focusNode.hasFocus
               ? IconButton(
                   icon: Icon(
-                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    _isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
                     color: _isPasswordVisible
                         ? const Color(0xFF41486D)
                         : const Color(0xFFD0D0D0),
@@ -85,7 +89,7 @@ class _CustomPasswordInputBoxState extends State<CustomPasswordInputBox> {
           ),
         ),
         onTap: () {
-          setState(() {}); // Refresh when the user taps the field
+          setState(() {}); // Refresh visibility icon when the field is tapped
         },
       ),
     );

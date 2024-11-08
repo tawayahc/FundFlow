@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fundflow/app.dart';
 import 'package:fundflow/core/widgets/custom_input_box.dart';
 import 'package:fundflow/core/widgets/custom_password_input_box.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
@@ -17,12 +19,19 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   // Controllers for text fields
- /* final TextEditingController _emailController = TextEditingController();*/
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   // Key for form validation
   final _formKey = GlobalKey<FormState>();
+
+  final storage = const FlutterSecureStorage();
+
+// to get token from local storage
+  Future<void> getToken() async {
+    var value = await storage.read(key: 'token');
+    logger.d(value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,16 +59,20 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 30,),
+                const SizedBox(
+                  height: 30,
+                ),
                 // Circular avatar placeholder
                 const CircleAvatar(
                   radius: 120,
                   backgroundColor: Color(0xFF41486D),
                 ),
-                const SizedBox(height: 16,),
-                Align(
+                const SizedBox(
+                  height: 16,
+                ),
+                const Align(
                   alignment: Alignment.centerLeft,
-                  child: const Text(
+                  child: Text(
                     'เข้าสู่ระบบ',
                     style: TextStyle(
                       color: Color(0xFF41486D),
@@ -69,62 +82,62 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16,),
+                const SizedBox(
+                  height: 16,
+                ),
                 Form(
                   key: _formKey,
                   child: Column(
                     children: [
                       const SizedBox(height: 12),
-            
+
                       CustomInputBox(
-                        labelText: 'ชื่อบัญชีผู้ใช้', 
-                        prefixIcon: Icon(
+                        labelText: 'ชื่อบัญชีผู้ใช้',
+                        prefixIcon: const Icon(
                           Icons.person,
                           color: Color(0xFFD0D0D0),
                         ),
+                        controller: _usernameController,
                       ),
-            
+
                       const SizedBox(height: 12),
-                      
+
                       CustomPasswordInputBox(
-                        labelText: 'รหัสผ่าน', 
-                        focusNode: FocusNode()
-                      ),
-                      
+                          labelText: 'รหัสผ่าน',
+                          focusNode: FocusNode(),
+                          controller: _passwordController),
+
                       //const SizedBox(height: 5),
-                     Align(
+                      Align(
                         alignment: Alignment.topRight,
                         child: TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamed('/forget1');
-                            },
-                            child: const Text(
-                              'ลืมรหัสผ่านใช่ไหม?',
-                              style: TextStyle(
+                          onPressed: () {
+                            Navigator.of(context).pushNamed('/forget1');
+                          },
+                          child: const Text(
+                            'ลืมรหัสผ่านใช่ไหม?',
+                            style: TextStyle(
                                 fontSize: 12, // Font size
-                                  color: Color(0xFFFF9595)
-                              ),
-                            ),
+                                color: Color(0xFFFF9595)),
                           ),
+                        ),
                       ),
                       const SizedBox(height: 12),
-                      
+
                       CustomButton(
-                        text: 'เข้าสู่ระบบ', 
+                        text: 'เข้าสู่ระบบ',
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {
-                          // Trigger login event
-                          context.read<AuthenticationBloc>().add(
-                            AuthenticationLoginRequested(
-                              email: _nameController.text,
-                              password: _passwordController.text,
-                              ),
-                            );
-                        }
-                      },
+                            // Trigger login event
+                            context.read<AuthenticationBloc>().add(
+                                  AuthenticationLoginRequested(
+                                    username: _usernameController.text,
+                                    password: _passwordController.text,
+                                  ),
+                                );
+                          }
+                        },
                       ),
-                      
-                          
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -145,14 +158,15 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Color(0xFFFF9595),
                                 fontSize: 12,
                               ),
-                              ),
+                            ),
                           ),
                         ],
                       ),
                     ],
+                  ),
                 ),
-              ),
-            ],),
+              ],
+            ),
           );
         },
       ),

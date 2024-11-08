@@ -13,6 +13,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   final FocusNode _oldPasswordFocusNode = FocusNode();
   final FocusNode _newPasswordFocusNode = FocusNode();
 
+  // Controllers for text fields
+  final TextEditingController _oldPasswordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -69,12 +73,14 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             CustomPasswordInputBox(
               labelText: 'รหัสผ่านเดิม',
               focusNode: _oldPasswordFocusNode,
+              controller: _oldPasswordController,
             ),
             const SizedBox(height: 12),
             // New Password
             CustomPasswordInputBox(
               labelText: 'รหัสผ่านใหม่',
               focusNode: _newPasswordFocusNode,
+              controller: _newPasswordController,
             ),
             const SizedBox(height: 30),
             CustomButton(

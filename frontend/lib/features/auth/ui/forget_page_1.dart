@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/custom_input_box.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 
-
+import '../bloc/auth_bloc.dart';
+import '../bloc/auth_event.dart';
+import '../bloc/auth_state.dart';
 
 class ForgetPage extends StatelessWidget {
-  const ForgetPage({super.key});
+  ForgetPage({super.key});
+  // Controllers for text fields
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,26 +42,25 @@ class ForgetPage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           CustomInputBox(
-                    labelText: 'อีเมล', 
-                    prefixIcon: Icon(
-                      Icons.email,
-                      color: Color(0xFFD0D0D0),
-                    ),
-                  ),
-        
-      
-        const SizedBox(height: 30),
+            labelText: 'อีเมล',
+            prefixIcon: Icon(
+              Icons.email,
+              color: Color(0xFFD0D0D0),
+            ),
+            controller: _emailController,
+          ),
+          const SizedBox(height: 30),
           SizedBox(
             width: double.infinity,
             child: CustomButton(
-              text: 'ยืนยัน', 
+              text: 'ยืนยัน',
               onPressed: () {
                 Navigator.pushNamed(context, '/forget2');
               },
             ),
           ),
-      ],
-            ),
-  );
-}
+        ],
+      ),
+    );
+  }
 }
