@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
-import 'package:fundflow/features/manageBankAccount/ui/transaction_lists.dart';
 
 import '../../../core/themes/app_styles.dart';
+import '../../home/models/transaction.dart';
+import '../../home/repository/transaction_repository.dart';
 
 class BankAccountPage extends StatefulWidget {
   const BankAccountPage({super.key});
@@ -197,7 +198,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                         return TransactionItem(
                           amount: filteredItem.amount,
                           category: filteredItem.category,
-                          type: filteredItem.type,
+                          type: filteredItem.memo,
                         );
                       },
                       childCount: filteredTransactions.length,

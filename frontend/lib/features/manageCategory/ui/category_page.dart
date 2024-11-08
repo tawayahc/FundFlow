@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
-import 'package:fundflow/features/manageBankAccount/ui/transaction_lists.dart';
 
 import '../../../core/themes/app_styles.dart';
+import '../../home/models/transaction.dart';
+import '../../home/repository/transaction_repository.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key});
@@ -190,7 +191,7 @@ class _CategoryPageState extends State<CategoryPage> with SingleTickerProviderSt
                         return TransactionItem(
                           amount: filteredItem.amount,
                           category: filteredItem.category,
-                          type: filteredItem.type,
+                          type: filteredItem.memo,
                         );
                       },
                       childCount: filteredTransactions.length,
