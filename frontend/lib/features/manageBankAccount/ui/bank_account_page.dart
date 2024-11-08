@@ -22,7 +22,7 @@ class BankAccountPage extends StatelessWidget {
               },
             ),
             //---------- **รูปธนาคาร
-            Row(
+            const Row(
               children: [
                 // รูปธนาคาร
                 CircleAvatar(
@@ -47,16 +47,16 @@ class BankAccountPage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             //---------- **กล่องเงิน
             Container(
-              padding: EdgeInsets.fromLTRB(0, 8, 4, 0), // padding (left, top, right, bottom)
+              padding: const EdgeInsets.fromLTRB(0, 8, 4, 0), // padding (left, top, right, bottom)
               width: 296, // สุดขอบ
               decoration: BoxDecoration(
                 color: Colors.green,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -95,13 +95,60 @@ class BankAccountPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 30),
-            Text(
+            const SizedBox(height: 30),
+            const Text(
               'ประวัติการทำรายการ',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             // Transaction ตรงนี้
+            PreferredSize(
+              preferredSize: const Size.fromHeight(40),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 40,
+                      width: 200,
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: const BoxDecoration(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(10)),
+                        color: AppColors.primary,
+                      ),
+                      child: TabBar(
+                        controller: _tabController,
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        dividerColor: Colors.transparent,
+                        indicator: const BoxDecoration(
+                          color: Colors.green,
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(10)),
+                        ),
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.white,
+                        tabs: const [
+                          Tab(
+                            icon: Icon(Icons.download) ,
+                          ),
+                          Tab(
+                            icon: Icon(Icons.upload),
+                          ),
+                          Tab(
+                            icon: Icon(Icons.compare_arrows),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      // image upload
+                    )
+                  ],
+                ),
+              ),
+            ),
             Expanded(
               child: CustomScrollView(
                 slivers: [
