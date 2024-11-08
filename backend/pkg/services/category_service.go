@@ -50,10 +50,18 @@ func DeleteCategory(categoryID uint, userID uint) error {
 // UpdateCategory updates a category
 func UpdateCategory(categoryID uint, categoryName string, colorCode string, userID uint) error {
 	var category models.Category
+	// Check if the category exists
 	if err := config.DB.Where("id = ? AND user_profile_id = ?", categoryID, userID).First(&category).Error; err != nil {
 		return errors.New("category not found")
 	}
 
+	// Check repetition of category name
+	var categoryCheck models.Category
+	if err := config.DB.Where("name = ? AND user_profile_id = ?", categoryName, userID).First(&categoryCheck).Error; err == nil {
+		return errors.New("category already exists")
+	}
+
+	// Update the category
 	if err := config.DB.Model(&category).Updates(models.Category{Name: categoryName, ColorCode: colorCode}).Error; err != nil {
 		return errors.New("failed to update category")
 	}

@@ -18,15 +18,28 @@ func GetBank(c *gin.Context) {
 		return
 	}
 
-	userProfile, _ := utils.GetUserProfileFromToken(c.GetHeader("Authorization"))
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	bank, err := services.GetBank(uint(bankID), userProfile.AuthID)
+	bank, err := services.GetBank(uint(bankID), claims.UserID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, bank)
+}
+
+// Get all banks
+func GetBanks(c *gin.Context) {
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
+
+	banks, err := services.GetBanks(claims.UserID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, banks)
 }
 
 // Creat a new bank
@@ -37,9 +50,9 @@ func CreateBank(c *gin.Context) {
 		return
 	}
 
-	userProfile, _ := utils.GetUserProfileFromToken(c.GetHeader("Authorization"))
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	if err := services.CreateBank(bank.Name, bank.BankName, userProfile.AuthID); err != nil {
+	if err := services.CreateBank(bank.Name, bank.BankName, claims.UserID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

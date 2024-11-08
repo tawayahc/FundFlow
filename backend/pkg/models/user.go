@@ -50,5 +50,6 @@ type Registration struct {
 // Claims for JWT token
 type Claims struct {
 	Username string `json:"username"`
+	UserID   uint   `json:"user_id"`
 	jwt.RegisteredClaims
 }
