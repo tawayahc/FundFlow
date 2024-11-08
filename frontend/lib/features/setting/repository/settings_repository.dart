@@ -30,7 +30,7 @@ class SettingsRepository {
   Future<void> changeEmail(ChangeEmailRequest request) async {
     try {
       final response = await dio.post(
-        '/changeEmail',
+        '/settings/change-email',
         data: request.toJson(),
       );
       // Handle the response
@@ -45,7 +45,7 @@ class SettingsRepository {
   Future<void> changePassword(ChangePasswordRequest request) async {
     try {
       final response = await dio.post(
-        '/changePassword',
+        '/settings/change-password',
         data: request.toJson(),
       );
       // Handle the response
@@ -60,7 +60,7 @@ class SettingsRepository {
   Future<void> deleteAccount(DeleteAccountRequest request) async {
     try {
       final response = await dio.post(
-        '/deleteAccount',
+        '/settings/delete-account',
         data: request.toJson(),
       );
       // Handle the response

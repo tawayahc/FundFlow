@@ -92,10 +92,8 @@ class SettingsPage extends StatelessWidget {
                   ],
                 ),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => EditEmailPage()),
-                  ); // ใช้ Navigator เพื่อไปหน้าเปลี่ยนอีเมล
+                  Navigator.pushNamed(context,
+                      '/setting_page/edit_email'); // ใช้ Navigator เพื่อไปหน้าเปลี่ยนอีเมล
                 },
               ),
 

@@ -78,7 +78,8 @@ class MyApp extends StatelessWidget {
             '/forget3': (context) => ResetPasswordPage(),
             '/setting_page': (context) => SettingsPage(),
             '/pocket_management': (context) => CategoryPage(),
-            '/setting_page/edit_email': (context) => EditEmailPage(),
+            '/setting_page/edit_email': (context) =>
+                EditEmailPage(repository: settingsRepository),
             '/setting_page/change_password': (context) =>
                 const ChangePasswordPage(),
             '/setting_page/delete_acc': (context) => const DeleteAccPage(),

@@ -4,6 +4,6 @@ class ChangeEmailRequest {
   ChangeEmailRequest({required this.newEmail});
 
   Map<String, dynamic> toJson() => {
-        'newEmail': newEmail,
+        'new_email': newEmail,
       };
 }
