@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/app.dart';
 import 'package:fundflow/core/widgets/custom_input_box.dart';
 import 'package:fundflow/core/widgets/custom_password_input_box.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
@@ -60,9 +61,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
 
                   const SizedBox(height: 16),
-                  Align(
+                  const Align(
                     alignment: Alignment.centerLeft,
-                    child: const Text(
+                    child: Text(
                       'สมัครสมาชิก',
                       style: TextStyle(
                         fontSize: 34,
@@ -77,7 +78,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
                   CustomInputBox(
                     labelText: 'ชื่อบัญชีผู้ใช้',
-                    prefixIcon: Icon(
+                    prefixIcon: const Icon(
                       Icons.person,
                       color: Color(0xFFD0D0D0),
                     ),
@@ -89,7 +90,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
                   CustomInputBox(
                     labelText: 'อีเมล',
-                    prefixIcon: Icon(
+                    prefixIcon: const Icon(
                       Icons.email,
                       color: Color(0xFFD0D0D0),
                     ),
@@ -121,36 +122,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     },
                   ),
                   const SizedBox(height: 12),
-                  //display controller
-                  ElevatedButton(
-                      onPressed: () {
-                        print(_emailController.text);
-                        print(_passwordController.text);
-                        print(_usernameController.text);
-                      },
-                      child: const Text('Display controller')),
-                  const SizedBox(height: 12),
-                  Text('Email: ${_emailController.text}'),
-                  Text('Password: ${_passwordController.text}'),
-                  Text('Username: ${_usernameController.text}'),
-                  const SizedBox(height: 12),
-                  // Login link
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                     child: RichText(
                       textAlign: TextAlign.center,
-                      text: TextSpan(
+                      text: const TextSpan(
                         text: 'มีบัญชีอยู่แล้วใช่ไหม? ',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Color(0xFF5A5A5A),
                           fontSize: 12,
                         ),
                         children: [
                           TextSpan(
                             text: 'เข้าสู่ระบบ',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Color(0xFFFF9595),
                               fontSize: 12,
                             ),

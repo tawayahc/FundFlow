@@ -10,16 +10,16 @@ class AppStarted extends AuthenticationEvent {
 }
 
 class AuthenticationLoginRequested extends AuthenticationEvent {
-  final String email;
+  final String username;
   final String password;
 
   const AuthenticationLoginRequested({
-    required this.email,
+    required this.username,
     required this.password,
   });
 
   @override
-  List<Object?> get props => [email, password];
+  List<Object?> get props => [username, password];
 }
 
 class AuthenticationRegisterRequested extends AuthenticationEvent {

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/layout.dart';
@@ -11,6 +12,7 @@ import 'package:fundflow/features/auth/ui/setting_page.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 import 'package:fundflow/features/home/ui/add_category.dart';
+import 'package:logger/logger.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/auth/bloc/auth_event.dart';
@@ -26,6 +28,13 @@ import 'features/home/repository/category_repository.dart';
 import 'features/home/repository/profile_repository.dart';
 import 'features/home/ui/add_bank.dart';
 
+final logger = Logger(
+  printer: PrettyPrinter(
+    colors: true,
+    printEmojis: true,
+  ),
+);
+
 class MyApp extends StatelessWidget {
   final AuthenticationRepository authenticationRepository;
 
@@ -33,6 +42,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (kReleaseMode) {
+      Logger.level = Level.off;
+    } else {
+      Logger.level = Level.debug;
+    }
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authenticationRepository),
@@ -50,7 +64,7 @@ class MyApp extends StatelessWidget {
           darkTheme: AppTheme.darkTheme, // Apply the Poppins dark theme
           themeMode: ThemeMode.system,
           builder: (context, child) => GlobalPadding(child: child!),
-          home: const HomePage(), // Decide whether to show login or HomePage
+          home: const LoginPage(), // Decide whether to show login or HomePage
           routes: {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegistrationPage(),

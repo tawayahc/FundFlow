@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fundflow/app.dart';
 import 'package:fundflow/features/auth/ui/change_password.dart';
 import 'package:fundflow/features/auth/ui/delete_acc_page.dart';
 import 'package:fundflow/features/auth/ui/edit_email_page.dart';
@@ -6,6 +8,12 @@ import 'package:fundflow/features/auth/ui/login_page.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
+
+  fetchToken() async {
+    const storage = FlutterSecureStorage();
+    var value = await storage.read(key: 'token');
+    logger.d(value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,6 +155,7 @@ class SettingsPage extends StatelessWidget {
               },
             ),
             const Divider(thickness: 0.5, color: Colors.grey),
+            ElevatedButton(onPressed: fetchToken, child: Text("button"))
           ],
         ),
       ),

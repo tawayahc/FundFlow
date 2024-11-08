@@ -121,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                             // Trigger login event
                             context.read<AuthenticationBloc>().add(
                                   AuthenticationLoginRequested(
-                                    email: _usernameController.text,
+                                    username: _usernameController.text,
                                     password: _passwordController.text,
                                   ),
                                 );

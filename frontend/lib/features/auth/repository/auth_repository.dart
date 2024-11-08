@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Secure storage
+import 'package:fundflow/app.dart';
 import '../models/user_model.dart';
 
 class AuthenticationRepository {
@@ -13,68 +14,76 @@ class AuthenticationRepository {
   );
   final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
-  final String loginUrl = '/login';
-  final String registerUrl = '/register';
-  final String getUserUrl = '/me';
-
-  Future<User> login({required String email, required String password}) async {
+  Future<String> login(
+      {required String username, required String password}) async {
     try {
-      final response = await _dio.post(loginUrl, data: {
-        'email': email,
+      final response = await _dio.post("/login", data: {
+        'username': username,
         'password': password,
       });
 
-      print('Login Response: ${response.statusCode} ${response.data}');
+      logger.d('Login Response: ${response.statusCode} ${response.data}');
 
       if (response.statusCode == 200) {
-        // Save token securely
-        await _secureStorage.write(key: 'token', value: response.data['token']);
-        return User.fromJson(response.data['user']);
+        final token = response.data['token'] as String?;
+        if (token != null) {
+          await _secureStorage.write(key: 'token', value: token);
+          return token;
+        } else {
+          throw Exception('Token not found in the response');
+        }
       } else {
-        throw Exception('Failed to log in');
+        throw Exception('Login failed');
       }
     } on DioException catch (dioError) {
       if (dioError.response != null) {
-        print('Dio error response: ${dioError.response?.data}');
+        logger.e('Dio error response: ${dioError.response?.data}');
         throw Exception(
             dioError.response?.data['errors'][0]['msg'] ?? 'Login failed');
       } else {
-        print('Dio error: ${dioError.message}');
+        logger.e('Dio error: ${dioError.message}');
         throw Exception('Network error');
       }
     } catch (e) {
-      print('Login Error: $e');
+      logger.e('Login Error: $e');
       throw Exception('Login failed');
     }
   }
 
-  Future<User> register({
+  Future<String> register({
     required String email,
     required String password,
     required String username,
   }) async {
     try {
-      final response = await _dio.post(registerUrl, data: {
+      final response = await _dio.post("/register", data: {
         'email': email,
         'password': password,
         'username': username,
       });
-      print('Register Response: ${response.statusCode} ${response.data}');
-      if (response.statusCode == 201) {
-        await _secureStorage.write(key: 'token', value: response.data['token']);
-        return User.fromJson(response.data['user']);
+
+      logger.d('Register Response: ${response.statusCode} ${response.data}');
+
+      if (response.statusCode == 200) {
+        final token = response.data['token'] as String?;
+        if (token != null) {
+          await _secureStorage.write(key: 'token', value: token);
+          return token;
+        } else {
+          throw Exception('Token not found in the response');
+        }
       } else {
         throw Exception('Failed to register');
       }
     } on DioException catch (dioError) {
       if (dioError.response != null) {
-        print('Dio error response: ${dioError.response?.data}');
+        logger.e('Dio error response: ${dioError.response?.data}');
       } else {
-        print('Dio error: ${dioError.message}');
+        logger.e('Dio error: ${dioError.message}');
       }
       throw Exception('Failed to register: ${dioError.message}');
     } catch (e) {
-      print('Register Error: $e');
+      logger.e('Register Error: $e');
       throw Exception('Failed to register: $e');
     }
   }
@@ -85,23 +94,27 @@ class AuthenticationRepository {
     if (token != null) {
       try {
         _dio.options.headers['Authorization'] = 'Bearer $token';
-        final response = await _dio.get(getUserUrl);
+        final response = await _dio.get("/me");
 
         if (response.statusCode == 200) {
           return User.fromJson(response.data);
         } else {
-          print('Failed to fetch user: ${response.statusCode}');
+          logger.e('Failed to fetch user: ${response.data}');
           return null;
         }
       } on DioException catch (dioError) {
-        print('Dio error: ${dioError.response?.data}');
+        logger.e('Dio error: ${dioError.message}');
         return null;
       } catch (e) {
-        print('Error fetching user: $e');
+        logger.e('Error: $e');
         return null;
       }
     }
     return null;
+  }
+
+  Future<String?> getStoredToken() async {
+    return await _secureStorage.read(key: 'token');
   }
 
   Future<void> logout() async {
