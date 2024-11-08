@@ -10,10 +10,8 @@ class AuthenticationWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Building AuthenticationWrapper');
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
       builder: (context, state) {
-        print('AuthenticationState: $state');
         if (state is Authenticated) {
           return HomePage(); // Access user via Bloc in HomePage
         } else if (state is Unauthenticated || state is AuthInitial) {

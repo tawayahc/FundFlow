@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/layout.dart';
+import 'package:fundflow/features/auth/ui/auth_wrapper.dart';
 import 'package:fundflow/features/auth/ui/change_password.dart';
 import 'package:fundflow/features/auth/ui/delete_acc_page.dart';
 import 'package:fundflow/features/auth/ui/edit_email_page.dart';
@@ -64,7 +65,8 @@ class MyApp extends StatelessWidget {
           darkTheme: AppTheme.darkTheme, // Apply the Poppins dark theme
           themeMode: ThemeMode.system,
           builder: (context, child) => GlobalPadding(child: child!),
-          home: const LoginPage(), // Decide whether to show login or HomePage
+          home:
+              const AuthenticationWrapper(), // Decide whether to show login or HomePage
           routes: {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegistrationPage(),
