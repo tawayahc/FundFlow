@@ -1,10 +1,10 @@
 package services
 
 import (
+	"errors"
 	"fundflow/pkg/config"
 	"fundflow/pkg/models"
 	"fundflow/pkg/utils"
-	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
