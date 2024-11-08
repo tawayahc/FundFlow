@@ -13,3 +13,8 @@ type BankDetail struct {
 	UserProfileID uint          `gorm:"not null"`
 	UserProfile   UserProfile   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:UserProfileID;references:AuthID"`
 }
+
+type CreateBankRequest struct {
+	Name     string `json:"name" binding:"required"`
+	BankName string `json:"bank_name" binding:"required"`
+}
