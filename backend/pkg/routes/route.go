@@ -35,6 +35,7 @@ func SetupRouter() *gin.Engine {
 	protectedCategory := r.Group("/categories")
 	protectedCategory.Use(middleware.AuthMiddleware())
 	{
+		protectedCategory.GET("/:category_id", controllers.GetCategory)
 		protectedCategory.GET("/all", controllers.GetCategories)
 		protectedCategory.POST("/create", controllers.CreateCategory)
 		protectedCategory.PUT("/:category_id", controllers.UpdateCategory)
