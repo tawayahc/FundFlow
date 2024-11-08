@@ -1,6 +1,6 @@
 import 'package:fundflow/features/home/models/transaction.dart';
 
-class BankRepository {
+class TransactionRepository {
   // This function simulates fetching data from an API or a local database
   Future<List<Transaction>> getTransaction() async {
     // Simulating network delay
