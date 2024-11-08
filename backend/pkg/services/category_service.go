@@ -6,6 +6,26 @@ import (
 	"fundflow/pkg/models"
 )
 
+// Get Categories retrieves all categories for a user
+func GetCategories(userID uint) ([]models.CategoryDTO, error) {
+	var categories []models.CategoryDTO
+	if err := config.DB.Table("categories").Select("id, name, color_code").Where("user_profile_id = ?", userID).Find(&categories).Error; err != nil {
+		return nil, errors.New("failed to retrieve categories")
+	}
+
+	return categories, nil
+}
+
+// Get Category retrieves a category by ID
+func GetCategory(categoryID uint, userID uint) (models.Category, error) {
+	var category models.Category
+	if err := config.DB.Where("id = ? AND user_profile_id = ?", categoryID, userID).First(&category).Error; err != nil {
+		return models.Category{}, errors.New("category not found")
+	}
+
+	return category, nil
+}
+
 // CreateCategory creates a new category
 func CreateCategory(categoryName string, colorCode string, userID uint) error {
 	// Check if the category already exists
@@ -21,16 +41,6 @@ func CreateCategory(categoryName string, colorCode string, userID uint) error {
 	}
 
 	return nil
-}
-
-// Get Categories retrieves all categories for a user
-func GetCategories(userID uint) ([]models.CategoryDTO, error) {
-	var categories []models.CategoryDTO
-	if err := config.DB.Table("categories").Select("id, name, color_code").Where("user_profile_id = ?", userID).Find(&categories).Error; err != nil {
-		return nil, errors.New("failed to retrieve categories")
-	}
-
-	return categories, nil
 }
 
 // Delete Category deletes a category
