@@ -171,9 +171,6 @@ class _BankAccountPageState extends State<BankAccountPage>
                           ],
                         ),
                       ),
-                      Container(
-                        // image upload
-                      )
                     ],
                   ),
                 ),
