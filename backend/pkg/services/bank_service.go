@@ -16,6 +16,16 @@ func GetBank(bankID uint, userID uint) (models.BankDetail, error) {
 	return bank, nil
 }
 
+// GetBanks retrieves all banks for a user
+func GetBanks(userID uint) ([]models.BankDetailDTO, error) {
+	var banks []models.BankDetailDTO
+	if err := config.DB.Table("bank_details").Select("id, name, bank_name, amount").Where("user_profile_id = ?", userID).Find(&banks).Error; err != nil {
+		return nil, errors.New("failed to retrieve banks")
+	}
+
+	return banks, nil
+}
+
 // CreateBank creates a new bank
 func CreateBank(name string, bankName string, userID uint) error {
 	// Check if the bank already exists

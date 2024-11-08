@@ -6,8 +6,8 @@ import (
 
 type BankDetail struct {
 	gorm.Model
-	Name          string        `gorm:"size:50;not null;unique"` // Unique name for each account
-	BankName      string        `gorm:"size:50;not null"`        // Bank name
+	Name          string        `gorm:"size:50;not null"`
+	BankName      string        `gorm:"size:50;not null"` // Bank name
 	Amount        float64       `gorm:"type:decimal(15,2);default:0.00"`
 	Transactions  []Transaction `gorm:"foreignKey:BankID"`
 	UserProfileID uint          `gorm:"not null"`
@@ -17,4 +17,11 @@ type BankDetail struct {
 type CreateBankRequest struct {
 	Name     string `json:"name" binding:"required"`
 	BankName string `json:"bank_name" binding:"required"`
+}
+
+type BankDetailDTO struct {
+	ID       uint    `json:"id"`
+	Name     string  `json:"name"`
+	BankName string  `json:"bank_name"`
+	Amount   float64 `json:"amount"`
 }

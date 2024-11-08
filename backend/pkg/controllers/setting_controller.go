@@ -17,9 +17,9 @@ func ChangeEmail(c *gin.Context) {
 		return
 	}
 
-	userName, _ := utils.ExtractUsernameFromToken(c.GetHeader("Authorization"))
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	err := services.ChangeEmail(emailRequest.NewEmail, userName)
+	err := services.ChangeEmail(emailRequest.NewEmail, claims.UserID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -36,9 +36,9 @@ func ChangePassword(c *gin.Context) {
 		return
 	}
 
-	userName, _ := utils.ExtractUsernameFromToken(c.GetHeader("Authorization"))
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	err := services.ChangePassword(passwordRequest.OldPassword, passwordRequest.NewPassword, userName)
+	err := services.ChangePassword(passwordRequest.OldPassword, passwordRequest.NewPassword, claims.Username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -54,9 +54,9 @@ func DeleteAccount(c *gin.Context) {
 		return
 	}
 
-	userName, _ := utils.ExtractUsernameFromToken(c.GetHeader("Authorization"))
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	err := services.DeleteAccount(userName, deleteRequest.Password)
+	err := services.DeleteAccount(claims.Username, deleteRequest.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

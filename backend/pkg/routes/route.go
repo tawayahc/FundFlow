@@ -46,6 +46,7 @@ func SetupRouter() *gin.Engine {
 	protectedBank.Use(middleware.AuthMiddleware())
 	{
 		protectedBank.GET("/:id", controllers.GetBank)
+		protectedBank.GET("/all", controllers.GetBanks)
 		protectedBank.POST("/create", controllers.CreateBank)
 	}
 

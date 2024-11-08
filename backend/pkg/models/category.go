@@ -29,6 +29,7 @@ type UpdateCategoryRequest struct {
 	NewColorCode string `json:"new_color_code" binding:"required"`
 }
 
+// Data Transfer Object
 type CategoryDTO struct {
 	ID        uint   `json:"id"`
 	Name      string `json:"name"`

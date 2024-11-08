@@ -17,9 +17,9 @@ func CreateCategory(c *gin.Context) {
 		return
 	}
 
-	userProfile, _ := utils.GetUserProfileFromToken(c.GetHeader("Authorization"))
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	if err := services.CreateCategory(category.Name, category.ColorCode, userProfile.AuthID); err != nil {
+	if err := services.CreateCategory(category.Name, category.ColorCode, claims.UserID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -29,9 +29,9 @@ func CreateCategory(c *gin.Context) {
 
 // Get all categories
 func GetCategories(c *gin.Context) {
-	userProfile, _ := utils.GetUserProfileFromToken(c.GetHeader("Authorization"))
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	categories, err := services.GetCategories(userProfile.AuthID)
+	categories, err := services.GetCategories(claims.UserID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -48,9 +48,9 @@ func DeleteCategory(c *gin.Context) {
 		return
 	}
 
-	userProfile, _ := utils.GetUserProfileFromToken(c.GetHeader("Authorization"))
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	if err := services.DeleteCategory(category.ID, userProfile.AuthID); err != nil {
+	if err := services.DeleteCategory(category.ID, claims.UserID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -65,9 +65,9 @@ func UpdateCategory(c *gin.Context) {
 		return
 	}
 
-	userProfile, _ := utils.GetUserProfileFromToken(c.GetHeader("Authorization"))
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	if err := services.UpdateCategory(category.CategoryID, category.NewName, category.NewColorCode, userProfile.AuthID); err != nil {
+	if err := services.UpdateCategory(category.CategoryID, category.NewName, category.NewColorCode, claims.UserID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
