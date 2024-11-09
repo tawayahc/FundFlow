@@ -6,7 +6,7 @@ import (
 	"fundflow/pkg/models"
 )
 
-// Get a bank by bankID
+// Get transactions for a bank
 func GetBank(bankID uint, userID uint) (models.BankTransactionsDTO, error) {
 	var bank models.BankDetailDTO
 	if err := config.DB.Table("bank_details").Select("id, name, bank_name, amount").Where("id = ? AND user_profile_id = ?", bankID, userID).First(&bank).Error; err != nil {

@@ -37,3 +37,9 @@ type CategoryDTO struct {
 	ColorCode string  `json:"color_code"`
 	Amount    float64 `json:"amount"`
 }
+
+// All transactions in a category
+type CategoryTransactionsDTO struct {
+	CategoryDTO
+	Transactions []TransactionDTO `json:"transactions"`
+}

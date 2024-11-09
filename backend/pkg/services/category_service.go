@@ -6,24 +6,94 @@ import (
 	"fundflow/pkg/models"
 )
 
-// Get Categories retrieves all categories for a user
+// GetCategories retrieves all categories for a user
 func GetCategories(userID uint) ([]models.CategoryDTO, error) {
 	var categories []models.CategoryDTO
-	if err := config.DB.Table("categories").Select("id, name, color_code, amount").Where("user_profile_id = ?", userID).Find(&categories).Error; err != nil {
+
+	// Retrieve categories for the user
+	if err := config.DB.Table("categories").Select("id, name, color_code, amount").
+		Where("user_profile_id = ?", userID).Find(&categories).Error; err != nil {
 		return nil, errors.New("failed to retrieve categories")
 	}
 
-	return categories, nil
-}
-
-// Get Category retrieves a category by ID
-func GetCategory(categoryID uint, userID uint) (models.Category, error) {
-	var category models.Category
-	if err := config.DB.Where("id = ? AND user_profile_id = ?", categoryID, userID).First(&category).Error; err != nil {
-		return models.Category{}, errors.New("category not found")
+	// Calculate total bank amount for the user
+	var totalBankAmount float64
+	if err := config.DB.Table("bank_details").Select("COALESCE(sum(amount), 0)").
+		Where("user_profile_id = ?", userID).Row().Scan(&totalBankAmount); err != nil {
+		return nil, errors.New("failed to retrieve total bank amount")
 	}
 
-	return category, nil
+	// Calculate total amount across all categories for the user
+	var totalCategoriesAmount float64
+	config.DB.Table("categories").Select("COALESCE(sum(amount), 0)").
+		Where("user_profile_id = ?", userID).Row().Scan(&totalCategoriesAmount)
+
+	// Create and add Cash Box category
+	cashBox := models.CategoryDTO{
+		ID:        0,
+		Name:      "Cash Box",
+		ColorCode: "0xFFFFFFF",
+		Amount:    totalBankAmount - totalCategoriesAmount,
+	}
+
+	// Organize results in the desired pattern
+	result := []models.CategoryDTO{cashBox}
+	result = append(result, categories...)
+
+	return result, nil
+}
+
+// GetCategory retrieves transactions for a specific category or "Other" category if categoryID is 0
+func GetCategory(categoryID, userID uint) (models.CategoryTransactionsDTO, error) {
+	var category models.CategoryDTO
+	var transactions []models.TransactionDTO
+
+	// Determine if fetching "Other" category or a specific category
+	if categoryID == 0 {
+		// Fetch the "Other" category total amount (where category_id is NULL)
+		if err := config.DB.Table("transactions").Select("COALESCE(sum(amount), 0)").
+			Where("user_profile_id = ? AND category_id IS NULL", userID).
+			Row().Scan(&category.Amount); err != nil {
+			return models.CategoryTransactionsDTO{}, errors.New("failed to retrieve 'Other' category amount")
+		}
+
+		// Define the "Other" category
+		category = models.CategoryDTO{
+			ID:        0,
+			Name:      "Other",
+			ColorCode: "0xFFFFFFF",
+			Amount:    category.Amount,
+		}
+
+		// Retrieve transactions with no category (category_id is NULL)
+		if err := config.DB.Table("transactions").
+			Select("transactions.id, transactions.type, transactions.amount, transactions.category_id, transactions.meta_data, transactions.memo, transactions.bank_id, bank_details.name as bank_nickname, bank_details.bank_name").
+			Joins("LEFT JOIN bank_details ON transactions.bank_id = bank_details.id").
+			Where("transactions.category_id IS NULL AND transactions.user_profile_id = ?", userID).
+			Find(&transactions).Error; err != nil {
+			return models.CategoryTransactionsDTO{}, errors.New("failed to retrieve transactions for 'Other' category")
+		}
+
+	} else {
+		// Fetch specific category details
+		if err := config.DB.Table("categories").
+			Select("id, name, color_code, amount").
+			Where("id = ? AND user_profile_id = ?", categoryID, userID).
+			First(&category).Error; err != nil {
+			return models.CategoryTransactionsDTO{}, errors.New("category not found")
+		}
+
+		// Retrieve transactions for the specific category
+		if err := config.DB.Table("transactions").
+			Select("transactions.id, transactions.type, transactions.amount, transactions.category_id, transactions.meta_data, transactions.memo, transactions.bank_id, bank_details.name as bank_nickname, bank_details.bank_name").
+			Joins("LEFT JOIN bank_details ON transactions.bank_id = bank_details.id").
+			Where("transactions.category_id = ? AND transactions.user_profile_id = ?", categoryID, userID).
+			Find(&transactions).Error; err != nil {
+			return models.CategoryTransactionsDTO{}, errors.New("failed to retrieve transactions for category")
+		}
+	}
+
+	return models.CategoryTransactionsDTO{CategoryDTO: category, Transactions: transactions}, nil
 }
 
 // CreateCategory creates a new category
@@ -49,7 +119,7 @@ func CreateCategory(CreateCategory models.CreateCategoryRequest, userID uint) er
 }
 
 // Delete Category deletes a category
-func DeleteCategory(categoryID uint, userID uint) error {
+func DeleteCategory(categoryID, userID uint) error {
 	var category models.Category
 	if err := config.DB.Where("id = ? AND user_profile_id = ?", categoryID, userID).First(&category).Error; err != nil {
 		return errors.New("category not found")
