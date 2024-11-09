@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/core/widgets/layout.dart';
 import 'package:fundflow/features/auth/bloc/repassword/repassword_bloc.dart';
 import 'package:fundflow/features/auth/repository/repassword_repo.dart';
+import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/auth/ui/auth_wrapper.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
 import 'package:fundflow/features/setting/ui/change_password.dart';
@@ -82,7 +83,6 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme, // Apply the Poppins light theme
           darkTheme: AppTheme.darkTheme, // Apply the Poppins dark theme
           themeMode: ThemeMode.system,
-          builder: (context, child) => GlobalPadding(child: child!),
           home:
               const AuthenticationWrapper(), // Decide whether to show login or HomePage
           routes: {
@@ -102,6 +102,7 @@ class MyApp extends StatelessWidget {
             '/addCategory': (context) => const AddCategoryPage(),
             '/manageBankAccount': (context) => const BankAccountPage(),
           },
+          // builder: (context, child) => const BottomNavBar(), // Apply padding only to the body
           debugShowCheckedModeBanner: false,
         ),
       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fundflow/core/widgets/layout.dart';
+import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/models/bank.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
