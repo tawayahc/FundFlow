@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/features/home/pages/home_page.dart';
+import '../../../core/widgets/navBar/main_layout.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_state.dart';
 import 'login_page.dart';
@@ -13,7 +13,7 @@ class AuthenticationWrapper extends StatelessWidget {
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
       builder: (context, state) {
         if (state is Authenticated) {
-          return HomePage(); // Access user via Bloc in HomePage
+          return const BottomNavBar();
         } else if (state is Unauthenticated || state is AuthInitial) {
           return const LoginPage();
         } else if (state is AuthenticationLoading) {
