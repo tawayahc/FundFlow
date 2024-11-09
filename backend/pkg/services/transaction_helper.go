@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fundflow/pkg/config"
 	"fundflow/pkg/models"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -15,7 +16,7 @@ func GetTransactions(userID uint) ([]models.TransactionDTO, error) {
 	// Retrieve transactions with bank details in a single query
 	if err := config.DB.
 		Table("transactions").
-		Select("transactions.id, transactions.type, transactions.amount, transactions.category_id, transactions.meta_data, transactions.memo, transactions.bank_id, bank_details.name AS bank_nickname, bank_details.bank_name").
+		Select("transactions.id, transactions.type, transactions.amount, transactions.category_id, transactions.meta_data, transactions.memo, transactions.bank_id, transactions.created_at, bank_details.name AS bank_nickname, bank_details.bank_name").
 		Joins("LEFT JOIN bank_details ON transactions.bank_id = bank_details.id").
 		Where("transactions.user_profile_id = ?", userID).
 		Find(&transactions).Error; err != nil {
@@ -32,7 +33,7 @@ func GetTransaction(transactionID uint, userID uint) (models.TransactionDTO, err
 	// Retrieve transaction with bank details in a single query
 	if err := config.DB.
 		Table("transactions").
-		Select("transactions.id, transactions.type, transactions.amount, transactions.category_id, transactions.meta_data, transactions.memo, transactions.bank_id, bank_details.name AS bank_nickname, bank_details.bank_name").
+		Select("transactions.id, transactions.type, transactions.amount, transactions.category_id, transactions.meta_data, transactions.memo, transactions.bank_id, transactions.created_at, bank_details.name AS bank_nickname, bank_details.bank_name").
 		Joins("LEFT JOIN bank_details ON transactions.bank_id = bank_details.id").
 		Where("transactions.id = ? AND transactions.user_profile_id = ?", transactionID, userID).
 		First(&transaction).Error; err != nil {
@@ -74,14 +75,26 @@ func CreateTransaction(transaction models.CreateTransactionRequest, userID uint)
 		}
 	}
 
+	// Convert created_at to time.Time
+	var createdAt time.Time
+	var err error
+	if transaction.CreatedAtTime != "" {
+		createdAt, err = time.Parse("2006-01-02 15:04:05", transaction.CreatedAtDate+" "+transaction.CreatedAtTime)
+	} else {
+		createdAt, err = time.Parse("2006-01-02", transaction.CreatedAtDate)
+	}
+	if err != nil {
+		return errors.New("invalid created_at date and time")
+	}
+
 	// Create a new transaction
 	newTransaction := models.Transaction{
 		BankID:        transaction.BankID,
 		Type:          transaction.Type,
 		Amount:        transaction.Amount,
 		CategoryID:    transaction.CategoryID,
+		CreatedAt:     createdAt,
 		UserProfileID: userID,
-		MetaData:      transaction.MetaData,
 		Memo:          transaction.Memo,
 	}
 	if err := config.DB.Create(&newTransaction).Error; err != nil {

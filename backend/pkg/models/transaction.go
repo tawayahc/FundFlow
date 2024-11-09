@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
@@ -14,17 +16,20 @@ type Transaction struct {
 	Category      Category    `gorm:"constraint:OnDelete:SET NULL;foreignKey:CategoryID;references:ID"`
 	UserProfileID uint        `gorm:"not null"`
 	UserProfile   UserProfile `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:UserProfileID;references:AuthID"`
-	MetaData      string      `gorm:"type:text;not null;unique"`
+	MetaData      string      `gorm:"type:text;unique;null"`
 	Memo          string      `gorm:"type:text"`
+	CreatedAt     time.Time   `gorm:"not null"`
 }
 
 type CreateTransactionRequest struct {
-	BankID     uint    `json:"bank_id" binding:"required"`
-	Type       string  `json:"type" binding:"required"`
-	Amount     float64 `json:"amount" binding:"required"`
-	CategoryID *uint   `json:"category_id"`
-	MetaData   string  `json:"meta_data" binding:"required"`
-	Memo       string  `json:"memo"`
+	BankID        uint    `json:"bank_id" binding:"required"`
+	Type          string  `json:"type" binding:"required"`
+	Amount        float64 `json:"amount" binding:"required"`
+	CategoryID    *uint   `json:"category_id"`
+	CreatedAtDate string  `json:"created_at_date" binding:"required"`
+	CreatedAtTime string  `json:"created_at_time"`
+	MetaData      string  `json:"meta_data"`
+	Memo          string  `json:"memo"`
 }
 
 type TransactionDTO struct {
@@ -37,6 +42,7 @@ type TransactionDTO struct {
 	CategoryID   *uint   `json:"category_id"`
 	MetaData     string  `json:"meta_data"`
 	Memo         string  `json:"memo"`
+	CreatedAt    string  `json:"created_at"`
 }
 
 type UpdateTransactionRequest struct {
