@@ -10,6 +10,8 @@ import 'package:fundflow/features/auth/ui/forget_page_1.dart';
 import 'package:fundflow/features/auth/ui/forget_page_2.dart';
 import 'package:fundflow/features/auth/ui/forget_page_3.dart';
 import 'package:fundflow/features/auth/ui/setting_page.dart';
+import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
+import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 import 'package:fundflow/features/home/ui/add_category.dart';
@@ -55,10 +57,25 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(create: (context) => CategoryRepository()),
         RepositoryProvider(create: (context) => ProfileRepository()),
       ],
-      child: BlocProvider<AuthenticationBloc>(
-        create: (context) => AuthenticationBloc(
-            authenticationRepository: authenticationRepository)
-          ..add(AppStarted()), // Handle the authentication flow
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<AuthenticationBloc>(
+            create: (context) => AuthenticationBloc(
+              authenticationRepository: authenticationRepository,
+            )..add(AppStarted()), // Handle the authentication flow
+          ),
+          // Add CategoryBloc here
+          BlocProvider<CategoryBloc>(
+            create: (context) => CategoryBloc(
+              categoryRepository: CategoryRepository(), // Pass the repository
+            ),
+          ),
+          BlocProvider<BankBloc>(
+            create: (context) => BankBloc(
+              bankRepository: BankRepository(), // Pass the repository
+            ),
+          ),
+        ],
         child: MaterialApp(
           title: 'FundFlow',
           theme: AppTheme.lightTheme, // Apply the Poppins light theme
@@ -70,13 +87,14 @@ class MyApp extends StatelessWidget {
           routes: {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegistrationPage(),
-            '/forget1': (context) => const ForgetPage(),
+            '/forget1': (context) => ForgetPage(),
             '/forget2': (context) => const VerificationPage(),
-            '/forget3': (context) => const ResetPasswordPage(),
+            '/forget3': (context) => ResetPasswordPage(),
             '/setting_page': (context) => const SettingsPage(),
             '/pocket_management': (context) => const CategoryPage(),
             '/setting_page/edit_email': (context) => EditEmailPage(),
-            '/setting_page/change_password': (context) => const ChangePasswordPage(),
+            '/setting_page/change_password': (context) =>
+                const ChangePasswordPage(),
             '/setting_page/delete_acc': (context) => const DeleteAccPage(),
             '/home': (context) => const HomePage(),
             '/addBank': (context) => const AddBankPage(),

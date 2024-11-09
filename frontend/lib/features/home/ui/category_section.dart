@@ -13,18 +13,33 @@ class CategorySection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
-        if (state is CategorysLoading) {
+        if (state is CategoriesLoading) {
           return const CircularProgressIndicator();
-        } else if (state is CategorysLoaded) {
-          return Column(
+        } else if (state is CategoriesLoaded) {
+          return Stack(
             children: [
-              CashBox(cashBox: state.cashBox),
-              const SizedBox(height: 10),
-              ..._buildCategoryRows(state.categorys),
+              Column(
+                children: [
+                  Opacity(
+                    opacity: 0.0,
+                    child: CashBox(cashBox: state.cashBox),
+                  ),
+                  const SizedBox(height: 10),
+                  ..._buildCategoryRows(state.categories),
+                ],
+              ),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: CustomDraggableCashBox(cashBox: state.cashBox),
+              ),
             ],
           );
+        } else if (state is CategoryError) {
+          return const Text('Failed to load categories');
         } else {
-          return const Text('Error loading categories');
+          return const Text('Unknown error');
         }
       },
     );
@@ -40,10 +55,8 @@ class CategorySection extends StatelessWidget {
       // First card
       rowChildren.add(
         Expanded(
-          child: CategoryCard(
-            categoryName: categories[i].category,
-            amount: categories[i].amount,
-            color: categories[i].color, // Pass amount and color from category
+          child: CustomDraggableCategoryCard(
+            category: categories[i], // Pass amount and color from category
           ),
         ),
       );
@@ -53,11 +66,9 @@ class CategorySection extends StatelessWidget {
         rowChildren.add(const SizedBox(width: 10)); // Space between cards
         rowChildren.add(
           Expanded(
-            child: CategoryCard(
-              categoryName: categories[i + 1].category,
-              amount: categories[i + 1].amount,
-              color: categories[i + 1]
-                  .color, // Pass amount and color from category
+            child: CustomDraggableCategoryCard(
+              category:
+                  categories[i + 1], // Pass amount and color from category
             ),
           ),
         );
