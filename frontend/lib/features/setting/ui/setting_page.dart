@@ -15,8 +15,7 @@ class SettingsPage extends StatelessWidget {
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios),
                 onPressed: () {
-                  Navigator.pushNamed(
-                      context, '/home'); // ย้อนกลับไปยังหน้าก่อนหน้า
+                  Navigator.pop(context); // ย้อนกลับไปยังหน้าก่อนหน้า
                 },
               ),
               centerTitle: true,
@@ -111,34 +110,7 @@ class SettingsPage extends StatelessWidget {
                           context, "/setting_page/change_password");
                     },
                   ),
-                  ListTile(
-                    leading: const Icon(Icons.delete_outline,
-                        color: Color(0xFF5A5A5A)),
-                    title: const Text('ลบบัญชี FundFlow',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color(0xFF5A5A5A), // สีดำสำหรับ "อีเมล"
-                        )),
-                    onTap: () {
-                      Navigator.pushNamed(context, "/setting_page/delete_acc");
-                    },
-                  ),
 
-                  ListTile(
-                    leading: const Icon(Icons.lock_outline,
-                        color: Color(0xFF5A5A5A)),
-                    title: const Text(
-                      'เปลี่ยนรหัสผ่าน',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF5A5A5A), // สีดำสำหรับ "อีเมล"
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, "/setting_page/change_password");
-                    },
-                  ),
                   ListTile(
                     leading: const Icon(Icons.delete_outline,
                         color: Color(0xFF5A5A5A)),

@@ -97,7 +97,7 @@ class MyApp extends StatelessWidget {
                 ChangePasswordPage(repository: settingsRepository),
             '/setting_page/delete_acc': (context) =>
                 DeleteAccountPage(repository: settingsRepository),
-            '/home': (context) => const HomePage(),
+            '/home': (context) => const BottomNavBar(),
             '/addBank': (context) => const AddBankPage(),
             '/addCategory': (context) => const AddCategoryPage(),
             '/manageBankAccount': (context) => const BankAccountPage(),
