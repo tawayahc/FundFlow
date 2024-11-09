@@ -53,5 +53,16 @@ func SetupRouter() *gin.Engine {
 		protectedBank.DELETE("/:bank_id", controllers.DeleteBank)
 	}
 
+	// Transaction routes with authentication
+	protectedTransaction := r.Group("/transactions")
+	protectedTransaction.Use(middleware.AuthMiddleware())
+	{
+		protectedTransaction.GET("/:id", controllers.GetTransaction)
+		protectedTransaction.GET("/all", controllers.GetTransactions)
+		protectedTransaction.POST("/create", controllers.CreateTransaction)
+		protectedTransaction.PUT("/:transaction_id", controllers.UpdateTransaction)
+		protectedTransaction.DELETE("/:transaction_id", controllers.DeleteTransaction)
+	}
+
 	return r
 }
