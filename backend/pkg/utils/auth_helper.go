@@ -40,5 +40,3 @@ func GetUserProfileByUsername(username string) (*models.UserProfile, error) {
 
 	return &userProfile, nil
 }
-
-
