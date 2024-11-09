@@ -91,6 +91,10 @@ func UpdateBank(bankID uint, updateBank models.UpdateBankRequest, userID uint) e
 		updates["amount"] = *updateBank.Amount
 	}
 
+	if len(updates) == 0 {
+		return errors.New("no updates provided")
+	}
+
 	// Update the bank
 	if err := config.DB.Model(&bank).Updates(updates).Error; err != nil {
 		return errors.New("failed to update bank")
