@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"fmt"
 	"fundflow/pkg/config"
 	"fundflow/pkg/models"
 
@@ -20,7 +19,7 @@ func GetTransactions(userID uint) ([]models.TransactionDTO, error) {
 		Joins("LEFT JOIN bank_details ON transactions.bank_id = bank_details.id").
 		Where("transactions.user_profile_id = ?", userID).
 		Find(&transactions).Error; err != nil {
-		return nil, fmt.Errorf("failed to retrieve transactions: %w", err)
+		return nil, errors.New("failed to retrieve transactions")
 	}
 
 	return transactions, nil
@@ -40,7 +39,7 @@ func GetTransaction(transactionID uint, userID uint) (models.TransactionDTO, err
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return models.TransactionDTO{}, errors.New("transaction not found")
 		}
-		return models.TransactionDTO{}, fmt.Errorf("failed to retrieve transaction: %w", err)
+		return models.TransactionDTO{}, errors.New("failed to retrieve transaction")
 	}
 
 	return transaction, nil
