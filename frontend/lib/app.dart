@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/core/widgets/layout.dart';
+import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/auth/ui/auth_wrapper.dart';
 import 'package:fundflow/features/auth/ui/change_password.dart';
 import 'package:fundflow/features/auth/ui/delete_acc_page.dart';
@@ -64,28 +65,29 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme, // Apply the Poppins light theme
           darkTheme: AppTheme.darkTheme, // Apply the Poppins dark theme
           themeMode: ThemeMode.system,
-          builder: (context, child) => GlobalPadding(child: child!),
           home:
               const AuthenticationWrapper(), // Decide whether to show login or HomePage
           routes: {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegistrationPage(),
-            '/forget1': (context) => const ForgetPage(),
+            '/forget1': (context) => ForgetPage(),
             '/forget2': (context) => const VerificationPage(),
-            '/forget3': (context) => const ResetPasswordPage(),
+            '/forget3': (context) => ResetPasswordPage(),
             '/setting_page': (context) => const SettingsPage(),
             '/pocket_management': (context) => const CategoryPage(),
             '/setting_page/edit_email': (context) => EditEmailPage(),
             '/setting_page/change_password': (context) => const ChangePasswordPage(),
             '/setting_page/delete_acc': (context) => const DeleteAccPage(),
-            '/home': (context) => const HomePage(),
+            '/home': (context) => const BottomNavBar(),
             '/addBank': (context) => const AddBankPage(),
             '/addCategory': (context) => const AddCategoryPage(),
             '/manageBankAccount': (context) => const BankAccountPage(),
           },
+          // builder: (context, child) => const BottomNavBar(), // Apply padding only to the body
           debugShowCheckedModeBanner: false,
         ),
       ),
+
     );
   }
 }
