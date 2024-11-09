@@ -52,7 +52,7 @@ func CreateBank(c *gin.Context) {
 
 	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	if err := services.CreateBank(bank.Name, bank.BankName, claims.UserID); err != nil {
+	if err := services.CreateBank(bank, claims.UserID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -76,7 +76,7 @@ func UpdateBank(c *gin.Context) {
 
 	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	if err := services.UpdateBank(uint(bankID), bank.Name, bank.BankName, claims.UserID); err != nil {
+	if err := services.UpdateBank(uint(bankID), bank, claims.UserID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

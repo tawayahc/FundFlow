@@ -52,7 +52,7 @@ func CreateCategory(c *gin.Context) {
 
 	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	if err := services.CreateCategory(category.Name, category.ColorCode, claims.UserID); err != nil {
+	if err := services.CreateCategory(category, claims.UserID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -76,7 +76,7 @@ func UpdateCategory(c *gin.Context) {
 
 	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	if err := services.UpdateCategory(uint(categoryID), category.NewName, category.NewColorCode, claims.UserID); err != nil {
+	if err := services.UpdateCategory(uint(categoryID), category, claims.UserID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

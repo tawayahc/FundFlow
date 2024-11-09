@@ -47,17 +47,30 @@ func GetTransaction(transactionID uint, userID uint) (models.TransactionDTO, err
 
 // CreateTransaction creates a new transaction
 func CreateTransaction(transaction models.CreateTransactionRequest, userID uint) error {
-	// Check if the bank exists
+	// Check if the bank exists and update the amount based on transaction type
 	var bank models.BankDetail
 	if err := config.DB.Where("id = ? AND user_profile_id = ?", transaction.BankID, userID).First(&bank).Error; err != nil {
 		return errors.New("bank not found")
 	}
 
-	// Check if the category exists
+	// Adjust the bank amount
+	if transaction.Type == "income" {
+		bank.Amount += transaction.Amount
+	} else if transaction.Type == "expense" {
+		bank.Amount -= transaction.Amount
+	} else {
+		return errors.New("invalid transaction type")
+	}
+
+	// Check if the category exists and update amount if applicable
+	var category *models.Category
 	if transaction.CategoryID != nil {
-		var category models.Category
-		if err := config.DB.Where("id = ?", *transaction.CategoryID).First(&category).Error; err != nil {
+		category = &models.Category{}
+		if err := config.DB.Where("id = ? AND user_profile_id = ?", *transaction.CategoryID, userID).First(category).Error; err != nil {
 			return errors.New("category not found")
+		}
+		if transaction.Type == "expense" {
+			category.Amount -= transaction.Amount
 		}
 	}
 
@@ -75,20 +88,18 @@ func CreateTransaction(transaction models.CreateTransactionRequest, userID uint)
 		return errors.New("failed to create transaction")
 	}
 
-	// Update the bank amount
-	if transaction.Type == "income" {
-		bank.Amount += transaction.Amount
-	} else if transaction.Type == "expense" {
-		bank.Amount -= transaction.Amount
-	} else {
-		return errors.New("invalid transaction type")
-	}
-
-	if err := config.DB.Save(&bank).Error; err != nil {
-		return errors.New("failed to update bank amount")
-	}
-
-	return nil
+	// Save updates to bank and category in a single transaction
+	return config.DB.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Save(&bank).Error; err != nil {
+			return errors.New("failed to update bank amount")
+		}
+		if category != nil {
+			if err := tx.Save(category).Error; err != nil {
+				return errors.New("failed to update category amount")
+			}
+		}
+		return nil
+	})
 }
 
 // UpdateTransaction updates a transaction

@@ -15,13 +15,15 @@ type BankDetail struct {
 }
 
 type CreateBankRequest struct {
-	Name     string `json:"name" binding:"required"`
-	BankName string `json:"bank_name" binding:"required"`
+	Name     string  `json:"name" binding:"required"`
+	BankName string  `json:"bank_name" binding:"required"`
+	Amount   float64 `json:"amount" binding:"required"`
 }
 
 type UpdateBankRequest struct {
-	Name     string `json:"name" binding:"required"`
-	BankName string `json:"bank_name" binding:"required"`
+	Name     *string  `json:"name"`
+	BankName *string  `json:"bank_name"`
+	Amount   *float64 `json:"amount"`
 }
 
 type BankDetailDTO struct {
