@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/features/auth/bloc/auth_bloc.dart';
 import 'package:fundflow/features/auth/bloc/auth_event.dart';
-import 'package:fundflow/features/setting/ui/change_password.dart';
-import 'package:fundflow/features/setting/ui/delete_acc_page.dart';
-import 'package:fundflow/features/setting/ui/edit_email_page.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
