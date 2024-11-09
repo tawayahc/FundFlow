@@ -2,6 +2,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
+import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/features/home/repository/category_repository.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
