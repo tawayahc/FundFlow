@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/home/category_card.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
+import 'package:fundflow/features/home/models/category.dart';
 
 class AddCategoryPage extends StatefulWidget {
   const AddCategoryPage({Key? key}) : super(key: key);
@@ -38,11 +39,15 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
           children: [
             // Category Card Preview
             CategoryCard(
-              categoryName: categoryName.isNotEmpty
-                  ? categoryName
-                  : 'ตัวอย่างประเภทค่าใช้จ่าย',
-              amount: 2000.00,
-              color: selectedColor, // Use selectedColor here
+              category: Category(
+                // Pass the entire Category object
+                name: categoryName.isNotEmpty
+                    ? categoryName
+                    : 'ตัวอย่างประเภทค่าใช้จ่าย',
+                amount: 2000.00, // Set a default amount here
+                color: selectedColor, // Use selectedColor here
+              ),
+// Use selectedColor here
             ),
             const SizedBox(height: 20),
 
@@ -101,12 +106,16 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
               child: ElevatedButton(
                 onPressed: () {
                   if (categoryName.isNotEmpty) {
-                    // Dispatch AddCategory event to the CategoryBloc
-                    context.read<CategoryBloc>().add(AddCategory(
-                          categoryName: categoryName,
-                          amount: 0.0, // Default amount or let user input
-                          color: selectedColor,
-                        ));
+                    final newCategory = Category(
+                      name: categoryName,
+                      amount: 0.0, // Set default or user-inputted amount
+                      color: selectedColor,
+                    );
+
+                    // Dispatch AddCategory event with the entire Category object
+                    context
+                        .read<CategoryBloc>()
+                        .add(AddCategory(category: newCategory));
                     Navigator.pop(context); // Return to the previous screen
                   }
                 },

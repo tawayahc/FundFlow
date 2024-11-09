@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/layout.dart';
+import 'package:fundflow/features/home/models/category.dart';
 
 class CategoryCard extends StatelessWidget {
-  final String categoryName;
-  final double amount;
-  final Color color;
+  final Category category;
 
   const CategoryCard({
     super.key,
-    required this.categoryName,
-    required this.amount,
-    required this.color,
+    required this.category,
   });
 
   @override
@@ -37,14 +34,14 @@ class CategoryCard extends StatelessWidget {
             margin: const EdgeInsets.only(top: 15),
             height: 10,
             decoration: BoxDecoration(
-              color: color,
+              color: category.color,
             ),
           ),
           Container(
             margin: const EdgeInsets.only(top: 2),
             height: 2,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.5),
+              color: category.color.withOpacity(0.5),
             ),
           ),
           Padding(
@@ -53,7 +50,7 @@ class CategoryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  categoryName,
+                  category.name,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.normal,
@@ -61,11 +58,11 @@ class CategoryCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '฿ ${formatter.format(amount)}',
+                  '฿ ${formatter.format(category.amount)}',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: color,
+                    color: category.color,
                   ),
                 ),
               ],
@@ -78,15 +75,11 @@ class CategoryCard extends StatelessWidget {
 }
 
 class CustomDraggableCategoryCard extends StatefulWidget {
-  final String categoryName;
-  final double amount;
-  final Color color;
+  final Category category;
 
   const CustomDraggableCategoryCard({
     super.key,
-    required this.categoryName,
-    required this.amount,
-    required this.color,
+    required this.category,
   });
 
   @override
@@ -116,9 +109,7 @@ class _CustomDraggableCategoryCardState
       child: Transform.translate(
         offset: position,
         child: CategoryCard(
-          categoryName: widget.categoryName,
-          amount: widget.amount,
-          color: widget.color,
+          category: widget.category,
         ),
       ),
     );

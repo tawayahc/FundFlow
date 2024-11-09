@@ -5,22 +5,26 @@ import 'package:fundflow/features/home/models/category.dart';
 class CategoryRepository {
   final Dio _dio = Dio();
   final String apiUrl =
-      'http://10.0.2.2:3000/api/categories'; // Or your local IP
+      'http://10.0.2.2:3000/api/categories'; // Localhost API endpoint for Android emulator
 
+  // Fetch categories from the API
   Future<Map<String, dynamic>> getCategories() async {
     try {
       final response = await _dio.get(apiUrl);
       if (response.statusCode == 200) {
         final data = response.data;
+
+        // Mapping response data to a list of Category objects
         return {
-          'cashBox': (data['cashBox'] as num).toDouble(), // Cast to double
+          'cashBox':
+              (data['cashBox'] as num).toDouble(), // Convert cashBox to double
           'categories': (data['categories'] as List)
               .map((item) => Category(
-                    category: item['category'],
-                    amount:
-                        (item['amount'] as num).toDouble(), // Cast to double
-                    color: Color(
-                        int.parse(item['color'].replaceFirst('#', '0xFF'))),
+                    name: item['name'],
+                    amount: (item['amount'] as num)
+                        .toDouble(), // Convert amount to double
+                    color: Color(int.parse(item['color']
+                        .replaceFirst('#', '0xFF'))), // Parse color value
                   ))
               .toList(),
         };
@@ -32,13 +36,15 @@ class CategoryRepository {
     }
   }
 
+  // Add a new category to the server
   Future<void> addCategory(Category category) async {
     try {
       final response = await _dio.post(
         apiUrl,
         data: {
-          'category': category.category,
+          'name': category.name,
           'amount': category.amount,
+          // Convert Color object to hex format string
           'color':
               '#${category.color.value.toRadixString(16).substring(2).toUpperCase()}',
         },

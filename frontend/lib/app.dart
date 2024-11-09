@@ -8,6 +8,7 @@ import 'package:fundflow/features/auth/ui/forget_page_1.dart';
 import 'package:fundflow/features/auth/ui/forget_page_2.dart';
 import 'package:fundflow/features/auth/ui/forget_page_3.dart';
 import 'package:fundflow/features/auth/ui/setting_page.dart';
+import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
@@ -52,6 +53,11 @@ class MyApp extends StatelessWidget {
           BlocProvider<CategoryBloc>(
             create: (context) => CategoryBloc(
               categoryRepository: CategoryRepository(), // Pass the repository
+            ),
+          ),
+          BlocProvider<BankBloc>(
+            create: (context) => BankBloc(
+              bankRepository: BankRepository(), // Pass the repository
             ),
           ),
         ],

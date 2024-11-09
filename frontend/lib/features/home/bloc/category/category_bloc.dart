@@ -28,11 +28,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     on<AddCategory>((event, emit) async {
       try {
         // Add the new category to the repository
-        await categoryRepository.addCategory(Category(
-          category: event.categoryName,
-          amount: event.amount,
-          color: event.color,
-        ));
+        await categoryRepository.addCategory(event.category);
         // Reload categories after addition
         add(LoadCategories());
       } catch (error) {

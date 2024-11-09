@@ -56,9 +56,7 @@ class CategorySection extends StatelessWidget {
       rowChildren.add(
         Expanded(
           child: CustomDraggableCategoryCard(
-            categoryName: categories[i].category,
-            amount: categories[i].amount,
-            color: categories[i].color, // Pass amount and color from category
+            category: categories[i], // Pass amount and color from category
           ),
         ),
       );
@@ -69,10 +67,8 @@ class CategorySection extends StatelessWidget {
         rowChildren.add(
           Expanded(
             child: CustomDraggableCategoryCard(
-              categoryName: categories[i + 1].category,
-              amount: categories[i + 1].amount,
-              color: categories[i + 1]
-                  .color, // Pass amount and color from category
+              category:
+                  categories[i + 1], // Pass amount and color from category
             ),
           ),
         );

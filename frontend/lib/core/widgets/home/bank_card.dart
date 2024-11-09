@@ -5,11 +5,13 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 class BankCard extends StatelessWidget {
   final Bank bank;
+  final Map<String, Color> bankColorMap;
 
-  const BankCard({super.key, required this.bank});
+  const BankCard({super.key, required this.bank, required this.bankColorMap});
 
   @override
   Widget build(BuildContext context) {
+    Color color = bankColorMap[bank.bank_name] ?? Colors.grey;
     return Container(
       margin: const EdgeInsets.only(right: 16),
       width: 170, // Set the width to avoid overflow
@@ -39,7 +41,7 @@ class BankCard extends StatelessWidget {
                   height: 32,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: bank.color.withOpacity(0.9), // Placeholder color
+                    color: color.withOpacity(0.9), // Placeholder color
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -59,7 +61,7 @@ class BankCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis, // Ellipsis if too long
                       ),
                       AutoSizeText(
-                        'ธนาคาร${bank.name}',
+                        bank.bank_name,
                         style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
@@ -86,10 +88,9 @@ class BankCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   gradient: LinearGradient(
                     colors: [
-                      bank.color.darken(0.1), // Darker shade of the bank.color
-                      bank.color, // Original color
-                      bank.color
-                          .withOpacity(0.7), // Lighter shade with 20% opacity
+                      color.darken(0.1), // Darker shade of the bank.color
+                      color, // Original color
+                      color.withOpacity(0.7), // Lighter shade with 20% opacity
                     ],
                     stops: const [
                       0.0,
@@ -127,7 +128,7 @@ class BankCard extends StatelessWidget {
                                   4), // Adjust spacing between '฿' and balance
                           Flexible(
                             child: AutoSizeText(
-                              formatter.format(bank.balance),
+                              formatter.format(bank.amount),
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
