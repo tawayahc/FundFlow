@@ -16,7 +16,7 @@ type Transaction struct {
 	Category      Category    `gorm:"constraint:OnDelete:SET NULL;foreignKey:CategoryID;references:ID"`
 	UserProfileID uint        `gorm:"not null"`
 	UserProfile   UserProfile `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:UserProfileID;references:AuthID"`
-	MetaData      string      `gorm:"type:text;unique;null"`
+	MetaData      *string     `gorm:"type:text;unique"`
 	Memo          string      `gorm:"type:text"`
 	CreatedAt     time.Time   `gorm:"not null"`
 }

@@ -87,6 +87,14 @@ func CreateTransaction(transaction models.CreateTransactionRequest, userID uint)
 		return errors.New("invalid created_at date and time")
 	}
 
+	// Check if MetaData is an empty string and set it to nil if true
+	var metaData *string
+	if transaction.MetaData == "" {
+		metaData = nil
+	} else {
+		metaData = &transaction.MetaData
+	}
+
 	// Create a new transaction
 	newTransaction := models.Transaction{
 		BankID:        transaction.BankID,
@@ -94,6 +102,7 @@ func CreateTransaction(transaction models.CreateTransactionRequest, userID uint)
 		Amount:        transaction.Amount,
 		CategoryID:    transaction.CategoryID,
 		CreatedAt:     createdAt,
+		MetaData:      metaData,
 		UserProfileID: userID,
 		Memo:          transaction.Memo,
 	}
