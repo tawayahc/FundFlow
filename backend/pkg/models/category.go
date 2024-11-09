@@ -27,7 +27,7 @@ type DeleteCategoryRequest struct {
 type UpdateCategoryRequest struct {
 	NewName      *string  `json:"new_name"`
 	NewColorCode *string  `json:"new_color_code"`
-	Amount       *float64 `json:"amount"`
+	NewAmount       *float64 `json:"new_amount"`
 }
 
 // Data Transfer Object

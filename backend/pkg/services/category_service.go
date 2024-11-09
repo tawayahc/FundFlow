@@ -62,7 +62,7 @@ func GetCategory(categoryID, userID uint) (models.CategoryTransactionsDTO, error
 			ID:        0,
 			Name:      "Other",
 			ColorCode: "0xFFFFFFF",
-			Amount:    category.Amount,
+			Amount:    category.Amount * -1,
 		}
 
 		// Retrieve transactions with no category (category_id is NULL)
@@ -154,6 +154,9 @@ func UpdateCategory(categoryID uint, UpdateCategory models.UpdateCategoryRequest
 	}
 	if UpdateCategory.NewColorCode != nil {
 		updates["color_code"] = *UpdateCategory.NewColorCode
+	}
+	if UpdateCategory.NewAmount != nil {
+		updates["amount"] = *UpdateCategory.NewAmount
 	}
 
 	if err := config.DB.Model(&existingCategory).Updates(updates).Error; err != nil {
