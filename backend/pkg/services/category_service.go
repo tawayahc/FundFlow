@@ -72,7 +72,7 @@ func GetCategory(categoryID, userID uint) (models.CategoryTransactionsDTO, error
 
 		// Retrieve transactions with no category (category_id is NULL)
 		if err := config.DB.Table("transactions").
-			Select("transactions.id, transactions.type, transactions.amount, transactions.category_id, transactions.meta_data, transactions.memo, transactions.bank_id, bank_details.name as bank_nickname, bank_details.bank_name").
+			Select("transactions.id, transactions.type, transactions.amount, transactions.category_id, transactions.meta_data, transactions.memo, transactions.bank_id, transactions.created_at, bank_details.name as bank_nickname, bank_details.bank_name").
 			Joins("LEFT JOIN bank_details ON transactions.bank_id = bank_details.id").
 			Where("transactions.category_id IS NULL AND transactions.user_profile_id = ?", userID).
 			Find(&transactions).Error; err != nil {

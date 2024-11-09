@@ -16,7 +16,7 @@ func GetBank(bankID uint, userID uint) (models.BankTransactionsDTO, error) {
 	// Get all transactions for the bank with bank_nickname and bank_name
 	var transactions []models.TransactionDTO
 	if err := config.DB.Table("transactions").
-		Select("transactions.id, transactions.type, transactions.amount, transactions.category_id, transactions.meta_data, transactions.memo, transactions.bank_id, bank_details.name as bank_nickname, bank_details.bank_name").
+		Select("transactions.id, transactions.type, transactions.amount, transactions.category_id, transactions.meta_data, transactions.memo, transactions.bank_id, transactions.created_at, bank_details.name as bank_nickname, bank_details.bank_name").
 		Joins("left join bank_details on transactions.bank_id = bank_details.id").
 		Where("transactions.bank_id = ?", bankID).
 		Find(&transactions).Error; err != nil {
