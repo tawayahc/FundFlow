@@ -85,6 +85,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
         if (state is ChangePasswordSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Password changed successfully')));
+          Navigator.pop(context);
         } else if (state is ChangePasswordFailure) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(state.error)));

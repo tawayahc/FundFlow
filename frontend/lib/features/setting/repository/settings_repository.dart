@@ -59,7 +59,7 @@ class SettingsRepository {
 
   Future<void> deleteAccount(DeleteAccountRequest request) async {
     try {
-      final response = await dio.post(
+      final response = await dio.delete(
         '/settings/delete-account',
         data: request.toJson(),
       );
