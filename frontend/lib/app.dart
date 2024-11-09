@@ -100,6 +100,7 @@ class MyApp extends StatelessWidget {
             '/home': (context) => const HomePage(),
             '/addBank': (context) => const AddBankPage(),
             '/addCategory': (context) => const AddCategoryPage(),
+            '/manageBankAccount': (context) => const BankAccountPage(),
           },
           debugShowCheckedModeBanner: false,
         ),
