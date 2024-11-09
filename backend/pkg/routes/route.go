@@ -31,6 +31,14 @@ func SetupRouter() *gin.Engine {
 		protectedSetting.DELETE("/delete-account", controllers.DeleteAccount)
 	}
 
+	// Profile routes with authentication
+	protectedProfile := r.Group("/profile")
+	protectedProfile.Use(middleware.AuthMiddleware())
+	{
+		protectedProfile.GET("/", controllers.GetProfile)
+		protectedProfile.PUT("/", controllers.UpdateProfile)
+	}
+
 	// Category routes with authentication
 	protectedCategory := r.Group("/categories")
 	protectedCategory.Use(middleware.AuthMiddleware())
