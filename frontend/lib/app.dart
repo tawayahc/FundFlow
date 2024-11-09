@@ -50,11 +50,15 @@ class MyApp extends StatelessWidget {
     } else {
       Logger.level = Level.debug;
     }
+    const baseUrl = 'http://10.0.2.2:8080';
+    final categoryRepository = CategoryRepository(baseUrl: baseUrl);
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authenticationRepository),
         RepositoryProvider(create: (context) => BankRepository()),
-        RepositoryProvider(create: (context) => CategoryRepository()),
+        RepositoryProvider.value(
+          value: categoryRepository,
+        ),
         RepositoryProvider(create: (context) => ProfileRepository()),
       ],
       child: MultiBlocProvider(
@@ -67,7 +71,7 @@ class MyApp extends StatelessWidget {
           // Add CategoryBloc here
           BlocProvider<CategoryBloc>(
             create: (context) => CategoryBloc(
-              categoryRepository: CategoryRepository(), // Pass the repository
+              categoryRepository: categoryRepository, // Pass the repository
             ),
           ),
           BlocProvider<BankBloc>(
