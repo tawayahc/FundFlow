@@ -101,3 +101,21 @@ func DeleteBank(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Bank deleted successfully"})
 }
+
+// Transfer money between banks
+func TransferMoney(c *gin.Context) {
+	var transfer models.TransferRequest
+	if err := c.ShouldBindJSON(&transfer); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
+
+	if err := services.TransferMoney(transfer.FromBankID, transfer.ToBankID, transfer.Amount, claims.UserID); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Money transferred successfully"})
+}

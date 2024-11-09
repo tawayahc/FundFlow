@@ -20,8 +20,8 @@ type CreateBankRequest struct {
 }
 
 type UpdateBankRequest struct {
-	Name     string `json:"name"`
-	BankName string `json:"bank_name"`
+	Name     string `json:"name" binding:"required"`
+	BankName string `json:"bank_name" binding:"required"`
 }
 
 type BankDetailDTO struct {
@@ -29,4 +29,16 @@ type BankDetailDTO struct {
 	Name     string  `json:"name"`
 	BankName string  `json:"bank_name"`
 	Amount   float64 `json:"amount"`
+}
+
+type TransferRequest struct {
+	FromBankID uint    `json:"from_bank_id" binding:"required"`
+	ToBankID   uint    `json:"to_bank_id" binding:"required"`
+	Amount     float64 `json:"amount" binding:"required"`
+}
+
+// All transactions in a bank
+type BankTransactionsDTO struct {
+	BankDetailDTO
+	Transactions []TransactionDTO `json:"transactions"`
 }
