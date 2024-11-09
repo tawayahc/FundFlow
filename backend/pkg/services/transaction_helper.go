@@ -129,11 +129,13 @@ func UpdateTransaction(transactionID uint, updateTransaction models.UpdateTransa
 		updates["memo"] = *updateTransaction.NewMemo
 	}
 
+	if len(updates) == 0 {
+		return errors.New("no fields to update")
+	}
+
 	// Update the transaction with the new values
-	if len(updates) > 0 {
-		if err := config.DB.Model(&transaction).Updates(updates).Error; err != nil {
-			return errors.New("failed to update transaction")
-		}
+	if err := config.DB.Model(&transaction).Updates(updates).Error; err != nil {
+		return errors.New("failed to update transaction")
 	}
 
 	return nil

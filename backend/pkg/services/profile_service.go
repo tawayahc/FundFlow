@@ -59,6 +59,10 @@ func UpdateProfile(profile models.UpdateUserProfileRequest, userID uint) error {
 		updates["date_of_birth"] = *profile.NewDateOfBirth
 	}
 
+	if len(updates) == 0 {
+		return errors.New("no fields to update")
+	}
+
 	// Only update fields with new values using GORM's `Updates` method
 	if err := config.DB.Model(&existingProfile).Updates(updates).Error; err != nil {
 		return errors.New("failed to update profile")

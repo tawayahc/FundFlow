@@ -28,12 +28,17 @@ func GetCategories(userID uint) ([]models.CategoryDTO, error) {
 	config.DB.Table("categories").Select("COALESCE(sum(amount), 0)").
 		Where("user_profile_id = ?", userID).Row().Scan(&totalCategoriesAmount)
 
+	// Calculate the amount of null category transactions
+	var nullCategoryAmount float64
+	config.DB.Table("transactions").Select("COALESCE(sum(amount), 0)").
+		Where("user_profile_id = ? AND category_id IS NULL", userID).Row().Scan(&nullCategoryAmount)
+
 	// Create and add Cash Box category
 	cashBox := models.CategoryDTO{
 		ID:        0,
 		Name:      "Cash Box",
 		ColorCode: "0xFFFFFFF",
-		Amount:    totalBankAmount - totalCategoriesAmount,
+		Amount:    totalBankAmount - totalCategoriesAmount + nullCategoryAmount,
 	}
 
 	// Organize results in the desired pattern
@@ -157,6 +162,10 @@ func UpdateCategory(categoryID uint, UpdateCategory models.UpdateCategoryRequest
 	}
 	if UpdateCategory.NewAmount != nil {
 		updates["amount"] = *UpdateCategory.NewAmount
+	}
+
+	if len(updates) == 0 {
+		return errors.New("no fields to update")
 	}
 
 	if err := config.DB.Model(&existingCategory).Updates(updates).Error; err != nil {
