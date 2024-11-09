@@ -1,10 +1,10 @@
 package services
 
 import (
+	"errors"
 	"fundflow/pkg/config"
 	"fundflow/pkg/models"
 	"fundflow/pkg/utils"
-	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -67,10 +67,11 @@ func ValidateUserCredentials(creds models.Credentials) (*models.Authentication, 
 	return &user, nil
 }
 
-func GenerateJWTToken(username string) (string, error) {
+func GenerateJWTToken(username string, userID uint) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
 	claims := &models.Claims{
 		Username: username,
+		UserID:   userID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},

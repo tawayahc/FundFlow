@@ -7,15 +7,18 @@ import (
 	"fundflow/pkg/utils"
 )
 
-func ChangeEmail(email string, userName string) error {
+func ChangeEmail(email string, userID uint) error {
 	// Check if the email already exists
 	var user models.UserProfile
 	if err := config.DB.Where("email = ?", email).First(&user).Error; err == nil {
 		return errors.New("email already exists")
 	}
 
-	// Get the userProfile from username
-	userProfile, _ := utils.GetUserProfileByUsername(userName)
+	// Get the userProfile from userID
+	var userProfile models.UserProfile
+	if err := config.DB.Where("id = ?", userID).First(&userProfile).Error; err != nil {
+		return errors.New("user not found")
+	}
 
 	// Update the email
 	if err := config.DB.Model(&userProfile).Update("email", email).Error; err != nil {
