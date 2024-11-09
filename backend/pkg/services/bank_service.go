@@ -37,15 +37,25 @@ func GetBanks(userID uint) ([]models.BankDetailDTO, error) {
 }
 
 // CreateBank creates a new bank
-func CreateBank(name string, bankName string, userID uint) error {
+func CreateBank(createBank models.CreateBankRequest, userID uint) error {
+	// Check if the amount is negative
+	if createBank.Amount < 0 {
+		return errors.New("amount cannot be negative")
+	}
+
 	// Check if the bank already exists
 	var bank models.BankDetail
-	if err := config.DB.Where("name = ? AND bank_name = ? AND user_profile_id = ?", name, bankName, userID).First(&bank).Error; err == nil {
+	if err := config.DB.Where("name = ? AND user_profile_id = ?", createBank.Name, userID).First(&bank).Error; err == nil {
 		return errors.New("bank already exists")
 	}
 
 	// Create a new bank
-	newBank := models.BankDetail{Name: name, BankName: bankName, UserProfileID: userID}
+	newBank := models.BankDetail{
+		Name:          createBank.Name,
+		BankName:      createBank.BankName,
+		Amount:        createBank.Amount,
+		UserProfileID: userID,
+	}
 	if err := config.DB.Create(&newBank).Error; err != nil {
 		return errors.New("failed to create bank")
 	}
@@ -54,21 +64,35 @@ func CreateBank(name string, bankName string, userID uint) error {
 }
 
 // UpdateBank updates a bank
-func UpdateBank(bankID uint, name string, bankName string, userID uint) error {
+func UpdateBank(bankID uint, updateBank models.UpdateBankRequest, userID uint) error {
 	// Check if the bank exists
 	var bank models.BankDetail
 	if err := config.DB.Where("id = ? AND user_profile_id = ?", bankID, userID).First(&bank).Error; err != nil {
 		return errors.New("bank not found")
 	}
 
-	// Check repition name and bank name
-	var bankDetail models.BankDetail
-	if err := config.DB.Where("name = ? AND bank_name = ? AND user_profile_id = ?", name, bankName, userID).First(&bankDetail).Error; err == nil {
-		return errors.New("this name in this bank_name already exists")
+	// Create a map to hold the fields to be updated
+	updates := make(map[string]interface{})
+
+	// Check each field for nil and add to the updates map if not nil
+	if updateBank.Name != nil {
+		// Check if the new name is already in use
+		var nameCheck models.BankDetail
+		if err := config.DB.Where("name = ? AND user_profile_id = ?", *updateBank.Name, userID).First(&nameCheck).Error; err == nil {
+			return errors.New("name already in use")
+		} else {
+			updates["name"] = *updateBank.Name
+		}
+	}
+	if updateBank.BankName != nil {
+		updates["bank_name"] = *updateBank.BankName
+	}
+	if updateBank.Amount != nil {
+		updates["amount"] = *updateBank.Amount
 	}
 
 	// Update the bank
-	if err := config.DB.Model(&bank).Updates(models.BankDetail{Name: name, BankName: bankName}).Error; err != nil {
+	if err := config.DB.Model(&bank).Updates(updates).Error; err != nil {
 		return errors.New("failed to update bank")
 	}
 
