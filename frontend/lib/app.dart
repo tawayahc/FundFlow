@@ -12,6 +12,7 @@ import 'package:fundflow/features/auth/ui/forget_page_3.dart';
 import 'package:fundflow/features/auth/ui/setting_page.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
+import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 import 'package:fundflow/features/home/ui/add_category.dart';
@@ -52,10 +53,11 @@ class MyApp extends StatelessWidget {
     }
     const baseUrl = 'http://10.0.2.2:8080';
     final categoryRepository = CategoryRepository(baseUrl: baseUrl);
+    final bankRepository = BankRepository(baseUrl: baseUrl);
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authenticationRepository),
-        RepositoryProvider(create: (context) => BankRepository()),
+        RepositoryProvider.value(value: bankRepository),
         RepositoryProvider.value(
           value: categoryRepository,
         ),
@@ -72,11 +74,11 @@ class MyApp extends StatelessWidget {
           BlocProvider<CategoryBloc>(
             create: (context) => CategoryBloc(
               categoryRepository: categoryRepository, // Pass the repository
-            ),
+            )..add(LoadCategories()),
           ),
           BlocProvider<BankBloc>(
             create: (context) => BankBloc(
-              bankRepository: BankRepository(), // Pass the repository
+              bankRepository: bankRepository, // Pass the repository
             ),
           ),
         ],

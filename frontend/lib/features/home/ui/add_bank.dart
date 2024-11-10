@@ -1,90 +1,169 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
+import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
+import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
+import 'package:fundflow/features/home/models/bank.dart';
 
-class AddBankPage extends StatelessWidget {
+class AddBankPage extends StatefulWidget {
   const AddBankPage({Key? key}) : super(key: key);
+
+  @override
+  _AddBankPageState createState() => _AddBankPageState();
+}
+
+class _AddBankPageState extends State<AddBankPage> {
+  String bankName = '';
+  String selectedBank = '';
+  Color selectedColor = Colors.blue;
+  double bankAmount = 0.0;
+
+  final List<Map<String, Color>> availableBank = [
+    {'กสิกรไทย': Colors.blue},
+    {'กรุงไทย': Colors.green},
+    {'ไทยพาณิชย์': Colors.red},
+    {'กรุงเทพ': Colors.orange},
+    {'ออมสิน': Colors.purple},
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('เพิ่มบัญชีธนาคาร'),
+        title: const Text('เพิ่มธนาคาร'),
         centerTitle: true,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('เลือกธนาคาร',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            Expanded(
-              child: GridView.builder(
+        child: BlocListener<BankBloc, BankState>(
+          listener: (context, state) {
+            if (state is BanksLoaded) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Bank added successfully')),
+              );
+              Navigator.pop(context); // Go back to the previous screen
+            } else if (state is BankError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
+            }
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'เลือกธนาคาร',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              // Bank Color Boxes with Names
+              GridView.builder(
+                shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
+                  crossAxisCount: 5, // 5 banks per row
                   childAspectRatio: 1,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
                 ),
-                itemCount: bankList.length,
+                itemCount: availableBank.length,
                 itemBuilder: (context, index) {
-                  final bank = bankList[index];
+                  final bank = availableBank[index];
+                  final bankName = bank.keys.first;
+                  final bankColor = bank.values.first;
+
                   return GestureDetector(
                     onTap: () {
-                      // Handle bank selection
+                      setState(() {
+                        selectedBank = bankName;
+                        selectedColor = bankColor;
+                      });
                     },
                     child: Column(
                       children: [
-                        Image.network(bank.logoUrl,
-                            height: 50), // Use asset or network images
-                        Text(bank.name, style: const TextStyle(fontSize: 14)),
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: bankColor,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                width: 2,
+                                color: selectedColor == bankColor
+                                    ? Colors.black
+                                    : Colors.transparent),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          bankName,
+                          style: const TextStyle(fontSize: 8),
+                          textAlign: TextAlign.center,
+                        ),
                       ],
                     ),
                   );
                 },
               ),
-            ),
-            const SizedBox(height: 20),
-            const TextField(
-              decoration: InputDecoration(
-                labelText: 'ชื่อบัญชี',
-                hintText: 'กรอกชื่อบัญชีธนาคาร',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 20),
+              // Bank Name Input
+              const Text(
+                'ชื่อบัญชีธนาคาร',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            ),
-            const SizedBox(height: 10),
-            const TextField(
-              decoration: InputDecoration(
-                labelText: 'ยอดเงินเริ่มต้น',
-                hintText: 'กรอกยอดเงินเริ่มต้น',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 10),
+              TextField(
+                decoration: const InputDecoration(
+                  hintText: 'กรอกชื่อบัญชีธนาคาร',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    bankName = value;
+                  });
+                },
               ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Save bank account and navigate back
-              },
-              child: const Text('เพิ่มบัญชีธนาคาร'),
-            ),
-          ],
+              const SizedBox(height: 20),
+              // Bank Amount Input
+              const Text(
+                'ยอดเงินเริ่มต้น',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                decoration: const InputDecoration(
+                  hintText: 'กรอกยอดเงินเริ่มต้น',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  setState(() {
+                    bankAmount = double.tryParse(value) ?? 0.0;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              // Save Button
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (bankName.isNotEmpty && selectedBank.isNotEmpty) {
+                      final newBank = Bank(
+                        name: bankName,
+                        bank_name: 'ธนาคาร$selectedBank',
+                        amount: bankAmount,
+                      );
+
+                      BlocProvider.of<BankBloc>(context)
+                          .add(AddBank(bank: newBank));
+                    }
+                  },
+                  child: const Text('เพิ่มธนาคาร'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-}
-
-// Example list of banks
-final bankList = [
-  Bank('ธนาคารกสิกรไทย', 'https://link-to-logo.com/logo1.png'),
-  Bank('ธนาคารกรุงไทย', 'https://link-to-logo.com/logo2.png'),
-  // Add more banks
-];
-
-class Bank {
-  final String name;
-  final String logoUrl;
-
-  Bank(this.name, this.logoUrl);
 }

@@ -1,22 +1,49 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fundflow/app.dart';
 import 'package:fundflow/features/home/models/bank.dart';
 
 class BankRepository {
-  final Dio _dio = Dio();
-  final String apiUrl = 'http://10.0.2.2:3000/api/banks';
+  final Dio dio;
+  final FlutterSecureStorage storage = FlutterSecureStorage();
+  final String baseUrl;
 
-  // Fetch all banks from the API and return List<Bank>
-  Future<List<Bank>> getBanks() async {
+  BankRepository({required this.baseUrl})
+      : dio = Dio(BaseOptions(
+          baseUrl: baseUrl,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        )) {
+    _initializeToken();
+  }
+
+  Future<void> _initializeToken() async {
+    String? token = await storage.read(key: 'token');
+    if (token != null) {
+      dio.options.headers['Authorization'] = 'Bearer $token';
+    }
+  }
+
+  Future<Map<String, dynamic>> getBanks() async {
     try {
-      final response = await _dio.get(apiUrl);
+      final response = await dio.get("/banks/all");
       if (response.statusCode == 200) {
-        // Parse JSON data into List<Bank>
         final List<dynamic> data = response.data;
-        return data.map((item) => Bank.fromJson(item)).toList();
+
+        final banks = data
+            .map((item) => Bank(
+                name: item['name'],
+                bank_name: item['bank_name'],
+                amount: (item['amount'] as num).toDouble()))
+            .toList();
+        return {'banks': banks};
       } else {
+        logger.e('Failed to load banks ${response.data}');
         throw Exception('Failed to load banks');
       }
     } catch (error) {
+      logger.e('Error fetching banks: $error');
       throw Exception('Error fetching banks: $error');
     }
   }
@@ -24,16 +51,20 @@ class BankRepository {
   // Add a new bank to the server
   Future<void> addBank(Bank bank) async {
     try {
-      final response = await _dio.post(apiUrl, data: {
+      await _initializeToken();
+
+      final response = await dio.post("/banks/create", data: {
         'name': bank.name,
         'bank_name': bank.bank_name,
         'amount': bank.amount,
       });
 
-      if (response.statusCode != 201) {
-        throw Exception('Failed to add bank');
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        logger.e('Failed to add category, Response: ${response.data}');
+        throw Exception('Failed to add category');
       }
     } catch (error) {
+      logger.e('Error adding bank: $error');
       throw Exception('Error adding bank: $error');
     }
   }

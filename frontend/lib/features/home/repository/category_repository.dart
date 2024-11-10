@@ -38,12 +38,14 @@ class CategoryRepository {
 
         // You can calculate 'cashBox' here if needed (if the logic for 'cashBox' is still valid)
         // For example, you can calculate the sum of amounts of the categories if that makes sense:
-        double cashBox = data.fold(0.0, (sum, item) {
-          return sum + (item['amount'] as num).toDouble();
-        });
+        final cashBoxData =
+            data.firstWhere((item) => item['id'] == 0, orElse: () => {});
+        final categoriesData = data.where((item) => item['id'] != 0).toList();
+
+        double cashBox = (cashBoxData['amount'] as num).toDouble();
 
         // Map response data to Category objects
-        final categories = data
+        final categories = categoriesData
             .map((item) => Category(
                   name: item['name'],
                   amount: (item['amount'] as num).toDouble(),
@@ -69,23 +71,33 @@ class CategoryRepository {
   // Add a new category to the server
   Future<void> addCategory(Category category) async {
     try {
+      // Ensure token is properly set in headers
+      await _initializeToken();
+      logger.i(
+          'Adding category: ${category.amount} ${category.name} ${category.color} ');
+
+      // Send the request with the correct payload
       final response = await dio.post(
         "/categories/create",
         data: {
           'name': category.name,
           'amount': category.amount,
-          // Convert Color object to hex format string
-          'color':
-              '#${category.color.value.toRadixString(16).substring(2).toUpperCase()}',
+          'color_code':
+              '0xFF${category.color.value.toRadixString(16).substring(2).toUpperCase()}',
         },
       );
 
-      if (response.statusCode != 201) {
-        logger.e('Failed to add category ${response.data}');
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        logger.e('Failed to add category, Response: ${response.data}');
         throw Exception('Failed to add category');
       }
     } catch (error) {
-      logger.e('Error adding category: $error');
+      // Detailed error logging
+      if (error is DioException) {
+        logger.e('Dio Error: ${error.response?.data ?? error.message}');
+      } else {
+        logger.e('Error adding category: $error');
+      }
       throw Exception('Error adding category: $error');
     }
   }

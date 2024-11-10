@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/home/category_card.dart';
+import 'package:fundflow/core/widgets/layout.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
@@ -11,10 +12,21 @@ class CategorySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CategoryBloc, CategoryState>(
+    return BlocConsumer<CategoryBloc, CategoryState>(
+      listener: (context, state) {
+        if (state is CategoriesLoaded) {
+          // Optionally do something when the categories are loaded
+          // like showing a snack bar or any other action
+        } else if (state is CategoryError) {
+          // Handle error state, show a SnackBar for example
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to load categories')),
+          );
+        }
+      },
       builder: (context, state) {
         if (state is CategoriesLoading) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         } else if (state is CategoriesLoaded) {
           return Stack(
             children: [
@@ -56,7 +68,7 @@ class CategorySection extends StatelessWidget {
       rowChildren.add(
         Expanded(
           child: CustomDraggableCategoryCard(
-            category: categories[i], // Pass amount and color from category
+            category: categories[i],
           ),
         ),
       );
@@ -67,8 +79,7 @@ class CategorySection extends StatelessWidget {
         rowChildren.add(
           Expanded(
             child: CustomDraggableCategoryCard(
-              category:
-                  categories[i + 1], // Pass amount and color from category
+              category: categories[i + 1],
             ),
           ),
         );
