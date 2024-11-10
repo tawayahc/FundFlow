@@ -17,7 +17,7 @@ type Category struct {
 type CreateCategoryRequest struct {
 	Name      string  `json:"name" binding:"required"`
 	ColorCode string  `json:"color_code" binding:"required"`
-	Amount    float64 `json:"amount" binding:"required"`
+	Amount    float64 `json:"amount"`
 }
 
 type DeleteCategoryRequest struct {
@@ -27,7 +27,7 @@ type DeleteCategoryRequest struct {
 type UpdateCategoryRequest struct {
 	NewName      *string  `json:"new_name"`
 	NewColorCode *string  `json:"new_color_code"`
-	NewAmount       *float64 `json:"new_amount"`
+	NewAmount    *float64 `json:"new_amount"`
 }
 
 // Data Transfer Object
