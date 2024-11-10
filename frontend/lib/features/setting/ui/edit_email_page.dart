@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_input_box.dart';
-import 'package:fundflow/features/setting/bloc/change_email/change_email_bloc.dart';
+import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
 
 class EditEmailPage extends StatelessWidget {
@@ -12,32 +12,29 @@ class EditEmailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ChangeEmailBloc(repository: repository),
-      child: Scaffold(
-        appBar: AppBar(
-          leading: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
-                iconSize: 20,
-                onPressed: () {
-                  Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
-                },
-              ),
-            ],
-          ),
-          centerTitle: true,
-          title: const Text(
-            'แก้ไขอีเมล',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+    return Scaffold(
+      appBar: AppBar(
+        leading: Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              iconSize: 20,
+              onPressed: () {
+                Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
+              },
             ),
+          ],
+        ),
+        centerTitle: true,
+        title: const Text(
+          'แก้ไขอีเมล',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        body: const EditEmailForm(),
       ),
+      body: const EditEmailForm(),
     );
   }
 }
@@ -53,15 +50,17 @@ class _EditEmailFormState extends State<EditEmailForm> {
   final TextEditingController _newEmailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ChangeEmailBloc, ChangeEmailState>(
+    return BlocListener<UserProfileBloc, UserProfileState>(
       listener: (context, state) {
-        if (state is ChangeEmailSuccess) {
+        if (state is UserProfileLoaded) {
           ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Email changed successfully')));
+            const SnackBar(content: Text('Email changed successfully')),
+          );
           Navigator.pop(context);
-        } else if (state is ChangeEmailFailure) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(state.error)));
+        } else if (state is UserProfileError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.error)),
+          );
         }
       },
       child: Padding(
@@ -72,9 +71,10 @@ class _EditEmailFormState extends State<EditEmailForm> {
             const Text(
               'กรอกอีเมลใหม่',
               style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF5A5A5A)),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF5A5A5A),
+              ),
             ),
             const SizedBox(height: 12),
             CustomInputBox(
@@ -85,17 +85,25 @@ class _EditEmailFormState extends State<EditEmailForm> {
               ),
             ),
             const SizedBox(height: 30),
-            BlocBuilder<ChangeEmailBloc, ChangeEmailState>(
+            BlocBuilder<UserProfileBloc, UserProfileState>(
               builder: (context, state) {
-                if (state is ChangeEmailLoading) {
-                  return CircularProgressIndicator();
+                if (state is UserProfileLoading) {
+                  return const Center(child: CircularProgressIndicator());
                 }
                 return CustomButton(
                   text: 'ยืนยัน',
                   onPressed: () {
-                    BlocProvider.of<ChangeEmailBloc>(context).add(
-                      SubmitChangeEmailEvent(_newEmailController.text),
-                    );
+                    final newEmail = _newEmailController.text.trim();
+                    if (newEmail.isNotEmpty && _isValidEmail(newEmail)) {
+                      context.read<UserProfileBloc>().add(
+                            SubmitChangeEmailEvent(newEmail),
+                          );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Please enter a valid email')),
+                      );
+                    }
                   },
                 );
               },
@@ -104,5 +112,16 @@ class _EditEmailFormState extends State<EditEmailForm> {
         ),
       ),
     );
+  }
+
+  bool _isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    return emailRegex.hasMatch(email);
+  }
+
+  @override
+  void dispose() {
+    _newEmailController.dispose();
+    super.dispose();
   }
 }

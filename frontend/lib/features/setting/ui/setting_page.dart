@@ -3,9 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/auth/bloc/auth_bloc.dart';
 import 'package:fundflow/features/auth/bloc/auth_event.dart';
-import 'package:fundflow/features/setting/bloc/change_avatar/change_avatar_bloc.dart';
-import 'package:fundflow/features/setting/bloc/change_avatar/change_avatar_event.dart';
-import 'package:fundflow/features/setting/bloc/change_avatar/change_avatar_state.dart';
+import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/widgets/avatar_selection_modal.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -21,7 +19,7 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
     // Ensure context is available
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final changeAvatarBloc = BlocProvider.of<ChangeAvatarBloc>(context);
+      final changeAvatarBloc = BlocProvider.of<UserProfileBloc>(context);
       changeAvatarBloc.add(FetchUserProfile());
     });
   }
@@ -48,7 +46,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
-          child: BlocBuilder<ChangeAvatarBloc, ChangeAvatarState>(
+          child: BlocBuilder<UserProfileBloc, UserProfileState>(
             buildWhen: (previous, current) {
               return current is UserProfileLoading ||
                   current is UserProfileLoaded ||
@@ -71,12 +69,12 @@ class _SettingsPageState extends State<SettingsPage> {
                           },
                           child: CircleAvatar(
                             radius: 30,
-                            backgroundImage:
-                                user.profileImageUrl?.isNotEmpty == true
-                                    ? NetworkImage(user.profileImageUrl!)
-                                    : const NetworkImage(
-                                            'https://placehold.co/200x200/png')
-                                        as ImageProvider,
+                            backgroundImage: user.profileImageUrl?.isNotEmpty ==
+                                    true
+                                ? NetworkImage(user.profileImageUrl!)
+                                : const NetworkImage(
+                                        'https://placehold.co/200x200/png?text=Select')
+                                    as ImageProvider,
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -185,7 +183,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 );
               } else if (state is UserProfileError) {
-                return Center(child: Text('Error: ${state.message}'));
+                return Center(child: Text('Error: ${state.error}'));
               } else {
                 return Center(child: Text('Error: Unknown state'));
               }
@@ -197,7 +195,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _showChangeAvatarModal(BuildContext context) {
-    final changeAvatarBloc = BlocProvider.of<ChangeAvatarBloc>(context);
+    final changeAvatarBloc = BlocProvider.of<UserProfileBloc>(context);
     showModalBottomSheet(
       context: context,
       builder: (BuildContext modalContext) {

@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fundflow/features/auth/bloc/repassword/repassword_bloc.dart';
 import 'package:fundflow/features/auth/repository/repassword_repo.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/auth/ui/auth_wrapper.dart';
-import 'package:fundflow/features/setting/bloc/change_avatar/change_avatar_bloc.dart';
+import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
 import 'package:fundflow/features/setting/ui/change_password.dart';
 import 'package:fundflow/features/setting/ui/delete_acc_page.dart';
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
     } else {
       Logger.level = Level.debug;
     }
-    const baseUrl = 'http://10.0.2.2:8080/';
+    final String baseUrl = dotenv.env['BASE_URL'] ?? 'http://10.0.2.2:8080/';
     final authenticationRepository = AuthenticationRepository(baseUrl: baseUrl);
     final settingsRepository = SettingsRepository(baseUrl: baseUrl);
     final repasswordRepository = RepasswordRepository(baseUrl: baseUrl);
@@ -70,18 +71,18 @@ class MyApp extends StatelessWidget {
           BlocProvider<AuthenticationBloc>(
             create: (context) => AuthenticationBloc(
               authenticationRepository: authenticationRepository,
-            )..add(AppStarted()), // Handle the authentication flow
+              settingsRepository: settingsRepository,
+            )..add(AppStarted()),
           ),
           BlocProvider<RepasswordBloc>(
             create: (context) => RepasswordBloc(
               repasswordRepository: repasswordRepository,
             ),
           ),
-          BlocProvider<ChangeAvatarBloc>(
-            create: (context) => ChangeAvatarBloc(
-              settingsRepository: settingsRepository,
-            ),
-          ),
+          BlocProvider<UserProfileBloc>(
+              create: (context) =>
+                  UserProfileBloc(repository: settingsRepository)
+                    ..add(FetchUserProfile())),
           // Add other BlocProviders here if needed
         ],
         child: MaterialApp(

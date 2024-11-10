@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/change_avatar/change_avatar_bloc.dart';
-import '../bloc/change_avatar/change_avatar_event.dart';
-import '../bloc/change_avatar/change_avatar_state.dart';
+import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 
 class AvatarSelectionModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final bloc = BlocProvider.of<ChangeAvatarBloc>(context);
+    final bloc = BlocProvider.of<UserProfileBloc>(context);
     bloc.add(FetchAvatarPresets());
 
     return Container(
       height: 400,
-      child: BlocConsumer<ChangeAvatarBloc, ChangeAvatarState>(
+      child: BlocConsumer<UserProfileBloc, UserProfileState>(
         listener: (context, state) {
           if (state is AvatarChangeSuccess) {
             Navigator.pop(context);
-            BlocProvider.of<ChangeAvatarBloc>(context).add(FetchUserProfile());
+            BlocProvider.of<UserProfileBloc>(context).add(FetchUserProfile());
           } else if (state is AvatarChangeFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                   content: Text('Failed to change avatar: ${state.message}')),
             );
             Navigator.pop(context);
-            BlocProvider.of<ChangeAvatarBloc>(context).add(FetchUserProfile());
+            BlocProvider.of<UserProfileBloc>(context).add(FetchUserProfile());
           }
         },
         builder: (context, state) {
@@ -53,7 +51,7 @@ class AvatarSelectionModal extends StatelessWidget {
               },
             );
           } else if (state is UserProfileError) {
-            return Center(child: Text('Error: ${state.message}'));
+            return Center(child: Text('Error: ${state.error}'));
           } else {
             return const SizedBox.shrink();
           }
