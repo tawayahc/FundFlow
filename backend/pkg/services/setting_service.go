@@ -28,10 +28,10 @@ func ChangeEmail(email string, userID uint) error {
 	return nil
 }
 
-func ChangePassword(oldPassword string, newPassword string, userName string) error {
+func ChangePassword(oldPassword string, newPassword string, userID uint) error {
 	// Get userAuthentication from username
 	var userAuthentication models.Authentication
-	config.DB.Where("username = ?", userName).First(&userAuthentication)
+	config.DB.Where("id = ?", userID).First(&userAuthentication)
 
 	// Validate the old password
 	if err := utils.ComparePasswords(userAuthentication.Password, oldPassword); err != nil {
@@ -51,10 +51,10 @@ func ChangePassword(oldPassword string, newPassword string, userName string) err
 	return nil
 }
 
-func DeleteAccount(userName string, password string) error {
+func DeleteAccount(userID uint, password string) error {
 	// Get userAuthentication from username
 	var userAuthentication models.Authentication
-	config.DB.Where("username = ?", userName).First(&userAuthentication)
+	config.DB.Where("id = ?", userID).First(&userAuthentication)
 
 	// Validate the password
 	if err := utils.ComparePasswords(userAuthentication.Password, password); err != nil {

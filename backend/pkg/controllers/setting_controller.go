@@ -38,7 +38,7 @@ func ChangePassword(c *gin.Context) {
 
 	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	err := services.ChangePassword(passwordRequest.OldPassword, passwordRequest.NewPassword, claims.Username)
+	err := services.ChangePassword(passwordRequest.OldPassword, passwordRequest.NewPassword, claims.UserID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -56,7 +56,7 @@ func DeleteAccount(c *gin.Context) {
 
 	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	err := services.DeleteAccount(claims.Username, deleteRequest.Password)
+	err := services.DeleteAccount(claims.UserID, deleteRequest.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
