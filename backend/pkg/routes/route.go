@@ -57,6 +57,7 @@ func SetupRouter() *gin.Engine {
 		protectedBank.GET("/:id", controllers.GetBank)
 		protectedBank.GET("/all", controllers.GetBanks)
 		protectedBank.POST("/create", controllers.CreateBank)
+		protectedBank.POST("/transfer", controllers.TransferMoney)
 		protectedBank.PUT("/:bank_id", controllers.UpdateBank)
 		protectedBank.DELETE("/:bank_id", controllers.DeleteBank)
 	}
