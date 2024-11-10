@@ -23,7 +23,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	userProfile, _ := utils.GetUserProfileByUsername(creds.Username)
+	userProfile, _ := utils.GetUserProfileByUserName(creds.Username)
 
 	// Generate JWT token
 	tokenString, err := services.GenerateJWTToken(creds.Username, userProfile.AuthID)

@@ -24,6 +24,7 @@ type UserProfile struct {
 }
 
 type UpdateUserProfileRequest struct {
+	NewUserName       *string    `json:"new_user_name"`
 	NewFirstName      *string    `json:"new_first_name"`
 	NewLastName       *string    `json:"new_last_name"`
 	NewUserProfilePic *string    `json:"new_user_profile_pic"`
@@ -34,12 +35,13 @@ type UpdateUserProfileRequest struct {
 }
 
 type UserProfileDTO struct {
-	ID              uint      `json:"id"`
-	FirstName       string    `json:"first_name"`
-	LastName        string    `json:"last_name"`
-	UserProfilePic  string    `json:"user_profile_pic"`
-	Email           string    `json:"email"`
-	PhoneNumber     string    `json:"phone_number"`
-	Address         string    `json:"address"`
-	DateOfBirth     time.Time `json:"date_of_birth"`
+	ID             uint      `json:"id"`
+	Username       string    `json:"username"`
+	FirstName      string    `json:"first_name"`
+	LastName       string    `json:"last_name"`
+	UserProfilePic string    `json:"user_profile_pic"`
+	Email          string    `json:"email"`
+	PhoneNumber    string    `json:"phone_number"`
+	Address        string    `json:"address"`
+	DateOfBirth    time.Time `json:"date_of_birth"`
 }

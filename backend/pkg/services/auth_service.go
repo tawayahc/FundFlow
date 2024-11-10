@@ -70,8 +70,7 @@ func ValidateUserCredentials(creds models.Credentials) (*models.Authentication, 
 func GenerateJWTToken(username string, userID uint) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
 	claims := &models.Claims{
-		Username: username,
-		UserID:   userID,
+		UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
