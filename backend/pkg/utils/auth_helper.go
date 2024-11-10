@@ -42,16 +42,11 @@ func GetUserProfileByUserID(userID uint) (*models.UserProfile, error) {
 }
 
 // GetUserProfileByUserName retrieves a user profile by username
-func GetUserProfileByUserName(username string) (*models.UserProfile, error) {
+func GetUserIDByUserName(username string) (uint, error) {
 	var auth models.Authentication
 	if err := config.DB.Where("username = ?", username).First(&auth).Error; err != nil {
-		return nil, errors.New("user not found")
+		return 0, errors.New("user not found")
 	}
 
-	var userProfile models.UserProfile
-	if err := config.DB.Where("auth_id = ?", auth.ID).First(&userProfile).Error; err != nil {
-		return nil, errors.New("user profile not found")
-	}
-
-	return &userProfile, nil
+	return auth.ID, nil
 }

@@ -23,10 +23,10 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	userProfile, _ := utils.GetUserProfileByUserName(creds.Username)
+	userID, _ := utils.GetUserIDByUserName(creds.Username)
 
 	// Generate JWT token
-	tokenString, err := services.GenerateJWTToken(userProfile.AuthID)
+	tokenString, err := services.GenerateJWTToken(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error generating token"})
 		return
