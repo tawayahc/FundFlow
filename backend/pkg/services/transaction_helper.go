@@ -95,6 +95,12 @@ func CreateTransaction(transaction models.CreateTransactionRequest, userID uint)
 		metaData = &transaction.MetaData
 	}
 
+	// Check if the transaction repetition of amount, bank id, created at and user profile id
+	var existingTransaction models.Transaction
+	if err := config.DB.Where("amount = ? AND bank_id = ? AND created_at = ? AND user_profile_id = ?", transaction.Amount, transaction.BankID, createdAt, userID).First(&existingTransaction).Error; err == nil {
+		return errors.New("transaction already exists")
+	}
+
 	// Create a new transaction
 	newTransaction := models.Transaction{
 		BankID:        transaction.BankID,
