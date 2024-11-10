@@ -43,7 +43,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		// Check that the username in the token is in the database
-		if err := utils.ValidateTokenUsername(claims.Username); err != nil {
+		if err := utils.ValidateTokenUserID(claims.UserID); err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
 			c.Abort()
 			return

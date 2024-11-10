@@ -16,7 +16,7 @@ func ChangeEmail(email string, userID uint) error {
 
 	// Get the userProfile from userID
 	var userProfile models.UserProfile
-	if err := config.DB.Where("id = ?", userID).First(&userProfile).Error; err != nil {
+	if err := config.DB.Where("auth_id = ?", userID).First(&userProfile).Error; err != nil {
 		return errors.New("user not found")
 	}
 
