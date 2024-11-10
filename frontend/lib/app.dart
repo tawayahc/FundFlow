@@ -6,6 +6,7 @@ import 'package:fundflow/features/auth/repository/repassword_repo.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/auth/ui/auth_wrapper.dart';
+import 'package:fundflow/features/setting/bloc/change_avatar/change_avatar_bloc.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
 import 'package:fundflow/features/setting/ui/change_password.dart';
 import 'package:fundflow/features/setting/ui/delete_acc_page.dart';
@@ -74,6 +75,11 @@ class MyApp extends StatelessWidget {
           BlocProvider<RepasswordBloc>(
             create: (context) => RepasswordBloc(
               repasswordRepository: repasswordRepository,
+            ),
+          ),
+          BlocProvider<ChangeAvatarBloc>(
+            create: (context) => ChangeAvatarBloc(
+              settingsRepository: settingsRepository,
             ),
           ),
           // Add other BlocProviders here if needed

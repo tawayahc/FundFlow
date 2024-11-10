@@ -15,6 +15,8 @@ class AuthenticationBloc
     on<AuthenticationLoginRequested>(_onLoginRequested);
     on<AuthenticationRegisterRequested>(_onRegisterRequested);
     on<AuthenticationLogoutRequested>(_onLogoutRequested);
+    on<AuthenticationRefreshRequested>(
+        _onAuthenticationRefreshRequested); // New event handler
   }
 
   Future<void> _onAppStarted(
@@ -27,14 +29,15 @@ class AuthenticationBloc
       final String? token = await authenticationRepository.getStoredToken();
       if (token != null) {
         logger.d('Token found, user is authenticated');
-        emit(Authenticated(token: token));
+        final User user = await authenticationRepository.getCurrentUser();
+        emit(Authenticated(token: token, user: user));
       } else {
         logger.e('No token found, user is unauthenticated');
         emit(Unauthenticated());
       }
     } catch (e) {
       logger.e('Error: $e');
-      emit(Unauthenticated());
+      emit(AuthenticationFailure(error: e.toString()));
     }
   }
 
@@ -48,7 +51,8 @@ class AuthenticationBloc
         username: event.username,
         password: event.password,
       );
-      emit(Authenticated(token: token));
+      final User user = await authenticationRepository.getCurrentUser();
+      emit(Authenticated(token: token, user: user));
     } catch (e) {
       emit(AuthenticationFailure(error: e.toString()));
     }
@@ -65,7 +69,8 @@ class AuthenticationBloc
         password: event.password,
         username: event.username,
       );
-      emit(Authenticated(token: token));
+      final User user = await authenticationRepository.getCurrentUser();
+      emit(Authenticated(token: token, user: user));
     } catch (e) {
       emit(AuthenticationFailure(error: e.toString()));
     }
@@ -79,6 +84,25 @@ class AuthenticationBloc
     try {
       await authenticationRepository.logout();
       emit(Unauthenticated());
+    } catch (e) {
+      emit(AuthenticationFailure(error: e.toString()));
+    }
+  }
+
+  // New event handler to refresh user data
+  Future<void> _onAuthenticationRefreshRequested(
+    AuthenticationRefreshRequested event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    emit(AuthenticationLoading());
+    try {
+      final String? token = await authenticationRepository.getStoredToken();
+      if (token != null) {
+        final User user = await authenticationRepository.getCurrentUser();
+        emit(Authenticated(token: token, user: user));
+      } else {
+        emit(Unauthenticated());
+      }
     } catch (e) {
       emit(AuthenticationFailure(error: e.toString()));
     }

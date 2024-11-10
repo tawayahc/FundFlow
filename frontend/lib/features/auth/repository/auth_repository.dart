@@ -92,37 +92,63 @@ class AuthenticationRepository {
     }
   }
 
-  Future<User?> getCurrentUser() async {
-    String? token = await _secureStorage.read(key: 'token');
-
-    if (token != null) {
-      try {
-        _dio.options.headers['Authorization'] = 'Bearer $token';
-        final response = await _dio.get("/me");
-
-        if (response.statusCode == 200) {
-          return User.fromJson(response.data);
-        } else {
-          logger.e('Failed to fetch user: ${response.data}');
-          return null;
-        }
-      } on DioException catch (dioError) {
-        logger.e('Dio error: ${dioError.message}');
-        return null;
-      } catch (e) {
-        logger.e('Error: $e');
-        return null;
-      }
-    }
-    return null;
-  }
-
   Future<String?> getStoredToken() async {
     return await _secureStorage.read(key: 'token');
   }
 
   Future<void> logout() async {
     await _secureStorage.delete(key: 'token');
-    // No need to call /logout on the server
+  }
+
+  /// Retrieves the current user's information.
+  Future<User> getCurrentUser() async {
+    try {
+      final String? token = await _secureStorage.read(key: 'token');
+      if (token == null) {
+        throw Exception('No authentication token found');
+      }
+
+      final response = await _dio.get('/profile', // Adjust endpoint
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $token', // Use the retrieved token
+            },
+          ));
+      if (response.statusCode == 200) {
+        return User.fromJson(response.data);
+      } else {
+        throw Exception('Failed to load user');
+      }
+    } catch (e) {
+      throw Exception('Failed to load user: $e');
+    }
+  }
+
+  /// Updates the user's avatar with the provided [avatarUrl].
+  Future<void> updateUserAvatar(String avatarUrl) async {
+    try {
+      final String? token = await _secureStorage.read(key: 'token');
+      if (token == null) {
+        throw Exception('No authentication token found');
+      }
+
+      final response = await _dio.post(
+        '/api/user/update-avatar', // Adjust endpoint
+        data: {
+          'profileImageUrl': avatarUrl
+        }, // Ensure the key matches your backend
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token', // Use the retrieved token
+          },
+        ),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to update avatar');
+      }
+    } catch (e) {
+      throw Exception('Failed to update avatar: $e');
+    }
   }
 }
