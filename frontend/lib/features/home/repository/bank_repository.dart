@@ -63,13 +63,13 @@ class BankRepository {
 
       // Check for changes and add to data if necessary
       if (bank.name != originalBank.name) {
-        data['name'] = bank.name;
+        data['new_name'] = bank.name;
       }
       if (bank.amount != originalBank.amount) {
-        data['amount'] = bank.amount;
+        data['new_amount'] = bank.amount;
       }
       if (bank.bank_name != originalBank.bank_name) {
-        data['bank_name'] = bank.bank_name;
+        data['new_bank_name'] = bank.bank_name;
       }
 
       // If nothing has changed, we can skip the API call
