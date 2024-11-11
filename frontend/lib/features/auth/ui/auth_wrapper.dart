@@ -13,6 +13,8 @@ class AuthenticationWrapper extends StatelessWidget {
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
       builder: (context, state) {
         if (state is Authenticated) {
+          // final userProfile = state.userProfile; // Access userProfile
+          // NOTE: we can pass user profile to home page
           return const BottomNavBar();
         } else if (state is Unauthenticated || state is AuthInitial) {
           return const LoginPage();
@@ -20,12 +22,8 @@ class AuthenticationWrapper extends StatelessWidget {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
-        } else if (state is AuthenticationFailure) {
-          return Scaffold(
-            body: Center(child: Text('Error: ${state.error}')),
-          );
         }
-        return Container(); // Default case
+        return const LoginPage();
       },
     );
   }
