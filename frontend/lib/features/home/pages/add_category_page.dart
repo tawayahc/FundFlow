@@ -39,9 +39,6 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
           child: BlocListener<CategoryBloc, CategoryState>(
             listener: (context, state) {
               if (state is CategoriesLoaded) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Category add successfully')),
-                );
                 Navigator.pop(context); // Return to the previous screen
               } else if (state is CategoryError) {
                 // Handle error state, show a SnackBar for example
