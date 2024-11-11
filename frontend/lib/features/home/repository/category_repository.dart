@@ -3,56 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/home/models/category.dart';
+import 'package:fundflow/utils/api_helper.dart';
 
 //http://localhost:8080/categories/all
 //localhost:8080/categories/create
 class CategoryRepository {
   final Dio dio;
-  final FlutterSecureStorage storage = FlutterSecureStorage();
-  final String baseUrl;
 
-  CategoryRepository({required this.baseUrl})
-      : dio = Dio(BaseOptions(
-          baseUrl: baseUrl,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        )) {
-    _initializeInterceptors();
-  }
-
-  void _initializeInterceptors() {
-    dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) async {
-        try {
-          // **Conditional Authorization Header Addition**
-          // Only add Bearer token if Authorization header is not already set
-          if (!options.headers.containsKey('Authorization')) {
-            String? token = await storage.read(key: 'token');
-            if (token != null) {
-              options.headers['Authorization'] = 'Bearer $token';
-              logger.d('Authorization header set with token: $token');
-            } else {
-              logger.w('No token found in secure storage.');
-            }
-          } else {
-            logger.d('Authorization header already set for this request.');
-          }
-        } catch (e) {
-          logger.e('Error reading token from storage: $e');
-        }
-        return handler.next(options);
-      },
-      onResponse: (response, handler) {
-        // Handle responses globally if needed
-        return handler.next(response);
-      },
-      onError: (DioException e, handler) {
-        // Handle errors globally if needed
-        return handler.next(e);
-      },
-    ));
-  }
+  CategoryRepository({required ApiHelper apiHelper}) : dio = apiHelper.dio;
 
   // Fetch categories from the API
   Future<Map<String, dynamic>> getCategories() async {

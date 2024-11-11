@@ -2,54 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/home/models/bank.dart';
+import 'package:fundflow/utils/api_helper.dart';
 
 class BankRepository {
   final Dio dio;
-  final FlutterSecureStorage storage = FlutterSecureStorage();
-  final String baseUrl;
 
-  BankRepository({required this.baseUrl})
-      : dio = Dio(BaseOptions(
-          baseUrl: baseUrl,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        )) {
-    _initializeInterceptors();
-  }
-
-  void _initializeInterceptors() {
-    dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) async {
-        try {
-          // **Conditional Authorization Header Addition**
-          // Only add Bearer token if Authorization header is not already set
-          if (!options.headers.containsKey('Authorization')) {
-            String? token = await storage.read(key: 'token');
-            if (token != null) {
-              options.headers['Authorization'] = 'Bearer $token';
-              logger.d('Authorization header set with token: $token');
-            } else {
-              logger.w('No token found in secure storage.');
-            }
-          } else {
-            logger.d('Authorization header already set for this request.');
-          }
-        } catch (e) {
-          logger.e('Error reading token from storage: $e');
-        }
-        return handler.next(options);
-      },
-      onResponse: (response, handler) {
-        // Handle responses globally if needed
-        return handler.next(response);
-      },
-      onError: (DioException e, handler) {
-        // Handle errors globally if needed
-        return handler.next(e);
-      },
-    ));
-  }
+  BankRepository({required ApiHelper apiHelper}) : dio = apiHelper.dio;
 
   Future<Map<String, dynamic>> getBanks() async {
     try {
