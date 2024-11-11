@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fundflow/pkg/config"
 	"fundflow/pkg/models"
+
+	"gorm.io/gorm"
 )
 
 // GetCategories retrieves all categories for a user
@@ -173,4 +175,54 @@ func UpdateCategory(categoryID uint, UpdateCategory models.UpdateCategoryRequest
 	}
 
 	return nil
+}
+
+// TransferCategory transfers an amount between two categories
+func TransferCategory(transferRequest models.TransferCategoryRequest, userID uint) error {
+	// Validate the transfer amount
+	if transferRequest.Amount <= 0 {
+		return errors.New("invalid transfer amount")
+	}
+
+	// Check if the categories exist and are different
+	var fromCategory, toCategory models.Category
+	if transferRequest.FromCategoryID != 0 {
+		if err := config.DB.Where("id = ? AND user_profile_id = ?", transferRequest.FromCategoryID, userID).First(&fromCategory).Error; err != nil {
+			return errors.New("from category not found")
+		}
+		if fromCategory.Amount < transferRequest.Amount {
+			return errors.New("insufficient funds in the from category")
+		}
+	}
+
+	if err := config.DB.Where("id = ? AND user_profile_id = ?", transferRequest.ToCategoryID, userID).First(&toCategory).Error; err != nil {
+		return errors.New("to category not found")
+	}
+	if transferRequest.FromCategoryID != 0 && fromCategory.ID == toCategory.ID {
+		return errors.New("cannot transfer to the same category")
+	}
+
+	// Check Cash Box if FromCategoryID is 0 (Cash Box transaction)
+	if transferRequest.FromCategoryID == 0 {
+		var totalBankAmount, totalCategoriesAmount float64
+		config.DB.Table("bank_details").Select("COALESCE(sum(amount), 0)").Where("user_profile_id = ?", userID).Row().Scan(&totalBankAmount)
+		config.DB.Table("categories").Select("COALESCE(sum(amount), 0)").Where("user_profile_id = ?", userID).Row().Scan(&totalCategoriesAmount)
+
+		if totalBankAmount-totalCategoriesAmount < transferRequest.Amount {
+			return errors.New("insufficient funds in the Cash Box")
+		}
+	}
+
+	// Update categories in a transaction
+	return config.DB.Transaction(func(tx *gorm.DB) error {
+		if transferRequest.FromCategoryID != 0 {
+			if err := tx.Model(&fromCategory).Update("amount", gorm.Expr("amount - ?", transferRequest.Amount)).Error; err != nil {
+				return errors.New("failed to update 'from' category amount")
+			}
+		}
+		if err := tx.Model(&toCategory).Update("amount", gorm.Expr("amount + ?", transferRequest.Amount)).Error; err != nil {
+			return errors.New("failed to update 'to' category amount")
+		}
+		return nil
+	})
 }

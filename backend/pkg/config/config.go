@@ -45,7 +45,7 @@ func ConnectDB() {
 	}
 
 	// Run migrations for Book and User models
-	err = DB.AutoMigrate(&models.Authentication{}, &models.UserProfile{}, &models.OTP{}, &models.Transaction{}, &models.BankDetail{}, &models.Category{})
+	err = DB.AutoMigrate(&models.Authentication{}, &models.UserProfile{}, &models.OTP{}, &models.Transaction{}, &models.BankDetail{}, &models.Category{}, &models.TransferTransaction{})
 	if err != nil {
 		log.Fatalf("Failed to migrate database: %v", err)
 	}

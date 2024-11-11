@@ -43,3 +43,10 @@ type CategoryTransactionsDTO struct {
 	CategoryDTO
 	Transactions []TransactionDTO `json:"transactions"`
 }
+
+// Transfer amount between categories
+type TransferCategoryRequest struct {
+	FromCategoryID uint    `json:"from_category_id" binding:"required"`
+	ToCategoryID   uint    `json:"to_category_id" binding:"required"`
+	Amount         float64 `json:"amount" binding:"required"`
+}

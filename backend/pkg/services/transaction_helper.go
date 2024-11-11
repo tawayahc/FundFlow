@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fundflow/pkg/config"
 	"fundflow/pkg/models"
-	"time"
+	"fundflow/pkg/utils"
 
 	"gorm.io/gorm"
 )
@@ -75,16 +75,10 @@ func CreateTransaction(transaction models.CreateTransactionRequest, userID uint)
 		}
 	}
 
-	// Convert created_at to time.Time
-	var createdAt time.Time
-	var err error
-	if transaction.CreatedAtTime != "" {
-		createdAt, err = time.Parse("2006-01-02 15:04:05", transaction.CreatedAtDate+" "+transaction.CreatedAtTime)
-	} else {
-		createdAt, err = time.Parse("2006-01-02", transaction.CreatedAtDate)
-	}
+	// Parse the created at date and time
+	createdAt, err := utils.ParseCreatedAt(transaction.CreatedAtDate, transaction.CreatedAtTime)
 	if err != nil {
-		return errors.New("invalid created_at date and time")
+		return err
 	}
 
 	// Check if MetaData is an empty string and set it to nil if true
