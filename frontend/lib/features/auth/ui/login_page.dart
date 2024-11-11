@@ -6,6 +6,7 @@ import 'package:fundflow/core/widgets/custom_input_box.dart';
 import 'package:fundflow/core/widgets/custom_password_input_box.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/utils/validator.dart';
 
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
@@ -44,11 +45,11 @@ class _LoginPageState extends State<LoginPage> {
             if (state is Authenticated) {
               // Navigate to home page
               Navigator.of(context).pushReplacementNamed('/home');
+              logger.d('Authenticated');
             } else if (state is AuthenticationFailure) {
-              // Show error message
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
-              );
+              logger.e('AuthenticationFailure: ${state.error}');
+            } else {
+              logger.d('AuthenticationBloc state: Unkonwn $state');
             }
           },
           builder: (context, state) {
@@ -56,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
               // Show loading indicator
               return const Center(child: CircularProgressIndicator());
             }
-      
+
             return SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -78,9 +79,8 @@ class _LoginPageState extends State<LoginPage> {
                       'เข้าสู่ระบบ',
                       style: TextStyle(
                         color: Color(0xFF41486D),
-                        fontSize: 34, // Font size
-                        fontWeight: FontWeight.bold, // Bold text
-                        //letterSpacing: 2.0, // Spacing between letters
+                        fontSize: 34,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -91,8 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        const SizedBox(height: 12),
-      
+                        // Username Input Field
                         CustomInputBox(
                           labelText: 'ชื่อบัญชีผู้ใช้',
                           prefixIcon: const Icon(
@@ -100,32 +99,65 @@ class _LoginPageState extends State<LoginPage> {
                             color: Color(0xFFD0D0D0),
                           ),
                           controller: _usernameController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'กรุณากรอกชื่อบัญชีผู้ใช้';
+                            }
+                            return null;
+                          },
                         ),
-      
+
                         const SizedBox(height: 12),
-      
+
+                        // Password Input Field
                         CustomPasswordInputBox(
-                            labelText: 'รหัสผ่าน',
-                            focusNode: FocusNode(),
-                            controller: _passwordController),
-      
-                        //const SizedBox(height: 5),
+                          labelText: 'รหัสผ่าน',
+                          focusNode: FocusNode(),
+                          controller: _passwordController,
+                          validator: (value) {
+                            String result = validatePassword(value ?? '');
+                            return result.isEmpty ? null : result;
+                          },
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        // "Forgot Password?" Button and Error Message
                         Align(
                           alignment: Alignment.topRight,
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamed('/forget1');
-                            },
-                            child: const Text(
-                              'ลืมรหัสผ่านใช่ไหม?',
-                              style: TextStyle(
-                                  fontSize: 12, // Font size
-                                  color: Color(0xFFFF9595)),
-                            ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushNamed('/forget1');
+                                },
+                                child: const Text(
+                                  'ลืมรหัสผ่านใช่ไหม?',
+                                  style: TextStyle(
+                                      fontSize: 12, // Font size
+                                      color: Color(0xFFFF9595)),
+                                ),
+                              ),
+                              // Optional: Additional space or widgets can be added here
+                            ],
                           ),
                         ),
+
                         const SizedBox(height: 12),
-      
+                        // Error Message
+                        if (state is AuthenticationFailure)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: Text(
+                              state.error,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        // Login Button
                         CustomButton(
                           text: 'เข้าสู่ระบบ',
                           onPressed: () {
@@ -140,6 +172,8 @@ class _LoginPageState extends State<LoginPage> {
                             }
                           },
                         ),
+
+                        // Registration Prompt
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
