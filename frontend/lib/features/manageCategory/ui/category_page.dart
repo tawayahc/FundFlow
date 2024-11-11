@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
@@ -7,7 +8,8 @@ import '../../home/models/transaction.dart';
 import '../../home/repository/transaction_repository.dart';
 
 class CategoryPage extends StatefulWidget {
-  const CategoryPage({super.key});
+  final Category category;
+  const CategoryPage({super.key, required this.category});
 
   @override
   _CategoryPageState createState() => _CategoryPageState();
