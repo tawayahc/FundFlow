@@ -21,7 +21,11 @@ class BankSection extends StatelessWidget {
               itemCount: state.banks.length,
               itemBuilder: (context, index) {
                 final bank = state.banks[index];
-                return BankCard(bank: bank); // Use BankCard from separate file
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/home');
+                  },
+                    child: BankCard(bank: bank)); // Use BankCard from separate file
               },
             ),
           );
