@@ -42,10 +42,14 @@ class _BankAccountPageState extends State<BankAccountPage>
   List<Transaction> get filteredTransactions {
     if (_tabController.index == 0) {
       // Show only income transactions
-      return transactions.where((transaction) => transaction.amount > 0).toList();
+      return transactions
+          .where((transaction) => transaction.amount > 0)
+          .toList();
     } else {
       // Show only outcome transactions
-      return transactions.where((transaction) => transaction.amount < 0).toList();
+      return transactions
+          .where((transaction) => transaction.amount < 0)
+          .toList();
     }
   }
 
@@ -61,16 +65,17 @@ class _BankAccountPageState extends State<BankAccountPage>
               IconButton(
                 icon: const Icon(Icons.arrow_back_ios),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/pocket_management'); // ย้อนกลับไปยังหน้าก่อนหน้า
+                  Navigator.pushNamed(context,
+                      '/pocket_management'); // ย้อนกลับไปยังหน้าก่อนหน้า
                 },
               ),
               //---------- **รูปธนาคาร
               Row(
                 children: [
                   // รูปธนาคาร
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 24,
-                    backgroundColor: widget.bank.color,
+                    backgroundColor: Color(0xFF414141),
                     // backgroundImage: ,
                   ),
                   const SizedBox(width: 10),
@@ -80,7 +85,8 @@ class _BankAccountPageState extends State<BankAccountPage>
                       // ชื่อธนาคาร
                       Text(
                         widget.bank.name,
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       // ชื่อเต็ม
                       Text(
@@ -94,16 +100,17 @@ class _BankAccountPageState extends State<BankAccountPage>
               const SizedBox(height: 16),
               //---------- **กล่องเงิน
               Container(
-                padding: const EdgeInsets.fromLTRB(0, 8, 4, 0), // padding (left, top, right, bottom)
+                padding: const EdgeInsets.fromLTRB(
+                    0, 8, 4, 0), // padding (left, top, right, bottom)
                 width: 296, // สุดขอบ
                 decoration: BoxDecoration(
-                  color: widget.bank.color,
+                  color: const Color(0xFF414141),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                    Row(
                       children: [
                         SizedBox(width: 16),
                         Text(
@@ -112,23 +119,25 @@ class _BankAccountPageState extends State<BankAccountPage>
                         ),
                       ],
                     ),
-                    const SizedBox(height: 0),
-                    const Divider(
+                    SizedBox(height: 0),
+                    Divider(
                       color: Colors.white,
                       thickness: 2,
                       height: 3,
                       indent: 2,
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     Center(
                       child: Text(
-                        '฿ ${widget.bank.balance}',
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                        '฿ 10000',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    const Align(
+                    SizedBox(height: 8),
+                    Align(
                       alignment: Alignment.centerRight,
                       child: Text(
                         'ข้อมูล ณ เวลา 00:00 น.',
@@ -159,8 +168,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                           width: 200,
                           margin: const EdgeInsets.symmetric(horizontal: 20),
                           decoration: const BoxDecoration(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(10)),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
                             color: AppColors.primary,
                           ),
                           child: TabBar(
@@ -170,13 +178,13 @@ class _BankAccountPageState extends State<BankAccountPage>
                             indicator: const BoxDecoration(
                               color: Colors.green,
                               borderRadius:
-                              BorderRadius.all(Radius.circular(10)),
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
                             labelColor: Colors.white,
                             unselectedLabelColor: Colors.white,
                             tabs: const [
                               Tab(
-                                icon: Icon(Icons.download) ,
+                                icon: Icon(Icons.download),
                               ),
                               Tab(
                                 icon: Icon(Icons.upload),
@@ -198,7 +206,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                   slivers: [
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
-                            (context, index) {
+                        (context, index) {
                           final filteredItem = filteredTransactions[index];
                           return TransactionItem(
                             amount: filteredItem.amount,

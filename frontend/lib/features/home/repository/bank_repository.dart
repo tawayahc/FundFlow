@@ -15,14 +15,40 @@ class BankRepository {
             'Content-Type': 'application/json',
           },
         )) {
-    _initializeToken();
+    _initializeInterceptors();
   }
 
-  Future<void> _initializeToken() async {
-    String? token = await storage.read(key: 'token');
-    if (token != null) {
-      dio.options.headers['Authorization'] = 'Bearer $token';
-    }
+  void _initializeInterceptors() {
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        try {
+          // **Conditional Authorization Header Addition**
+          // Only add Bearer token if Authorization header is not already set
+          if (!options.headers.containsKey('Authorization')) {
+            String? token = await storage.read(key: 'token');
+            if (token != null) {
+              options.headers['Authorization'] = 'Bearer $token';
+              logger.d('Authorization header set with token: $token');
+            } else {
+              logger.w('No token found in secure storage.');
+            }
+          } else {
+            logger.d('Authorization header already set for this request.');
+          }
+        } catch (e) {
+          logger.e('Error reading token from storage: $e');
+        }
+        return handler.next(options);
+      },
+      onResponse: (response, handler) {
+        // Handle responses globally if needed
+        return handler.next(response);
+      },
+      onError: (DioException e, handler) {
+        // Handle errors globally if needed
+        return handler.next(e);
+      },
+    ));
   }
 
   Future<Map<String, dynamic>> getBanks() async {
@@ -51,8 +77,6 @@ class BankRepository {
   // Add a new bank to the server
   Future<void> addBank(Bank bank) async {
     try {
-      await _initializeToken();
-
       final response = await dio.post("/banks/create", data: {
         'name': bank.name,
         'bank_name': bank.bank_name,

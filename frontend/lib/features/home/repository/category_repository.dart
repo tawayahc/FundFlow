@@ -18,14 +18,40 @@ class CategoryRepository {
             'Content-Type': 'application/json',
           },
         )) {
-    _initializeToken();
+    _initializeInterceptors();
   }
 
-  Future<void> _initializeToken() async {
-    String? token = await storage.read(key: 'token');
-    if (token != null) {
-      dio.options.headers['Authorization'] = 'Bearer $token';
-    }
+  void _initializeInterceptors() {
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        try {
+          // **Conditional Authorization Header Addition**
+          // Only add Bearer token if Authorization header is not already set
+          if (!options.headers.containsKey('Authorization')) {
+            String? token = await storage.read(key: 'token');
+            if (token != null) {
+              options.headers['Authorization'] = 'Bearer $token';
+              logger.d('Authorization header set with token: $token');
+            } else {
+              logger.w('No token found in secure storage.');
+            }
+          } else {
+            logger.d('Authorization header already set for this request.');
+          }
+        } catch (e) {
+          logger.e('Error reading token from storage: $e');
+        }
+        return handler.next(options);
+      },
+      onResponse: (response, handler) {
+        // Handle responses globally if needed
+        return handler.next(response);
+      },
+      onError: (DioException e, handler) {
+        // Handle errors globally if needed
+        return handler.next(e);
+      },
+    ));
   }
 
   // Fetch categories from the API
@@ -72,8 +98,6 @@ class CategoryRepository {
   // Add a new category to the server
   Future<void> addCategory(Category category) async {
     try {
-      // Ensure token is properly set in headers
-      await _initializeToken();
       logger.i(
           'Adding category: ${category.amount} ${category.name} ${category.color} ');
 
@@ -106,8 +130,6 @@ class CategoryRepository {
   Future<void> editCategory(
       Category originalCategory, Category category) async {
     try {
-      // Ensure token is properly set in headers
-      await _initializeToken();
       logger.i(
           'Editing category: ${category.amount} ${category.name} ${category.color} ');
 
