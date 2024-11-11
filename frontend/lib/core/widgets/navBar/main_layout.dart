@@ -2,8 +2,10 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
+import 'package:fundflow/features/home/ui/add_bank.dart';
 import 'package:fundflow/features/manageBankAccount/ui/bank_account_page.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
+import 'package:fundflow/features/setting/ui/setting_page.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -34,8 +36,8 @@ class _NavBarState extends State<BottomNavBar>
   Widget build(BuildContext context) {
     final List<Widget> onNavBarPages = [
       const HomePage(),
-      const CategoryPage(),
-      const BankAccountPage()
+      const AddBankPage(),
+      const SettingsPage()
     ];
 
     return Scaffold(

@@ -90,14 +90,14 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme, // Apply the Poppins light theme
           darkTheme: AppTheme.darkTheme, // Apply the Poppins dark theme
           themeMode: ThemeMode.system,
-          home:
-              const AuthenticationWrapper(), // Decide whether to show login or HomePage
+          home: BottomNavBar(),
+              // const AuthenticationWrapper(), // Decide whether to show login or HomePage
           routes: {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegistrationPage(),
             '/forget1': (context) => ForgetPage(),
             '/setting_page': (context) => SettingsPage(),
-            '/pocket_management': (context) => CategoryPage(),
+            // '/pocket_management': (context) => CategoryPage(),
             '/setting_page/edit_email': (context) =>
                 EditEmailPage(repository: settingsRepository),
             '/setting_page/change_password': (context) =>
@@ -107,7 +107,7 @@ class MyApp extends StatelessWidget {
             '/home': (context) => const BottomNavBar(),
             '/addBank': (context) => const AddBankPage(),
             '/addCategory': (context) => const AddCategoryPage(),
-            '/manageBankAccount': (context) => const BankAccountPage(),
+            // '/manageBankAccount': (context) => const BankAccountPage(bank: bank,),
           },
           // builder: (context, child) => const BottomNavBar(), // Apply padding only to the body
           debugShowCheckedModeBanner: false,

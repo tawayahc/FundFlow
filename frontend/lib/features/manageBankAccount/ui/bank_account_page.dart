@@ -3,11 +3,13 @@ import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
 
 import '../../../core/themes/app_styles.dart';
+import '../../home/models/bank.dart';
 import '../../home/models/transaction.dart';
 import '../../home/repository/transaction_repository.dart';
 
 class BankAccountPage extends StatefulWidget {
-  const BankAccountPage({super.key});
+  final Bank bank;
+  const BankAccountPage({super.key, required this.bank});
 
   @override
   _BankAccountPageState createState() => _BankAccountPageState();
@@ -63,26 +65,27 @@ class _BankAccountPageState extends State<BankAccountPage>
                 },
               ),
               //---------- **รูปธนาคาร
-              const Row(
+              Row(
                 children: [
                   // รูปธนาคาร
                   CircleAvatar(
                     radius: 24,
+                    backgroundColor: widget.bank.color,
                     // backgroundImage: ,
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // ชื่อธนาคาร
                       Text(
-                        'กสิกร',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        widget.bank.name,
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       // ชื่อเต็ม
                       Text(
-                        'ธนาคารกสิกรไทย',
-                        style: TextStyle(color: Colors.grey),
+                        'ธนาคาร${widget.bank.name}',
+                        style: const TextStyle(color: Colors.grey),
                       ),
                     ],
                   ),
@@ -94,13 +97,13 @@ class _BankAccountPageState extends State<BankAccountPage>
                 padding: const EdgeInsets.fromLTRB(0, 8, 4, 0), // padding (left, top, right, bottom)
                 width: 296, // สุดขอบ
                 decoration: BoxDecoration(
-                  color: Colors.green,
+                  color: widget.bank.color,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         SizedBox(width: 16),
                         Text(
@@ -109,23 +112,23 @@ class _BankAccountPageState extends State<BankAccountPage>
                         ),
                       ],
                     ),
-                    SizedBox(height: 0),
-                    Divider(
+                    const SizedBox(height: 0),
+                    const Divider(
                       color: Colors.white,
                       thickness: 2,
                       height: 3,
                       indent: 2,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Center(
                       child: Text(
-                        '฿ 1000000.00',
-                        style: TextStyle(
+                        '฿ ${widget.bank.balance}',
+                        style: const TextStyle(
                             color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    SizedBox(height: 8),
-                    Align(
+                    const SizedBox(height: 8),
+                    const Align(
                       alignment: Alignment.centerRight,
                       child: Text(
                         'ข้อมูล ณ เวลา 00:00 น.',
