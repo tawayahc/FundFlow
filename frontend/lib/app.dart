@@ -7,6 +7,10 @@ import 'package:fundflow/features/auth/repository/repassword_repo.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/auth/ui/auth_wrapper.dart';
+import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
+import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
+import 'package:fundflow/features/home/bloc/category/category_event.dart';
+import 'package:fundflow/features/home/pages/add_bank_page.dart';
 import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
 import 'package:fundflow/features/setting/ui/change_password.dart';
@@ -18,7 +22,7 @@ import 'package:fundflow/features/auth/ui/reset_page.dart';
 import 'package:fundflow/features/setting/ui/setting_page.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
-import 'package:fundflow/features/home/ui/add_category.dart';
+import 'package:fundflow/features/home/pages/add_category_page.dart';
 import 'package:logger/logger.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
@@ -33,7 +37,6 @@ import 'features/manageBankAccount/ui/bank_account_page.dart';
 import 'features/home/repository/bank_repository.dart';
 import 'features/home/repository/category_repository.dart';
 import 'features/home/repository/profile_repository.dart';
-import 'features/home/ui/add_bank.dart';
 
 final logger = Logger(
   printer: PrettyPrinter(
@@ -56,13 +59,17 @@ class MyApp extends StatelessWidget {
     final authenticationRepository = AuthenticationRepository(baseUrl: baseUrl);
     final settingsRepository = SettingsRepository(baseUrl: baseUrl);
     final repasswordRepository = RepasswordRepository(baseUrl: baseUrl);
+    final categoryRepository = CategoryRepository(baseUrl: baseUrl);
+    final bankRepository = BankRepository(baseUrl: baseUrl);
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authenticationRepository),
         RepositoryProvider.value(value: repasswordRepository),
         RepositoryProvider.value(value: settingsRepository),
-        RepositoryProvider(create: (context) => BankRepository()),
-        RepositoryProvider(create: (context) => CategoryRepository()),
+        RepositoryProvider.value(value: bankRepository),
+        RepositoryProvider.value(
+          value: categoryRepository,
+        ),
         RepositoryProvider(create: (context) => ProfileRepository()),
       ],
       child: MultiBlocProvider(
@@ -83,6 +90,16 @@ class MyApp extends StatelessWidget {
               create: (context) =>
                   UserProfileBloc(repository: settingsRepository)
                     ..add(FetchUserProfile())),
+          BlocProvider<CategoryBloc>(
+            create: (context) => CategoryBloc(
+              categoryRepository: categoryRepository, // Pass the repository
+            )..add(LoadCategories()),
+          ),
+          BlocProvider<BankBloc>(
+            create: (context) => BankBloc(
+              bankRepository: bankRepository, // Pass the repository
+            ),
+          ),
           // Add other BlocProviders here if needed
         ],
         child: MaterialApp(
@@ -91,7 +108,7 @@ class MyApp extends StatelessWidget {
           darkTheme: AppTheme.darkTheme, // Apply the Poppins dark theme
           themeMode: ThemeMode.system,
           home: BottomNavBar(),
-              // const AuthenticationWrapper(), // Decide whether to show login or HomePage
+          // const AuthenticationWrapper(), // Decide whether to show login or HomePage
           routes: {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegistrationPage(),

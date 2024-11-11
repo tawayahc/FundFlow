@@ -8,7 +8,7 @@ class BanksLoading extends BankState {}
 class BanksLoaded extends BankState {
   final List<Bank> banks;
 
-  BanksLoaded(this.banks);
+  BanksLoaded({required this.banks});
 }
 
 class BankError extends BankState {
