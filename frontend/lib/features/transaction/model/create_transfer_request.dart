@@ -1,31 +1,25 @@
-class CreateTransactionRequest {
-  final int bankId;
-  final String type;
+class CreateTransferRequest {
+  final int fromBankId;
+  final int toBankId;
   final double amount;
-  final int? categoryId;
   final String createdAtDate;
   final String? createdAtTime;
-  final String memo;
 
-  CreateTransactionRequest({
-    required this.bankId,
-    required this.type,
+  CreateTransferRequest({
+    required this.fromBankId,
+    required this.toBankId,
     required this.amount,
-    this.categoryId,
     required this.createdAtDate,
     this.createdAtTime,
-    required this.memo,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'bank_id': bankId,
-      'type': type,
+      'from_bank_id': fromBankId,
+      'to_bank_id': toBankId,
       'amount': amount,
-      'category_id': categoryId,
       'created_at_date': createdAtDate,
       'created_at_time': createdAtTime ?? '00:00:00',
-      'memo': memo,
     };
   }
 }

@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:fundflow/features/transaction/model/bank_model.dart';
+import 'package:fundflow/features/transaction/model/category_model.dart';
 
 abstract class TransactionState extends Equatable {
   const TransactionState();
@@ -10,6 +12,17 @@ abstract class TransactionState extends Equatable {
 class TransactionInitial extends TransactionState {}
 
 class TransactionLoading extends TransactionState {}
+
+class BanksAndCategoriesLoaded extends TransactionState {
+  final List<Bank> banks;
+  final List<Category> categories;
+
+  const BanksAndCategoriesLoaded(
+      {required this.banks, required this.categories});
+
+  @override
+  List<Object> get props => [banks, categories];
+}
 
 class TransactionSuccess extends TransactionState {}
 
