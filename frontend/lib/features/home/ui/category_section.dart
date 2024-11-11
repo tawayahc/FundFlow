@@ -123,7 +123,6 @@ class CategorySection extends StatelessWidget {
         ),
       );
     }
-
     return rows;
   }
 }
