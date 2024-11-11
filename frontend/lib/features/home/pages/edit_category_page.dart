@@ -104,18 +104,10 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
-                TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    hintText: 'กรอกจำนวนเงิน',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      categoryAmount = double.tryParse(value) ?? 0.0;
-                    });
-                  },
-                  // controller:                    TextEditingController(text: categoryAmount.toString()),
+                Text(
+                  '฿ ${widget.category.amount}',
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 20),
                 // Color Selector
