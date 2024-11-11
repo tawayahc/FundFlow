@@ -46,6 +46,7 @@ func SetupRouter() *gin.Engine {
 		protectedCategory.GET("/:category_id", controllers.GetCategory)
 		protectedCategory.GET("/all", controllers.GetCategories)
 		protectedCategory.POST("/create", controllers.CreateCategory)
+		protectedCategory.POST("/transfer", controllers.TransferFunds)
 		protectedCategory.PUT("/:category_id", controllers.UpdateCategory)
 		protectedCategory.DELETE("/:category_id", controllers.DeleteCategory)
 	}
@@ -55,6 +56,7 @@ func SetupRouter() *gin.Engine {
 	protectedBank.Use(middleware.AuthMiddleware())
 	{
 		protectedBank.GET("/:id", controllers.GetBank)
+		protectedBank.GET("/transfer/:bank_id", controllers.GetBankTransfer)
 		protectedBank.GET("/all", controllers.GetBanks)
 		protectedBank.POST("/create", controllers.CreateBank)
 		protectedBank.POST("/transfer", controllers.TransferMoney)

@@ -112,10 +112,29 @@ func TransferMoney(c *gin.Context) {
 
 	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
 
-	if err := services.TransferMoney(transfer.FromBankID, transfer.ToBankID, transfer.Amount, claims.UserID); err != nil {
+	if err := services.TransferMoney(transfer, claims.UserID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Money transferred successfully"})
+}
+
+// Get all transfer transactions of a bank
+func GetBankTransfer(c *gin.Context) {
+	bankID, err := strconv.ParseUint(c.Param("bank_id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid bank ID"})
+		return
+	}
+
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
+
+	transfers, err := services.GetTransferTransactions(uint(bankID), claims.UserID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, transfers)
 }

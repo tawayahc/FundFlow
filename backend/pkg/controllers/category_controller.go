@@ -107,3 +107,21 @@ func DeleteCategory(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Category deleted successfully"})
 }
+
+// Transfer funds between categories
+func TransferFunds(c *gin.Context) {
+	var transfer models.TransferCategoryRequest
+	if err := c.ShouldBindJSON(&transfer); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
+
+	if err := services.TransferCategory(transfer, claims.UserID); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Funds transferred successfully"})
+}
