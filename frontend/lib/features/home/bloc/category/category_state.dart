@@ -12,6 +12,8 @@ class CategoriesLoaded extends CategoryState {
   CategoriesLoaded({required this.cashBox, required this.categories});
 }
 
+class CategoryAdded extends CategoryState {}
+
 class CategoryUpdated extends CategoryState {}
 
 class CategoryError extends CategoryState {}

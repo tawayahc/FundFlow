@@ -27,8 +27,8 @@ class BankSection extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            BankAccountPage(bank: bank, bankColorMap: bankColorMap),
+                        builder: (context) => BankAccountPage(
+                            bank: bank, bankColorMap: bankColorMap),
                       ),
                     );
                   },
@@ -41,7 +41,7 @@ class BankSection extends StatelessWidget {
             ),
           );
         } else if (state is BankError) {
-          return Center(child: Text(state.message));
+          return const Text('Failed to load banks');
         } else {
           return const Center(child: Text('Unknown error'));
         }
