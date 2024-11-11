@@ -1,9 +1,11 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/features/home/pages/add_bank_page.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/features/manageBankAccount/ui/bank_account_page.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
+import 'package:fundflow/features/setting/ui/setting_page.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -12,8 +14,8 @@ class BottomNavBar extends StatefulWidget {
   State<BottomNavBar> createState() => _NavBarState();
 }
 
-class _NavBarState extends State<BottomNavBar> with SingleTickerProviderStateMixin {
-
+class _NavBarState extends State<BottomNavBar>
+    with SingleTickerProviderStateMixin {
   final _pageController = PageController(initialPage: 0);
   late NotchBottomBarController _controller;
   final int maxPage = 3;
@@ -34,8 +36,8 @@ class _NavBarState extends State<BottomNavBar> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     final List<Widget> onNavBarPages = [
       const HomePage(),
-      const CategoryPage(),
-      const BankAccountPage()
+      const AddBankPage(),
+      const SettingsPage()
     ];
 
     return Scaffold(
@@ -43,7 +45,8 @@ class _NavBarState extends State<BottomNavBar> with SingleTickerProviderStateMix
         child: PageView(
           controller: _pageController,
           physics: const NeverScrollableScrollPhysics(),
-          children: List.generate(onNavBarPages.length, (index) => onNavBarPages[index]),
+          children: List.generate(
+              onNavBarPages.length, (index) => onNavBarPages[index]),
         ),
       ),
       extendBody: true,
@@ -89,7 +92,6 @@ class _NavBarState extends State<BottomNavBar> with SingleTickerProviderStateMix
         },
         kIconSize: 24,
         kBottomRadius: 20,
-
       ),
     );
   }

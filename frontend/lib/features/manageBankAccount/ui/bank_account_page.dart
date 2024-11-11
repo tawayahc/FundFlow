@@ -3,11 +3,13 @@ import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
 
 import '../../../core/themes/app_styles.dart';
+import '../../home/models/bank.dart';
 import '../../home/models/transaction.dart';
 import '../../home/repository/transaction_repository.dart';
 
 class BankAccountPage extends StatefulWidget {
-  const BankAccountPage({super.key});
+  final Bank bank;
+  const BankAccountPage({super.key, required this.bank});
 
   @override
   _BankAccountPageState createState() => _BankAccountPageState();
@@ -40,10 +42,14 @@ class _BankAccountPageState extends State<BankAccountPage>
   List<Transaction> get filteredTransactions {
     if (_tabController.index == 0) {
       // Show only income transactions
-      return transactions.where((transaction) => transaction.amount > 0).toList();
+      return transactions
+          .where((transaction) => transaction.amount > 0)
+          .toList();
     } else {
       // Show only outcome transactions
-      return transactions.where((transaction) => transaction.amount < 0).toList();
+      return transactions
+          .where((transaction) => transaction.amount < 0)
+          .toList();
     }
   }
 
@@ -59,30 +65,33 @@ class _BankAccountPageState extends State<BankAccountPage>
               IconButton(
                 icon: const Icon(Icons.arrow_back_ios),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/pocket_management'); // ย้อนกลับไปยังหน้าก่อนหน้า
+                  Navigator.pushNamed(context,
+                      '/pocket_management'); // ย้อนกลับไปยังหน้าก่อนหน้า
                 },
               ),
               //---------- **รูปธนาคาร
-              const Row(
+              Row(
                 children: [
                   // รูปธนาคาร
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 24,
+                    backgroundColor: Color(0xFF414141),
                     // backgroundImage: ,
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // ชื่อธนาคาร
                       Text(
-                        'กสิกร',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        widget.bank.name,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       // ชื่อเต็ม
                       Text(
-                        'ธนาคารกสิกรไทย',
-                        style: TextStyle(color: Colors.grey),
+                        'ธนาคาร${widget.bank.name}',
+                        style: const TextStyle(color: Colors.grey),
                       ),
                     ],
                   ),
@@ -91,10 +100,11 @@ class _BankAccountPageState extends State<BankAccountPage>
               const SizedBox(height: 16),
               //---------- **กล่องเงิน
               Container(
-                padding: const EdgeInsets.fromLTRB(0, 8, 4, 0), // padding (left, top, right, bottom)
+                padding: const EdgeInsets.fromLTRB(
+                    0, 8, 4, 0), // padding (left, top, right, bottom)
                 width: 296, // สุดขอบ
                 decoration: BoxDecoration(
-                  color: Colors.green,
+                  color: const Color(0xFF414141),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Column(
@@ -119,9 +129,11 @@ class _BankAccountPageState extends State<BankAccountPage>
                     SizedBox(height: 16),
                     Center(
                       child: Text(
-                        '฿ 1000000.00',
+                        '฿ 10000',
                         style: TextStyle(
-                            color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                     SizedBox(height: 8),
@@ -156,8 +168,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                           width: 200,
                           margin: const EdgeInsets.symmetric(horizontal: 20),
                           decoration: const BoxDecoration(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(10)),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
                             color: AppColors.primary,
                           ),
                           child: TabBar(
@@ -167,13 +178,13 @@ class _BankAccountPageState extends State<BankAccountPage>
                             indicator: const BoxDecoration(
                               color: Colors.green,
                               borderRadius:
-                              BorderRadius.all(Radius.circular(10)),
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
                             labelColor: Colors.white,
                             unselectedLabelColor: Colors.white,
                             tabs: const [
                               Tab(
-                                icon: Icon(Icons.download) ,
+                                icon: Icon(Icons.download),
                               ),
                               Tab(
                                 icon: Icon(Icons.upload),
@@ -195,7 +206,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                   slivers: [
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
-                            (context, index) {
+                        (context, index) {
                           final filteredItem = filteredTransactions[index];
                           return TransactionItem(
                             amount: filteredItem.amount,

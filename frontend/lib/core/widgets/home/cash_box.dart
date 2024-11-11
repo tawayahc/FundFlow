@@ -76,3 +76,44 @@ class CashBox extends StatelessWidget {
     );
   }
 }
+
+class CustomDraggableCashBox extends StatefulWidget {
+  final double cashBox;
+
+  const CustomDraggableCashBox({super.key, required this.cashBox});
+
+  @override
+  _CustomDraggableCashBoxState createState() => _CustomDraggableCashBoxState();
+}
+
+class _CustomDraggableCashBoxState extends State<CustomDraggableCashBox> {
+  Offset position = Offset.zero; // Starting position
+  final Offset initialPosition =
+      Offset.zero; // Save initial position to reset later
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onPanUpdate: (details) {
+        setState(() {
+          // Update the position based on the drag
+          position += details.delta;
+        });
+      },
+      onPanEnd: (details) {
+        // Reset the position to the initial position when drag ends
+        setState(() {
+          position = initialPosition;
+        });
+      },
+      child: Stack(
+        children: [
+          Transform.translate(
+            offset: position,
+            child: CashBox(cashBox: widget.cashBox),
+          ),
+        ],
+      ),
+    );
+  }
+}

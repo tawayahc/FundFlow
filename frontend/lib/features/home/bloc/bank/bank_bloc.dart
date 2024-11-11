@@ -12,10 +12,20 @@ class BankBloc extends Bloc<BankEvent, BankState> {
     on<LoadBanks>((event, emit) async {
       emit(BanksLoading());
       try {
-        final banks = await bankRepository.getBanks();
-        emit(BanksLoaded(banks));
+        final data = await bankRepository.getBanks();
+        emit(BanksLoaded(banks: data['banks']));
       } catch (error) {
         emit(BankError("Failed to load banks"));
+      }
+    });
+
+    on<AddBank>((event, emit) async {
+      try {
+        // Save the bank (e.g., to a repository or API)
+        await bankRepository.addBank(event.bank);
+        add(LoadBanks());
+      } catch (error) {
+        emit(BanksLoading());
       }
     });
   }

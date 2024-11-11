@@ -4,15 +4,19 @@ import 'package:fundflow/app.dart';
 import '../models/user_model.dart';
 
 class AuthenticationRepository {
-  final Dio _dio = Dio(
-    BaseOptions(
-      baseUrl: 'http://10.0.2.2:8080/', // Update based on your environment
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    ),
-  );
+  final Dio _dio;
+  final String baseUrl;
   final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+
+  AuthenticationRepository({required this.baseUrl})
+      : _dio = Dio(
+          BaseOptions(
+            baseUrl: baseUrl, // Update based on your environment
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          ),
+        );
 
   Future<String> login(
       {required String username, required String password}) async {
@@ -38,8 +42,7 @@ class AuthenticationRepository {
     } on DioException catch (dioError) {
       if (dioError.response != null) {
         logger.e('Dio error response: ${dioError.response?.data}');
-        throw Exception(
-            dioError.response?.data['errors'][0]['msg'] ?? 'Login failed');
+        throw Exception('Invalid username or password');
       } else {
         logger.e('Dio error: ${dioError.message}');
         throw Exception('Network error');
@@ -88,37 +91,11 @@ class AuthenticationRepository {
     }
   }
 
-  Future<User?> getCurrentUser() async {
-    String? token = await _secureStorage.read(key: 'token');
-
-    if (token != null) {
-      try {
-        _dio.options.headers['Authorization'] = 'Bearer $token';
-        final response = await _dio.get("/me");
-
-        if (response.statusCode == 200) {
-          return User.fromJson(response.data);
-        } else {
-          logger.e('Failed to fetch user: ${response.data}');
-          return null;
-        }
-      } on DioException catch (dioError) {
-        logger.e('Dio error: ${dioError.message}');
-        return null;
-      } catch (e) {
-        logger.e('Error: $e');
-        return null;
-      }
-    }
-    return null;
-  }
-
   Future<String?> getStoredToken() async {
     return await _secureStorage.read(key: 'token');
   }
 
   Future<void> logout() async {
     await _secureStorage.delete(key: 'token');
-    // No need to call /logout on the server
   }
 }

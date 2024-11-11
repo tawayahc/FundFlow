@@ -4,6 +4,7 @@ import 'package:fundflow/core/widgets/custom_input_box.dart';
 import 'package:fundflow/core/widgets/custom_password_input_box.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/utils/validator.dart';
 
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
@@ -47,7 +48,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               // Show loading indicator
               return const Center(child: CircularProgressIndicator());
             }
-      
+
             return SingleChildScrollView(
               child: Form(
                 key: _formKey,
@@ -60,7 +61,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       radius: 120,
                       backgroundColor: Color(0xFF41486D),
                     ),
-      
+
                     const SizedBox(height: 16),
                     const Align(
                       alignment: Alignment.centerLeft,
@@ -73,10 +74,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         ),
                       ),
                     ),
-      
+
                     const SizedBox(height: 16),
                     // Input for Username
-      
+
                     CustomInputBox(
                       labelText: 'ชื่อบัญชีผู้ใช้',
                       prefixIcon: const Icon(
@@ -85,10 +86,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                       controller: _usernameController,
                     ),
-      
+
                     const SizedBox(height: 12),
                     // Input for email
-      
+
                     CustomInputBox(
                       labelText: 'อีเมล',
                       prefixIcon: const Icon(
@@ -97,14 +98,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                       controller: _emailController,
                     ),
-      
+
                     const SizedBox(height: 12),
                     // Input for Password
                     CustomPasswordInputBox(
-                        labelText: 'รหัสผ่าน',
-                        focusNode: FocusNode(),
-                        controller: _passwordController),
-      
+                      labelText: 'รหัสผ่าน',
+                      focusNode: FocusNode(),
+                      controller: _passwordController,
+                      validator: (value) {
+                        String result = validatePassword(value ?? '');
+                        return result.isEmpty ? null : result;
+                      },
+                    ),
+
                     const SizedBox(height: 30),
                     // Register button
                     CustomButton(
