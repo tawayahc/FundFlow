@@ -5,18 +5,19 @@ import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
 import 'package:fundflow/features/home/models/bank.dart';
 
-class AddBankPage extends StatefulWidget {
-  const AddBankPage({Key? key}) : super(key: key);
+class EditBankPage extends StatefulWidget {
+  final Bank bank;
+
+  const EditBankPage({Key? key, required this.bank}) : super(key: key);
 
   @override
-  _AddBankPageState createState() => _AddBankPageState();
+  _EditBankPageState createState() => _EditBankPageState();
 }
 
-class _AddBankPageState extends State<AddBankPage> {
-  String bankName = '';
-  String selectedBank = '';
-  Color selectedColor = Colors.blue;
-  double bankAmount = 0.0;
+class _EditBankPageState extends State<EditBankPage> {
+  late String bankName;
+  late String selectedBank;
+  late Color selectedColor;
 
   final List<Map<String, Color>> availableBank = [
     {'กสิกรไทย': Colors.blue},
@@ -26,20 +27,50 @@ class _AddBankPageState extends State<AddBankPage> {
     {'ออมสิน': Colors.purple},
   ];
 
+  late Bank originalBank;
+
+  @override
+  void initState() {
+    super.initState();
+
+    originalBank = widget.bank;
+
+    bankName = originalBank.name;
+    selectedBank = originalBank.bank_name.replaceFirst('ธนาคาร', '');
+    selectedColor = _getBankColor(selectedBank);
+  }
+
+  Color _getBankColor(String bankName) {
+    switch (bankName) {
+      case 'กสิกรไทย':
+        return Colors.blue;
+      case 'กรุงไทย':
+        return Colors.green;
+      case 'ไทยพาณิชย์':
+        return Colors.red;
+      case 'กรุงเทพ':
+        return Colors.orange;
+      case 'ออมสิน':
+        return Colors.purple;
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('เพิ่มธนาคาร'),
+        title: const Text('แก้ไขธนาคาร'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: BlocListener<BankBloc, BankState>(
           listener: (context, state) {
-            if (state is BankAdded) {
+            if (state is BankUpdated) {
               // ScaffoldMessenger.of(context).showSnackBar(
-              //   const SnackBar(content: Text('Bank added successfully')),
+              //   const SnackBar(content: Text('Bank updated successfully')),
               // );
               Navigator.pop(context); // Go back to the previous screen
             } else if (state is BankError) {
@@ -123,23 +154,16 @@ class _AddBankPageState extends State<AddBankPage> {
                 },
               ),
               const SizedBox(height: 20),
-              // Bank Amount Input
+              // Display the bank's amount (not editable)
               const Text(
-                'ยอดเงินเริ่มต้น',
+                'ยอดเงินปัจจุบัน',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              TextField(
-                decoration: const InputDecoration(
-                  hintText: 'กรอกยอดเงินเริ่มต้น',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  setState(() {
-                    bankAmount = double.tryParse(value) ?? 0.0;
-                  });
-                },
+              Text(
+                '฿ ${widget.bank.amount}',
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 20),
               // Save Button
@@ -147,18 +171,18 @@ class _AddBankPageState extends State<AddBankPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (bankName.isNotEmpty && selectedBank.isNotEmpty) {
-                      final newBank = Bank(
-                        id: -1,
+                      final updatedBank = Bank(
+                        id: widget.bank.id, // Preserve the original bank ID
                         name: bankName,
                         bank_name: 'ธนาคาร$selectedBank',
-                        amount: bankAmount,
+                        amount: widget.bank.amount, // Keep the original amount
                       );
 
-                      BlocProvider.of<BankBloc>(context)
-                          .add(AddBank(bank: newBank));
+                      BlocProvider.of<BankBloc>(context).add(EditBank(
+                          originalBank: originalBank, bank: updatedBank));
                     }
                   },
-                  child: const Text('เพิ่มธนาคาร'),
+                  child: const Text('บันทึกการเปลี่ยนแปลง'),
                 ),
               ),
             ],

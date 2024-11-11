@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/features/home/pages/edit_bank_page.dart';
 import 'package:fundflow/features/home/ui/bank_section.dart';
 import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
 
@@ -11,7 +12,8 @@ import '../../home/repository/transaction_repository.dart';
 class BankAccountPage extends StatefulWidget {
   final Bank bank;
   final Map<String, Color> bankColorMap;
-  const BankAccountPage({super.key, required this.bank, required this.bankColorMap});
+  const BankAccountPage(
+      {super.key, required this.bank, required this.bankColorMap});
 
   @override
   _BankAccountPageState createState() => _BankAccountPageState();
@@ -65,13 +67,17 @@ class _BankAccountPageState extends State<BankAccountPage>
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () async {
-              //   // Navigate to the EditCategoryPage and get the updated category
-              //   final updatedCategory = await Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       // builder: (context) => EditCategoryPage(category: category),
-              //     ),
-              //   );
+                // Navigate to the EditBankPage and get the updated bank
+                final updatedBank = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditBankPage(bank: widget.bank),
+                  ),
+                );
+
+                if (updatedBank != null) {
+                  // Handle updated category (e.g., update the state, show a message, etc.)
+                }
               },
             ),
           ],

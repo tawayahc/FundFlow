@@ -54,14 +54,14 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
         child: BlocListener<CategoryBloc, CategoryState>(
           listener: (context, state) {
             if (state is CategoryUpdated) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Category updated successfully')),
-              );
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   const SnackBar(content: Text('Category updated successfully')),
+              // );
               Navigator.pop(context); // Go back to the previous screen
             } else if (state is CategoryError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Failed to update category')),
-              );
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   const SnackBar(content: Text('Failed to update category')),
+              // );
             }
           },
           child: Column(

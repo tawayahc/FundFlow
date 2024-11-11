@@ -11,8 +11,8 @@ class BanksLoaded extends BankState {
   BanksLoaded({required this.banks});
 }
 
-class BankError extends BankState {
-  final String message;
+class BankAdded extends BankState {}
 
-  BankError(this.message);
-}
+class BankUpdated extends BankState {}
+
+class BankError extends BankState {}

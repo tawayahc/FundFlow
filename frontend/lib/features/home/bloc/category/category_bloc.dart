@@ -31,6 +31,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         await categoryRepository.addCategory(event.category);
         // Reload categories after addition
         add(LoadCategories());
+        emit(CategoryAdded());
       } catch (error) {
         emit(CategoriesLoading()); // Handle error as needed
       }
