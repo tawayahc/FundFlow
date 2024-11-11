@@ -39,6 +39,9 @@ import 'features/manageBankAccount/ui/bank_account_page.dart';
 import 'features/home/repository/bank_repository.dart';
 import 'features/home/repository/category_repository.dart';
 import 'features/home/repository/profile_repository.dart';
+import 'features/transaction/ui/transaction_page.dart';
+import 'features/transaction/bloc/transaction_bloc.dart';
+import 'features/transaction/repository/transaction_repository.dart';
 
 final logger = Logger(
   printer: PrettyPrinter(
@@ -67,6 +70,7 @@ class MyApp extends StatelessWidget {
     final repasswordRepository = RepasswordRepository(baseUrl: baseUrl);
     final categoryRepository = CategoryRepository(apiHelper: apiHelper);
     final bankRepository = BankRepository(apiHelper: apiHelper);
+    final transactionRepository = TransactionRepository(apiHelper: apiHelper);
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authenticationRepository),
@@ -77,6 +81,7 @@ class MyApp extends StatelessWidget {
           value: categoryRepository,
         ),
         RepositoryProvider(create: (context) => ProfileRepository()),
+        RepositoryProvider.value(value: transactionRepository),
       ],
       child: MultiBlocProvider(
         // Wrap with MultiBlocProvider
@@ -107,6 +112,11 @@ class MyApp extends StatelessWidget {
             ),
           ),
           // Add other BlocProviders here if needed
+          BlocProvider<TransactionBloc>(
+            create: (context) => TransactionBloc(
+              repository: transactionRepository,
+            ),
+          ),
         ],
         child: MaterialApp(
           title: 'FundFlow',
@@ -130,6 +140,7 @@ class MyApp extends StatelessWidget {
             '/home': (context) => const BottomNavBar(),
             '/addBank': (context) => const AddBankPage(),
             '/addCategory': (context) => const AddCategoryPage(),
+            '/transaction': (context) => TransactionPage(),
             // '/manageBankAccount': (context) => const BankAccountPage(bank: bank,),
           },
           // builder: (context, child) => const BottomNavBar(), // Apply padding only to the body
