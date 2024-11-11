@@ -21,18 +21,27 @@ class BankSection extends StatelessWidget {
               itemCount: state.banks.length,
               itemBuilder: (context, index) {
                 final bank = state.banks[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/home');
-                  },
-                    child: BankCard(bank: bank)); // Use BankCard from separate file
+                return BankCard(
+                  bank: bank,
+                  bankColorMap: bankColorMap,
+                );
               },
             ),
           );
+        } else if (state is BankError) {
+          return Center(child: Text(state.message));
         } else {
-          return const Center(child: Text('Error loading banks'));
+          return const Center(child: Text('Unknown error'));
         }
       },
     );
   }
 }
+
+Map<String, Color> bankColorMap = {
+  'ธนาคารกสิกรไทย': Colors.green,
+  'ธนาคารกรุงไทย': Colors.blue,
+  'ธนาคารไทยพาณิชย์': Colors.purple,
+  'ธนาคารกรุงเทพ': Colors.lightBlue,
+  'ธนาคารกรุงศรี': const Color(0xFFffe000),
+};

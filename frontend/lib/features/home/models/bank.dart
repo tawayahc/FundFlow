@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 
 class Bank {
   final String name;
-  final double balance;
-  final Color color;
+  final String bank_name;
+  final double amount;
 
-  Bank({required this.name, required this.balance, required this.color});
+  Bank({
+    required this.name,
+    required this.bank_name,
+    required this.amount,
+  });
 }
