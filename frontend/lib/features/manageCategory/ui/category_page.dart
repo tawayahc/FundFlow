@@ -1,14 +1,15 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
+import 'package:fundflow/features/home/models/category.dart' as categories;
 
 import '../../../core/themes/app_styles.dart';
 import '../../home/models/transaction.dart';
+import '../../home/pages/edit_category_page.dart';
 import '../../home/repository/transaction_repository.dart';
 
 class CategoryPage extends StatefulWidget {
-  final Category category;
+  final categories.Category category;
   const CategoryPage({super.key, required this.category});
 
   @override
@@ -53,54 +54,48 @@ class _CategoryPageState extends State<CategoryPage> with SingleTickerProviderSt
     return GlobalPadding(
       child: Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () {
-              Navigator.pushNamed(context, '/home'); // ย้อนกลับไปยังหน้าก่อนหน้า
-            },
-          ),
+          // ----------- ชื่อ category
+          title: Text(widget.category.name),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () async {
+                // Navigate to the EditCategoryPage and get the updated category
+                final updatedCategory = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditCategoryPage(category: widget.category),
+                  ),
+                );
+
+                // If there's an updated category, do something with it (e.g., update the list)
+                if (updatedCategory != null) {
+                  // Handle updated category (e.g., update the state, show a message, etc.)
+                }
+              },
+            ),
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //---------- **ชื่อ category
-              Row(
-                children: [
-                  const Spacer(),
-                  const Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'หิว',
-                      style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const Spacer(),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: Icon(Icons.edit, color: Colors.grey[500]),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/change_category_name');
-                      },
-                    ),
-                  ),
-                ],
-              ),
               const SizedBox(height: 16),
               //---------- **กล่องเงิน
               Container(
                 padding: const EdgeInsets.fromLTRB(0, 8, 4, 0), // padding (left, top, right, bottom)
                 width: double.infinity, // สุดขอบ
                 decoration: BoxDecoration(
-                  color: Colors.green,
+                  //---------- **สี category
+                  color: widget.category.color,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         SizedBox(width: 16),
                         Text(
@@ -109,30 +104,22 @@ class _CategoryPageState extends State<CategoryPage> with SingleTickerProviderSt
                         ),
                       ],
                     ),
-                    SizedBox(height: 0),
-                    Divider(
+                    const SizedBox(height: 0),
+                    const Divider(
                       color: Colors.white,
                       thickness: 2,
                       height: 3,
                       indent: 2,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Center(
                       child: Text(
-                        '฿ 1000000.00',
-                        style: TextStyle(
+                        '฿ ${widget.category.amount.toStringAsFixed(2)}',
+                        style: const TextStyle(
                             color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    SizedBox(height: 8),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        'ข้อมูล ณ เวลา 00:00 น.',
-                        style: TextStyle(color: Colors.white, fontSize: 11),
-                        textAlign: TextAlign.right,
-                      ),
-                    )
+                    const SizedBox(height: 8),
                   ],
                 ),
               ),
@@ -211,3 +198,4 @@ class _CategoryPageState extends State<CategoryPage> with SingleTickerProviderSt
     );
   }
 }
+

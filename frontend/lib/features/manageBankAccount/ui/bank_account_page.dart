@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/features/home/ui/bank_section.dart';
 import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
 
 import '../../../core/themes/app_styles.dart';
@@ -9,7 +10,8 @@ import '../../home/repository/transaction_repository.dart';
 
 class BankAccountPage extends StatefulWidget {
   final Bank bank;
-  const BankAccountPage({super.key, required this.bank});
+  final Map<String, Color> bankColorMap;
+  const BankAccountPage({super.key, required this.bank, required this.bankColorMap});
 
   @override
   _BankAccountPageState createState() => _BankAccountPageState();
@@ -55,27 +57,37 @@ class _BankAccountPageState extends State<BankAccountPage>
 
   @override
   Widget build(BuildContext context) {
+    Color color = bankColorMap[widget.bank.bank_name] ?? Colors.white;
     return GlobalPadding(
       child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () async {
+              //   // Navigate to the EditCategoryPage and get the updated category
+              //   final updatedCategory = await Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       // builder: (context) => EditCategoryPage(category: category),
+              //     ),
+              //   );
+              },
+            ),
+          ],
+        ),
         body: Padding(
           padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
-                onPressed: () {
-                  Navigator.pushNamed(context,
-                      '/pocket_management'); // ย้อนกลับไปยังหน้าก่อนหน้า
-                },
-              ),
               //---------- **รูปธนาคาร
               Row(
                 children: [
                   // รูปธนาคาร
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 24,
-                    backgroundColor: Color(0xFF414141),
+                    backgroundColor: color,
                     // backgroundImage: ,
                   ),
                   const SizedBox(width: 10),
@@ -90,7 +102,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                       ),
                       // ชื่อเต็ม
                       Text(
-                        'ธนาคาร${widget.bank.name}',
+                        widget.bank.bank_name,
                         style: const TextStyle(color: Colors.grey),
                       ),
                     ],
@@ -104,13 +116,13 @@ class _BankAccountPageState extends State<BankAccountPage>
                     0, 8, 4, 0), // padding (left, top, right, bottom)
                 width: 296, // สุดขอบ
                 decoration: BoxDecoration(
-                  color: const Color(0xFF414141),
+                  color: color,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         SizedBox(width: 16),
                         Text(
@@ -119,25 +131,24 @@ class _BankAccountPageState extends State<BankAccountPage>
                         ),
                       ],
                     ),
-                    SizedBox(height: 0),
-                    Divider(
+                    const Divider(
                       color: Colors.white,
                       thickness: 2,
                       height: 3,
                       indent: 2,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Center(
                       child: Text(
-                        '฿ 10000',
-                        style: TextStyle(
+                        '฿ ${widget.bank.amount}',
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 24,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                    SizedBox(height: 8),
-                    Align(
+                    const SizedBox(height: 8),
+                    const Align(
                       alignment: Alignment.centerRight,
                       child: Text(
                         'ข้อมูล ณ เวลา 00:00 น.',
