@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
-import 'package:fundflow/core/widgets/layout.dart';
+import 'package:fundflow/core/widgets/global_padding.dart';
 
 class CashBox extends StatelessWidget {
   final double cashBox;

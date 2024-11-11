@@ -41,3 +41,8 @@ class AuthenticationLogoutRequested extends AuthenticationEvent {
   @override
   List<Object?> get props => [];
 }
+
+class AuthenticationRefreshRequested extends AuthenticationEvent {
+  @override
+  List<Object?> get props => [];
+}
