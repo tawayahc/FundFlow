@@ -30,7 +30,7 @@ class HomePage extends StatelessWidget {
         BlocProvider(
           create: (context) => CategoryBloc(
             categoryRepository: context.read<CategoryRepository>(),
-          )..add(LoadCategorys()),
+          )..add(LoadCategories()),
         ),
         BlocProvider(
           create: (context) => ProfileBloc(
