@@ -22,12 +22,8 @@ class AuthenticationWrapper extends StatelessWidget {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
-        } else if (state is AuthenticationFailure) {
-          return Scaffold(
-            body: Center(child: Text('Error: ${state.error}')),
-          );
         }
-        return Container(); // Default case
+        return const LoginPage();
       },
     );
   }

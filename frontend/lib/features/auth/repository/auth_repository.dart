@@ -42,8 +42,7 @@ class AuthenticationRepository {
     } on DioException catch (dioError) {
       if (dioError.response != null) {
         logger.e('Dio error response: ${dioError.response?.data}');
-        throw Exception(
-            dioError.response?.data['errors'][0]['msg'] ?? 'Login failed');
+        throw Exception('Invalid username or password');
       } else {
         logger.e('Dio error: ${dioError.message}');
         throw Exception('Network error');

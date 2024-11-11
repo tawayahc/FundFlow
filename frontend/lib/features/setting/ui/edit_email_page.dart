@@ -4,6 +4,7 @@ import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_input_box.dart';
 import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
+import 'package:fundflow/utils/validator.dart';
 
 class EditEmailPage extends StatelessWidget {
   final SettingsRepository repository;
@@ -94,7 +95,7 @@ class _EditEmailFormState extends State<EditEmailForm> {
                   text: 'ยืนยัน',
                   onPressed: () {
                     final newEmail = _newEmailController.text.trim();
-                    if (newEmail.isNotEmpty && _isValidEmail(newEmail)) {
+                    if (newEmail.isNotEmpty && isValidEmail(newEmail)) {
                       context.read<UserProfileBloc>().add(
                             SubmitChangeEmailEvent(newEmail),
                           );
@@ -112,11 +113,6 @@ class _EditEmailFormState extends State<EditEmailForm> {
         ),
       ),
     );
-  }
-
-  bool _isValidEmail(String email) {
-    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-    return emailRegex.hasMatch(email);
   }
 
   @override

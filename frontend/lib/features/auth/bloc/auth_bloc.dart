@@ -58,11 +58,17 @@ class AuthenticationBloc
         username: event.username,
         password: event.password,
       );
+
+      if (token.isEmpty) {
+        logger.d('Token is $token');
+        throw Exception('Invalid username or password');
+      }
       final UserProfile user = await settingsRepository.fetchUserProfile();
       emit(
         Authenticated(token: token, userProfile: user),
       );
     } catch (e) {
+      logger.e('Login Error: ${e.toString()}');
       emit(AuthenticationFailure(error: e.toString()));
     }
   }
@@ -83,6 +89,7 @@ class AuthenticationBloc
         Authenticated(token: token, userProfile: user),
       );
     } catch (e) {
+      logger.e('Register Error: ${e.toString()}');
       emit(AuthenticationFailure(error: e.toString()));
     }
   }
