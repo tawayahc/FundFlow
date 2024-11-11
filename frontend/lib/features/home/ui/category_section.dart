@@ -6,6 +6,7 @@ import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/core/widgets/home/cash_box.dart';
+import 'package:fundflow/features/home/pages/category_transaction_page.dart';
 
 class CategorySection extends StatelessWidget {
   const CategorySection({super.key});
@@ -37,7 +38,7 @@ class CategorySection extends StatelessWidget {
                     child: CashBox(cashBox: state.cashBox),
                   ),
                   const SizedBox(height: 10),
-                  ..._buildCategoryRows(state.categories),
+                  ..._buildCategoryRows(context, state.categories),
                 ],
               ),
               Positioned(
@@ -58,7 +59,8 @@ class CategorySection extends StatelessWidget {
   }
 
   // Function to group categories in pairs and return rows
-  List<Widget> _buildCategoryRows(List<Category> categories) {
+  List<Widget> _buildCategoryRows(
+      BuildContext context, List<Category> categories) {
     List<Widget> rows = [];
 
     for (int i = 0; i < categories.length; i += 2) {
@@ -67,8 +69,19 @@ class CategorySection extends StatelessWidget {
       // First card
       rowChildren.add(
         Expanded(
-          child: CustomDraggableCategoryCard(
-            category: categories[i],
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      CategoryTransactionPage(category: categories[i]),
+                ),
+              );
+            },
+            child: CustomDraggableCategoryCard(
+              category: categories[i],
+            ),
           ),
         ),
       );
@@ -78,8 +91,19 @@ class CategorySection extends StatelessWidget {
         rowChildren.add(const SizedBox(width: 10)); // Space between cards
         rowChildren.add(
           Expanded(
-            child: CustomDraggableCategoryCard(
-              category: categories[i + 1],
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        CategoryTransactionPage(category: categories[i + 1]),
+                  ),
+                );
+              },
+              child: CustomDraggableCategoryCard(
+                category: categories[i + 1],
+              ),
             ),
           ),
         );

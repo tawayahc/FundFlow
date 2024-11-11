@@ -47,6 +47,7 @@ class CategoryRepository {
         // Map response data to Category objects
         final categories = categoriesData
             .map((item) => Category(
+                  id: item['id'],
                   name: item['name'],
                   amount: (item['amount'] as num).toDouble(),
                   color: Color(
@@ -99,6 +100,56 @@ class CategoryRepository {
         logger.e('Error adding category: $error');
       }
       throw Exception('Error adding category: $error');
+    }
+  }
+
+  Future<void> editCategory(
+      Category originalCategory, Category category) async {
+    try {
+      // Ensure token is properly set in headers
+      await _initializeToken();
+      logger.i(
+          'Editing category: ${category.amount} ${category.name} ${category.color} ');
+
+      // Initialize the payload
+      Map<String, dynamic> data = {};
+
+      // Check for changes and add to data if necessary
+      if (category.name != originalCategory.name) {
+        data['new_name'] = category.name;
+      }
+      if (category.amount != originalCategory.amount) {
+        data['new_amount'] = category.amount;
+      }
+      if (category.color != originalCategory.color) {
+        data['new_color_code'] =
+            '0xFF${category.color.value.toRadixString(16).substring(2).toUpperCase()}';
+      }
+
+      // If nothing has changed, we can skip the API call
+      if (data.isEmpty) {
+        logger.i('No changes to update');
+        return;
+      }
+
+      // Send the request with the updated data
+      final response = await dio.put(
+        "/categories/${category.id}",
+        data: data,
+      );
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        logger.e('Failed to edit category, Response: ${response.data}');
+        throw Exception('Failed to edit category');
+      }
+    } catch (error) {
+      // Detailed error logging
+      if (error is DioException) {
+        logger.e('Dio Error: ${error.response?.data ?? error.message}');
+      } else {
+        logger.e('Error editing category: $error');
+      }
+      throw Exception('Error editing category: $error');
     }
   }
 }

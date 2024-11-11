@@ -56,7 +56,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                 // Category Card Preview
                 CategoryCard(
                   category: Category(
-                    // Pass the entire Category object
+                    id: -1,
                     name: categoryName.isNotEmpty
                         ? categoryName
                         : 'ตัวอย่างประเภทค่าใช้จ่าย',
@@ -119,6 +119,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                     onPressed: () {
                       if (categoryName.isNotEmpty) {
                         final newCategory = Category(
+                          id: -1,
                           name: categoryName,
                           amount:
                               categoryAmount, // Set default or user-inputted amount

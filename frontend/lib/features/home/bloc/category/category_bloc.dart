@@ -35,5 +35,18 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         emit(CategoriesLoading()); // Handle error as needed
       }
     });
+
+    on<EditCategory>((event, emit) async {
+      try {
+        // Edit the category using the repository
+        await categoryRepository.editCategory(
+            event.originalCategory, event.category);
+        // If successful, reload categories or navigate to the previous screen
+        emit(CategoryUpdated());
+      } catch (error) {
+        print("Error editing category: $error");
+        emit(CategoryError()); // New error state
+      }
+    });
   }
 }

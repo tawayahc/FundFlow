@@ -9,3 +9,10 @@ class AddCategory extends CategoryEvent {
 
   AddCategory({required this.category});
 }
+
+class EditCategory extends CategoryEvent {
+  final Category originalCategory;
+  final Category category; // The category with new details
+
+  EditCategory({required this.originalCategory, required this.category});
+}

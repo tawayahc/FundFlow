@@ -13,9 +13,10 @@ import 'package:fundflow/features/auth/ui/setting_page.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
+import 'package:fundflow/features/home/pages/add_bank_page.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
-import 'package:fundflow/features/home/ui/add_category.dart';
+import 'package:fundflow/features/home/pages/add_category_page.dart';
 import 'package:logger/logger.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
@@ -30,7 +31,6 @@ import 'features/manageBankAccount/ui/bank_account_page.dart';
 import 'features/home/repository/bank_repository.dart';
 import 'features/home/repository/category_repository.dart';
 import 'features/home/repository/profile_repository.dart';
-import 'features/home/ui/add_bank.dart';
 
 final logger = Logger(
   printer: PrettyPrinter(
