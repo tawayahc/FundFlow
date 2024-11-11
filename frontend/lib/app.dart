@@ -23,6 +23,7 @@ import 'package:fundflow/features/setting/ui/setting_page.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 import 'package:fundflow/features/home/pages/add_category_page.dart';
+import 'package:fundflow/utils/api_helper.dart';
 import 'package:logger/logger.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
@@ -55,12 +56,16 @@ class MyApp extends StatelessWidget {
     } else {
       Logger.level = Level.debug;
     }
+    // NOTE: API Helper is use for store the base url and token
+    // NOTE: base url is use when we don't have the token
+    final apiHelper =
+        ApiHelper(baseUrl: dotenv.env['BASE_URL'] ?? 'http://10.0.2.2:8080/');
     final String baseUrl = dotenv.env['BASE_URL'] ?? 'http://10.0.2.2:8080/';
     final authenticationRepository = AuthenticationRepository(baseUrl: baseUrl);
-    final settingsRepository = SettingsRepository(baseUrl: baseUrl);
+    final settingsRepository = SettingsRepository(apiHelper: apiHelper);
     final repasswordRepository = RepasswordRepository(baseUrl: baseUrl);
-    final categoryRepository = CategoryRepository(baseUrl: baseUrl);
-    final bankRepository = BankRepository(baseUrl: baseUrl);
+    final categoryRepository = CategoryRepository(apiHelper: apiHelper);
+    final bankRepository = BankRepository(apiHelper: apiHelper);
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authenticationRepository),
