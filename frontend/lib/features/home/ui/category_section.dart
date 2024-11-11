@@ -6,6 +6,7 @@ import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/core/widgets/home/cash_box.dart';
 import 'package:fundflow/features/home/pages/category_transaction_page.dart';
+import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 
 class CategorySection extends StatelessWidget {
   const CategorySection({super.key});
@@ -74,7 +75,7 @@ class CategorySection extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      CategoryTransactionPage(category: categories[i]),
+                      CategoryPage(category: categories[i]),
                 ),
               );
             },
@@ -96,7 +97,7 @@ class CategorySection extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        CategoryTransactionPage(category: categories[i + 1]),
+                        CategoryPage(category: categories[i + 1]),
                   ),
                 );
               },
