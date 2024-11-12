@@ -7,12 +7,12 @@ class CustomPasswordInputBox extends StatefulWidget {
   final String? Function(String?)? validator;
 
   const CustomPasswordInputBox({
-    Key? key,
+    super.key,
     required this.labelText,
     required this.focusNode,
     required this.controller,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   _CustomPasswordInputBoxState createState() => _CustomPasswordInputBoxState();

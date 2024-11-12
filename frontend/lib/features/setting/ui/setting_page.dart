@@ -185,7 +185,7 @@ class _SettingsPageState extends State<SettingsPage> {
               } else if (state is UserProfileError) {
                 return Center(child: Text('Error: ${state.error}'));
               } else {
-                return Center(child: Text('Error: Unknown state'));
+                return const Center(child: Text('Error: Unknown state'));
               }
             },
           ),

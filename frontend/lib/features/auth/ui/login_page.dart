@@ -64,15 +64,16 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(
-                    height: 30,
+                    height: 60,
                   ),
-                  // Circular avatar placeholder
-                  const CircleAvatar(
-                    radius: 120,
-                    backgroundColor: Color(0xFF41486D),
+                  Image.asset(
+                    'assets/logo_FundFlow.png', // ใช้ชื่อโฟลเดอร์ที่ถูกต้อง
+                    width: 240,
+                    height: 240,
+                    fit: BoxFit.contain,
                   ),
                   const SizedBox(
-                    height: 16,
+                    height: 40,
                   ),
                   const Align(
                     alignment: Alignment.centerLeft,

@@ -7,12 +7,12 @@ class CustomInputBox extends StatefulWidget {
   final String? Function(String?)? validator;
 
   const CustomInputBox({
-    Key? key,
+    super.key,
     required this.labelText,
     required this.prefixIcon,
     required this.controller,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomInputBox> createState() => _CustomInputBoxState();

@@ -9,7 +9,7 @@ import 'package:fundflow/utils/validator.dart';
 class EditEmailPage extends StatelessWidget {
   final SettingsRepository repository;
 
-  EditEmailPage({required this.repository});
+  const EditEmailPage({super.key, required this.repository});
 
   @override
   Widget build(BuildContext context) {

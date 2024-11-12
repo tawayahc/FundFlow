@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
-import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/models/user_profile.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
 import 'auth_event.dart';

@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/pages/add_bank_page.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
-import 'package:fundflow/features/manageBankAccount/ui/bank_account_page.dart';
-import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 import 'package:fundflow/features/setting/ui/setting_page.dart';
 
 class BottomNavBar extends StatefulWidget {

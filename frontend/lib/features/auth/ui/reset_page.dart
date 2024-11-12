@@ -10,7 +10,7 @@ import 'package:fundflow/features/auth/models/repassword_request.dart';
 class ResetPasswordPage extends StatefulWidget {
   final String email;
 
-  ResetPasswordPage({required this.email});
+  const ResetPasswordPage({super.key, required this.email});
 
   @override
   State<ResetPasswordPage> createState() => _ResetPasswordPageState();
@@ -48,12 +48,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           ),
         ),
         body: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: BlocListener<RepasswordBloc, RepasswordState>(
             listener: (context, state) {
               if (state is RepasswordPasswordReset) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Password reset successfully')),
+                  const SnackBar(content: Text('Password reset successfully')),
                 );
                 Navigator.popUntil(context, (route) => route.isFirst);
               } else if (state is RepasswordFailure) {
@@ -65,6 +65,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 20),
                 const Text(
                   'เปลี่ยนรหัสผ่าน',
                   style: TextStyle(

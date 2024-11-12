@@ -105,7 +105,7 @@ class SettingsRepository {
         'https://api.cloudinary.com/v1_1/$cloudName/resources/image';
 
     String basicAuth =
-        'Basic ' + base64Encode(utf8.encode('$apiKey:$apiSecret'));
+        'Basic ${base64Encode(utf8.encode('$apiKey:$apiSecret'))}';
 
     try {
       final response = await dio.get(
