@@ -28,23 +28,27 @@ class CategorySection extends StatelessWidget {
         if (state is CategoriesLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is CategoriesLoaded) {
+          double screenWidth = MediaQuery.of(context).size.width;
+          double horizontalPadding =
+              16.0 * 2; // Assuming 16 padding on each side
+          double cashBoxWidth = (screenWidth - horizontalPadding);
           return Stack(
             children: [
               Column(
                 children: [
-                  Opacity(
-                    opacity: 0.0,
-                    child: CashBox(cashBox: state.cashBox),
-                  ),
+                  Draggable(
+                      feedback: Material(
+                          color: Colors.transparent,
+                          child: SizedBox(
+                              child: CashBox(
+                                  cashBox: state.cashBox,
+                                  width: cashBoxWidth - 50))),
+                      childWhenDragging: const CashBoxWhenDragging(),
+                      child:
+                          CashBox(cashBox: state.cashBox, width: cashBoxWidth)),
                   const SizedBox(height: 10),
                   ..._buildCategoryRows(context, state.categories),
                 ],
-              ),
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: CustomDraggableCashBox(cashBox: state.cashBox),
               ),
             ],
           );
@@ -62,6 +66,12 @@ class CategorySection extends StatelessWidget {
       BuildContext context, List<Category> categories) {
     List<Widget> rows = [];
 
+    double screenWidth = MediaQuery.of(context).size.width;
+    double horizontalPadding = 16.0 * 2;
+    double spacingBetweenCards = 10.0;
+    double cardWidth =
+        (screenWidth - horizontalPadding - spacingBetweenCards) / 2;
+
     for (int i = 0; i < categories.length; i += 2) {
       List<Widget> rowChildren = [];
 
@@ -77,8 +87,21 @@ class CategorySection extends StatelessWidget {
                 ),
               );
             },
-            child: CustomDraggableCategoryCard(
-              category: categories[i],
+            child: Draggable(
+              feedback: Material(
+                color: Colors.transparent,
+                child: SizedBox(
+                  child: CategoryCard(
+                    category: categories[i],
+                    width: cardWidth - 25,
+                  ),
+                ),
+              ),
+              childWhenDragging: const CategoryWhenDragging(),
+              child: CategoryCard(
+                category: categories[i],
+                width: cardWidth,
+              ),
             ),
           ),
         ),
@@ -99,8 +122,21 @@ class CategorySection extends StatelessWidget {
                   ),
                 );
               },
-              child: CustomDraggableCategoryCard(
-                category: categories[i + 1],
+              child: Draggable(
+                feedback: Material(
+                  color: Colors.transparent,
+                  child: SizedBox(
+                    child: CategoryCard(
+                      category: categories[i + 1],
+                      width: cardWidth - 25,
+                    ),
+                  ),
+                ),
+                childWhenDragging: const CategoryWhenDragging(),
+                child: CategoryCard(
+                  category: categories[i + 1],
+                  width: cardWidth,
+                ),
               ),
             ),
           ),
