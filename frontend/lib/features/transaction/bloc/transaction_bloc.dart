@@ -42,9 +42,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       AddTransferEvent event, Emitter<TransactionState> emit) async {
     emit(TransactionLoading());
     try {
-      // await repository.addTransfer(event.request);
+      await repository.addTransfer(event.request);
+      logger.d('Transfer added successfully');
       emit(TransactionSuccess());
     } catch (e) {
+      logger.e('Failed to add transfer: $e');
       emit(TransactionFailure(e.toString()));
     }
   }
