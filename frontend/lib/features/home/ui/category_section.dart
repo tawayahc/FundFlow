@@ -5,6 +5,7 @@ import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/core/widgets/home/cash_box.dart';
+import 'package:fundflow/features/home/pages/transfer_category_amount';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 
 class CategorySection extends StatelessWidget {
@@ -75,34 +76,53 @@ class CategorySection extends StatelessWidget {
     for (int i = 0; i < categories.length; i += 2) {
       List<Widget> rowChildren = [];
 
-      // First card
+      // First card with DragTarget
       rowChildren.add(
         Expanded(
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CategoryPage(category: categories[i]),
+          child: DragTarget<Category>(
+            onAcceptWithDetails: (draggedCategory) {
+              if (draggedCategory.data.id != categories[i].id) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return TransferCategoryAmount(
+                      fromCategory: draggedCategory.data,
+                      toCategory: categories[i],
+                    );
+                  },
+                );
+              }
+            },
+            builder: (context, candidateData, rejectedData) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CategoryPage(category: categories[i]),
+                    ),
+                  );
+                },
+                child: Draggable<Category>(
+                  data: categories[i],
+                  feedback: Material(
+                    color: Colors.transparent,
+                    child: SizedBox(
+                      child: CategoryCard(
+                        category: categories[i],
+                        width: cardWidth - 25,
+                      ),
+                    ),
+                  ),
+                  childWhenDragging: const CategoryWhenDragging(),
+                  child: CategoryCard(
+                    category: categories[i],
+                    width: cardWidth,
+                  ),
                 ),
               );
             },
-            child: Draggable(
-              feedback: Material(
-                color: Colors.transparent,
-                child: SizedBox(
-                  child: CategoryCard(
-                    category: categories[i],
-                    width: cardWidth - 25,
-                  ),
-                ),
-              ),
-              childWhenDragging: const CategoryWhenDragging(),
-              child: CategoryCard(
-                category: categories[i],
-                width: cardWidth,
-              ),
-            ),
           ),
         ),
       );
@@ -112,43 +132,58 @@ class CategorySection extends StatelessWidget {
         rowChildren.add(const SizedBox(width: 10)); // Space between cards
         rowChildren.add(
           Expanded(
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        CategoryPage(category: categories[i + 1]),
+            child: DragTarget<Category>(
+              onAcceptWithDetails: (draggedCategory) {
+                if (draggedCategory.data.id != categories[i + 1].id) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return TransferCategoryAmount(
+                        fromCategory: draggedCategory.data,
+                        toCategory: categories[i + 1],
+                      );
+                    },
+                  );
+                }
+              },
+              builder: (context, candidateData, rejectedData) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            CategoryPage(category: categories[i + 1]),
+                      ),
+                    );
+                  },
+                  child: Draggable<Category>(
+                    data: categories[i + 1],
+                    feedback: Material(
+                      color: Colors.transparent,
+                      child: SizedBox(
+                        child: CategoryCard(
+                          category: categories[i + 1],
+                          width: cardWidth - 25,
+                        ),
+                      ),
+                    ),
+                    childWhenDragging: const CategoryWhenDragging(),
+                    child: CategoryCard(
+                      category: categories[i + 1],
+                      width: cardWidth,
+                    ),
                   ),
                 );
               },
-              child: Draggable(
-                feedback: Material(
-                  color: Colors.transparent,
-                  child: SizedBox(
-                    child: CategoryCard(
-                      category: categories[i + 1],
-                      width: cardWidth - 25,
-                    ),
-                  ),
-                ),
-                childWhenDragging: const CategoryWhenDragging(),
-                child: CategoryCard(
-                  category: categories[i + 1],
-                  width: cardWidth,
-                ),
-              ),
             ),
           ),
         );
       } else {
-        rowChildren.add(const SizedBox(width: 10)); // Space for consistency
-        rowChildren.add(
-          const Spacer(), // Spacer to keep the single card at half width
-        );
+        rowChildren.add(const SizedBox(width: 10));
+        rowChildren.add(const Spacer());
       }
 
-      // Add the row with the two cards (or one card + spacer)
       rows.add(
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
