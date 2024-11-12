@@ -11,7 +11,8 @@ import '../../home/repository/transaction_repository.dart';
 class BankAccountPage extends StatefulWidget {
   final Bank bank;
   final Map<String, Color> bankColorMap;
-  const BankAccountPage({super.key, required this.bank, required this.bankColorMap});
+  const BankAccountPage(
+      {super.key, required this.bank, required this.bankColorMap});
 
   @override
   _BankAccountPageState createState() => _BankAccountPageState();
@@ -65,13 +66,13 @@ class _BankAccountPageState extends State<BankAccountPage>
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () async {
-              //   // Navigate to the EditCategoryPage and get the updated category
-              //   final updatedCategory = await Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       // builder: (context) => EditCategoryPage(category: category),
-              //     ),
-              //   );
+                //   // Navigate to the EditCategoryPage and get the updated category
+                //   final updatedCategory = await Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       // builder: (context) => EditCategoryPage(category: category),
+                //     ),
+                //   );
               },
             ),
           ],
@@ -171,42 +172,36 @@ class _BankAccountPageState extends State<BankAccountPage>
                   preferredSize: const Size.fromHeight(40),
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 40,
-                          width: 200,
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: AppColors.primary,
-                          ),
-                          child: TabBar(
-                            controller: _tabController,
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            dividerColor: Colors.transparent,
-                            indicator: const BoxDecoration(
-                              color: Colors.green,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            labelColor: Colors.white,
-                            unselectedLabelColor: Colors.white,
-                            tabs: const [
-                              Tab(
-                                icon: Icon(Icons.download),
-                              ),
-                              Tab(
-                                icon: Icon(Icons.upload),
-                              ),
-                              Tab(
-                                icon: Icon(Icons.compare_arrows),
-                              ),
-                            ],
-                          ),
+                    child: Container(
+                      height: 40,
+                      width: 200,
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: AppColors.primary,
+                      ),
+                      child: TabBar(
+                        controller: _tabController,
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        dividerColor: Colors.transparent,
+                        indicator: const BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
-                      ],
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.white,
+                        tabs: const [
+                          Tab(
+                            icon: Icon(Icons.download),
+                          ),
+                          Tab(
+                            icon: Icon(Icons.upload),
+                          ),
+                          Tab(
+                            icon: Icon(Icons.compare_arrows),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
