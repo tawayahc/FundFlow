@@ -31,16 +31,16 @@ func GetCategories(userID uint) ([]models.CategoryDTO, error) {
 		Where("user_profile_id = ?", userID).Row().Scan(&totalCategoriesAmount)
 
 	// Calculate the amount of null category transactions
-	var nullCategoryAmount float64
-	config.DB.Table("transactions").Select("COALESCE(sum(amount), 0)").
-		Where("user_profile_id = ? AND category_id IS NULL", userID).Row().Scan(&nullCategoryAmount)
+	// var nullCategoryAmount float64
+	// config.DB.Table("transactions").Select("COALESCE(sum(amount), 0)").
+	// 	Where("user_profile_id = ? AND category_id IS NULL", userID).Row().Scan(&nullCategoryAmount)
 
 	// Create and add Cash Box category
 	cashBox := models.CategoryDTO{
 		ID:        0,
 		Name:      "Cash Box",
 		ColorCode: "0xFFFFFFF",
-		Amount:    totalBankAmount - totalCategoriesAmount + nullCategoryAmount,
+		Amount:    totalBankAmount - totalCategoriesAmount,
 	}
 
 	// Organize results in the desired pattern
