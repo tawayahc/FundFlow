@@ -8,7 +8,7 @@ import 'package:fundflow/features/home/models/bank.dart';
 class EditBankPage extends StatefulWidget {
   final Bank bank;
 
-  const EditBankPage({Key? key, required this.bank}) : super(key: key);
+  const EditBankPage({super.key, required this.bank});
 
   @override
   _EditBankPageState createState() => _EditBankPageState();

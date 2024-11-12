@@ -25,7 +25,7 @@ class _ForgetPageState extends State<ForgetPage> {
           .add(GenerateOTPEvent(OTPRequest(email: email)));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter a valid email address')),
+        const SnackBar(content: Text('Please enter a valid email address')),
       );
     }
   }
@@ -54,25 +54,27 @@ class _ForgetPageState extends State<ForgetPage> {
           ),
         ),
       ),
-      body: BlocConsumer<RepasswordBloc, RepasswordState>(
-        listener: (context, state) {
-          if (state is RepasswordOTPSent) {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    VerificationPage(email: _emailController.text)));
-          }
-        },
-        builder: (context, state) {
-          return Padding(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize
+                  .min, // ทำให้ Column มีขนาดเล็กที่สุดเท่าที่เนื้อหากำหนด
               children: [
-                const Text(
-                  'กรอกอีเมลเพื่อยืนยันตัวตน',
-                  style: TextStyle(
+                const SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.centerLeft, // ทำให้ข้อความชิดซ้าย
+                  child: const Text(
+                    'กรอกอีเมลเพื่อยืนยันตัวตน',
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF5A5A5A)),
+                      color: Color(0xFF5A5A5A),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 12),
                 CustomInputBox(
@@ -84,14 +86,16 @@ class _ForgetPageState extends State<ForgetPage> {
                   controller: _emailController,
                 ),
                 const SizedBox(height: 30),
-                CustomButton(
-                  text: 'ยืนยัน',
-                  onPressed: _submitEmail,
+                Center(
+                  child: CustomButton(
+                    text: 'ยืนยัน',
+                    onPressed: _submitEmail,
+                  ),
                 ),
               ],
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

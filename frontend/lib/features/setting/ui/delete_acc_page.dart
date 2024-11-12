@@ -7,7 +7,7 @@ import 'package:fundflow/features/setting/repository/settings_repository.dart';
 class DeleteAccountPage extends StatelessWidget {
   final SettingsRepository repository;
 
-  DeleteAccountPage({required this.repository});
+  const DeleteAccountPage({super.key, required this.repository});
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +63,7 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
         listener: (context, state) {
           if (state is DeleteAccountSuccess) {
             ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('Account deleted')));
+                .showSnackBar(const SnackBar(content: Text('Account deleted')));
             Navigator.pushNamedAndRemoveUntil(
                 context, '/login', (route) => false);
           } else if (state is DeleteAccountFailure) {

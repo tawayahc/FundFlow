@@ -8,7 +8,7 @@ import 'package:fundflow/features/setting/repository/settings_repository.dart';
 class ChangePasswordPage extends StatelessWidget {
   final SettingsRepository repository;
 
-  ChangePasswordPage({required this.repository});
+  const ChangePasswordPage({super.key, required this.repository});
 
   @override
   Widget build(BuildContext context) {
