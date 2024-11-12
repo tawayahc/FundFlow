@@ -67,6 +67,40 @@ class TabOverviewState extends State<TabOverview> with SingleTickerProviderState
           ),
           indicatorSize: TabBarIndicatorSize.tab,
         ),
+        const SizedBox(height: 8,),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                Text('ประเภทรายการ'),
+                Text('Dropdown here')
+              ],
+            ),
+            Column(
+              children: [
+                Text('ช่วงเวลา'),
+                Text('Date picker here')
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 4,),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text('2567', style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),),
+          ],
+        ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RoutineSummaryItem('พ.ย. 67', 9780.94, 8076.00, 1704.94),
+            RoutineSummaryItem('พ.ย. 67', 9780.94, 8076.00, 1704.94),
+            RoutineSummaryItem('พ.ย. 67', 9780.94, 8076.00, 1704.94),
+            RoutineSummaryItem('พ.ย. 67', 9780.94, 8076.00, 1704.94),
+          ],
+        )
       ],
     );
   }
@@ -125,22 +159,44 @@ Widget SummaryCard(bool type, String title, double amount, double items, double 
   );
 }
 
-Widget Dropdown(String label) {
-  return Expanded(
-    child: DropdownButtonFormField<String>(
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+Widget RoutineSummaryItem(String month, double totalIn, double totalOut, double balance) {
+  Color balanceColor;
+  totalIn - totalOut > 0 ? balanceColor = Colors.green : balanceColor = Colors.red;
+  return Card(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            month,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey[800]),
+          ),
+          const Divider(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("เงินเข้าทั้งหมด", style: TextStyle(color: Colors.grey[600])),
+              Text(totalIn.toStringAsFixed(2), style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("เงินออกทั้งหมด", style: TextStyle(color: Colors.grey[600])),
+              Text(totalOut.toStringAsFixed(2), style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("สรุปยอด", style: TextStyle(color: Colors.grey[600])),
+              Text(balance.toStringAsFixed(2), style: TextStyle(color: balanceColor, fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ],
       ),
-      items: ['เงินเข้า-เงินออก', 'เงินเข้า', 'เงินออก'].map((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      onChanged: (value) {},
     ),
   );
 }
