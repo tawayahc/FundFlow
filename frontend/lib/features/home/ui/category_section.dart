@@ -37,16 +37,44 @@ class CategorySection extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Draggable(
-                      feedback: Material(
+                  DragTarget<Category>(
+                    onAccept: (fromCategory) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return TransferCategoryAmount(
+                            fromCategory: fromCategory,
+                            toCategory: Category(
+                                id: -1,
+                                name: 'CashBox',
+                                amount: state.cashBox,
+                                color: Colors.black),
+                          );
+                        },
+                      );
+                    },
+                    builder: (context, candidateData, rejectedData) {
+                      return Draggable(
+                        feedback: Material(
                           color: Colors.transparent,
                           child: SizedBox(
-                              child: CashBox(
-                                  cashBox: state.cashBox,
-                                  width: cashBoxWidth - 50))),
-                      childWhenDragging: const CashBoxWhenDragging(),
-                      child:
-                          CashBox(cashBox: state.cashBox, width: cashBoxWidth)),
+                            child: CashBox(
+                              cashBox: state.cashBox,
+                              width: cashBoxWidth - 50,
+                            ),
+                          ),
+                        ),
+                        childWhenDragging: const CashBoxWhenDragging(),
+                        data: Category(
+                            id: -1,
+                            name: 'CashBox',
+                            amount: state.cashBox,
+                            color: Colors.black),
+                        child: CashBox(
+                            cashBox: state.cashBox, width: cashBoxWidth),
+                      );
+                    },
+                  ),
                   const SizedBox(height: 10),
                   ..._buildCategoryRows(context, state.categories),
                 ],
