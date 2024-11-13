@@ -22,6 +22,7 @@ class BankAccountPage extends StatefulWidget {
 class _BankAccountPageState extends State<BankAccountPage>
     with SingleTickerProviderStateMixin {
   String _type = 'income';
+  List<Transaction> transactions = [];
   late TabController _tabController;
 
   @override
@@ -227,7 +228,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                           final filteredItem = filteredTransactions[index];
                           return TransactionItem(
                             amount: filteredItem.amount,
-                            category: filteredItem.category,
+                            category: 'filteredItem.category',
                             type: filteredItem.memo,
                           );
                         },

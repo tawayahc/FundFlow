@@ -57,7 +57,7 @@ class ProfileSection extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.notifications, color: Colors.black),
                     onPressed: () {
-                      // Handle notification icon press
+                      Navigator.pushNamed(context, '/notification');
                     },
                   ),
                   IconButton(

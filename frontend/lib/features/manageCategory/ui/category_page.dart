@@ -20,6 +20,7 @@ class _CategoryPageState extends State<CategoryPage>
     with SingleTickerProviderStateMixin {
   String _type = 'income';
   late TabController _tabController;
+  List<Transaction> transactions = [];
 
   @override
   void initState() {
@@ -189,7 +190,7 @@ class _CategoryPageState extends State<CategoryPage>
                             final filteredItem = filteredTransactions[index];
                             return TransactionItem(
                               amount: filteredItem.amount,
-                              category: filteredItem.category,
+                              category: 'filteredItem.category',
                               type: filteredItem.memo,
                             );
                           },
