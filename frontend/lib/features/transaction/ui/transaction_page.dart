@@ -104,7 +104,14 @@ class _TransactionPageState extends State<TransactionPage>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Add Transaction'),
+          centerTitle: true,
+          title: const Text(
+            'เพิ่มรายการ',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              ),
+          ),
         ),
         body: BlocListener<TransactionBloc, TransactionState>(
           listener: (context, state) {
@@ -136,41 +143,45 @@ class _TransactionPageState extends State<TransactionPage>
                 child: Column(
                   children: [
                     // Tabs for Transaction Type
-                    PreferredSize(
-                      preferredSize: const Size.fromHeight(40),
-                      child: ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: AppColors.primary,
-                          ),
-                          child: TabBar(
-                            controller: _tabController,
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            dividerColor: Colors.transparent,
-                            indicator: const BoxDecoration(
-                              color: Colors.green,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            labelColor: Colors.white,
-                            unselectedLabelColor: Colors.white,
-                            tabs: const [
-                              TabItem(
-                                title: "รายรับ",
-                              ),
-                              TabItem(
-                                title: "รายจ่าย",
-                              ),
-                              TabItem(
-                                title: "ย้ายเงิน",
-                              ),
-                            ],
-                          ),
+                    
+                    Container(
+                      width: 259,
+                      height: 43,
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        color: AppColors.white,
+                        boxShadow:  [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(0, 0),
+                            blurRadius: 3.6,
+                            spreadRadius: 1,
+                          )
+                        ]
+                      ),
+                      child: TabBar(
+                        controller: _tabController,
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        dividerColor: Colors.transparent,
+                        indicator: const BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(30)),
                         ),
+                        labelColor: AppColors.white,
+                        unselectedLabelColor: AppColors.primary,
+                        tabs: const [
+                          TabItem(
+                            title: "รายรับ",
+                          ),
+                          TabItem(
+                            title: "รายจ่าย",
+                          ),
+                          TabItem(
+                            title: "ย้ายเงิน",
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: AppSpacing.medium),

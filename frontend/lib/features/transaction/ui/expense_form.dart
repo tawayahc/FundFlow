@@ -1,6 +1,10 @@
 import 'package:bottom_picker/bottom_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/custom_input_box.dart';
+import 'package:fundflow/core/widgets/custom_input_inkwell.dart';
+import 'package:fundflow/core/widgets/custom_button.dart';
+import 'package:fundflow/core/widgets/custom_dropdown.dart';
 import '../model/bank_model.dart';
 import '../model/category_model.dart';
 import '../model/form_model.dart';
@@ -33,10 +37,147 @@ class _ExpenseFormState extends State<ExpenseForm> {
   TimeOfDay? _selectedTime;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.banks.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _showNoBanksDialog());
+    }
+    if(widget.categories.isEmpty){
+      WidgetsBinding.instance.addPostFrameCallback((_) => _showNoCategoriesDialog());
+    }
+  }
+
+  @override
   void dispose() {
     _amountController.dispose();
     _noteController.dispose();
     super.dispose();
+  }
+
+  void _showNoBanksDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Container(
+            height: 200,
+            decoration: BoxDecoration(
+              /*border: Border.all(
+                color: Color(0xFF41486D),
+                width: 2,
+              ),*/
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.warning,
+                  color: Colors.red,
+                  size: 50,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'คุณยังไม่มีบัญชีธนาคาร\nกรุณากดเพิ่มธนาคาร',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.red
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  height: 40,
+                  width: 200,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/add-bank');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      backgroundColor: const Color(0xFF41486D), // ปุ่มสีน้ำเงินเข้ม
+                    ),
+                    child: const Text(
+                      'เพิ่มธนาคาร',
+                      style:  TextStyle(fontSize: 16, color: Color(0xffffffff)),),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showNoCategoriesDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Container(
+            height: 200,
+            decoration: BoxDecoration(
+              /*border: Border.all(
+                color: Color(0xFF41486D),
+                width: 2,
+              ),*/
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.warning,
+                  color: Colors.red,
+                  size: 50,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'คุณยังไม่มีหมวดหมู่\nกรุณากดเพิ่มหมวดหมู่',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.red
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  height: 40,
+                  width: 200,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/add-category');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      backgroundColor: const Color(0xFF41486D), // ปุ่มสีน้ำเงินเข้ม
+                    ),
+                    child: const Text(
+                      'เพิ่มหมวดหมู่',
+                      style:  TextStyle(fontSize: 16, color: Color(0xffffffff)),),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _selectDate() {
@@ -118,7 +259,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
   @override
   Widget build(BuildContext context) {
     bool isFormEnabled = widget.categories.isNotEmpty;
-    if (widget.banks.isEmpty) {
+    /*if (widget.banks.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -152,13 +293,36 @@ class _ExpenseFormState extends State<ExpenseForm> {
           ],
         ),
       );
-    }
+    }*/
     return Form(
       key: _formKey,
       child: Column(
         children: [
           // Bank Dropdown
-          DropdownButtonFormField<Bank>(
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              'ระบุธนาคาร',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          // Bank Dropdown
+          CustomDropdown<Bank>(
+            prefixIcon: Icons.balance,
+            hintText: 'กรอกธนาคาร', 
+            selectedItem:  _selectedBank, 
+            items: widget.banks, 
+            onChanged: (Bank? newValue) {
+                setState(() {
+                  _selectedBank = newValue;
+                });
+              }, 
+            displayItem: (Bank bank) => bank.name,
+            validator: (value) => value == null ? 'Please select a bank' : null,),
+          /*DropdownButtonFormField<Bank>(
             value: _selectedBank,
             hint: const Text('Select Bank'),
             items: widget.banks.map((Bank bank) {
@@ -177,10 +341,40 @@ class _ExpenseFormState extends State<ExpenseForm> {
               labelText: 'Bank',
               border: OutlineInputBorder(),
             ),
-          ),
+          ),*/
           const SizedBox(height: 16),
           // Category Dropdown
-          DropdownButtonFormField<Category>(
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              'ระบุหมวดหมู่',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          CustomDropdown<Category>(
+            prefixIcon: Icons.category,
+            hintText: 'ระบุหมวดหมู่', 
+            selectedItem:  _selectedCategory, 
+            items: widget.categories, 
+            onChanged: (Category? newValue) {
+                    setState(() {
+                      _selectedCategory = newValue;
+                    });
+                  },
+            /*isFormEnabled
+                ? (Category? newValue) {
+                    setState(() {
+                      _selectedCategory = newValue;
+                    });
+                  }
+                : null, */
+            displayItem: (Category category) => category.name,
+            validator: (value) =>
+                value == null ? 'Please select a category' : null,),
+          /*DropdownButtonFormField<Category>(
             value: _selectedCategory,
             hint: const Text('Select Category'),
             items: widget.categories.map((Category category) {
@@ -202,10 +396,37 @@ class _ExpenseFormState extends State<ExpenseForm> {
               labelText: 'Category',
               border: OutlineInputBorder(),
             ),
-          ),
+          ),*/
           const SizedBox(height: 16),
           // Amount Field
-          TextFormField(
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              'ระบุจำนวนเงิน',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          CustomInputBox(
+            labelText: 'ระบุจำนวนเงิน', 
+            prefixIcon: const Icon(
+              Icons.account_balance_wallet,
+              color: Color(0xFFD0D0D0),
+            ), 
+            controller: _amountController,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter an amount';
+              }
+              if (double.tryParse(value) == null) {
+                return 'Please enter a valid number';
+              }
+              return null;
+            },),
+          /*TextFormField(
             controller: _amountController,
             decoration: const InputDecoration(
               labelText: 'Amount',
@@ -221,11 +442,26 @@ class _ExpenseFormState extends State<ExpenseForm> {
               }
               return null;
             },
-          ),
+          ),*/
 
           const SizedBox(height: 16),
           // Date Picker
-          InkWell(
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              'ระบุวันที่',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          CustomInputInkwell(
+            prefixIcon: Icons.calendar_today, 
+            labelText: "${_selectedDate.toLocal()}".split(' ')[0], 
+            onTap: _selectDate),
+          const SizedBox(height: 16),
+          /*InkWell(
             onTap: _selectDate,
             child: InputDecorator(
               decoration: const InputDecoration(
@@ -242,10 +478,25 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 ],
               ),
             ),
-          ),
-          const SizedBox(height: 16),
+          ),*/
           // Time Picker
-          InkWell(
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              'ระบุเวลา',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          CustomInputInkwell(
+            prefixIcon: Icons.access_time, 
+            labelText: _selectedTime != null
+                          ? _selectedTime!.format(context)
+                          : 'กรอกเวลา(ไม่จำเป็น)', 
+            onTap: _selectTime),
+          /*InkWell(
             onTap: _selectTime,
             child: InputDecorator(
               decoration: const InputDecoration(
@@ -264,21 +515,42 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 ],
               ),
             ),
-          ),
+          ),*/
           const SizedBox(height: 16),
           // Note Field
-          TextFormField(
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              'โน้ตเพิ่มเติม',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          CustomInputBox(
+            labelText: 'โน้ต', 
+            prefixIcon: const Icon(
+              Icons.note,
+              
+              color: Color(0xFFD0D0D0),
+            ), 
+            controller: _noteController),
+          /*TextFormField(
             controller: _noteController,
             decoration: const InputDecoration(
               labelText: 'Note',
               border: OutlineInputBorder(),
             ),
-          ),
+          ),*/
           const SizedBox(height: 16),
-          ElevatedButton(
+          CustomButton(
+            text: 'ยืนยัน', 
+            onPressed: _submit),
+          /*ElevatedButton(
             onPressed: isFormEnabled ? _submit : null,
             child: const Text('Submit'),
-          ),
+          ),*/
         ],
       ),
     );
