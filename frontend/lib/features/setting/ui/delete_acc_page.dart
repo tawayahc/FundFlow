@@ -1,36 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
+import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/setting/bloc/delete_account/delete_account_bloc.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
 
 class DeleteAccountPage extends StatelessWidget {
   final SettingsRepository repository;
 
-  const DeleteAccountPage({super.key, required this.repository});
+  DeleteAccountPage({required this.repository});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => DeleteAccountBloc(repository: repository),
-      child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              onPressed: () {
-                Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
-              },
-            ),
-            centerTitle: true,
-            title: const Text(
-              'ลบบัญชี',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+    return GlobalPadding(
+      child: BlocProvider(
+        create: (context) => DeleteAccountBloc(repository: repository),
+        child: Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                color: Color(0xFF414141),
+                onPressed: () {
+                  Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
+                },
+              ),
+              centerTitle: true,
+              title: const Text(
+                'ลบบัญชี FundFlow',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF414141),
+                ),
               ),
             ),
-          ),
-          body: const DeleteAccountForm()),
+            body: const DeleteAccountForm()),
+      ),
     );
   }
 }
@@ -63,7 +68,7 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
         listener: (context, state) {
           if (state is DeleteAccountSuccess) {
             ScaffoldMessenger.of(context)
-                .showSnackBar(const SnackBar(content: Text('Account deleted')));
+                .showSnackBar(SnackBar(content: Text('Account deleted')));
             Navigator.pushNamedAndRemoveUntil(
                 context, '/login', (route) => false);
           } else if (state is DeleteAccountFailure) {
@@ -76,12 +81,13 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 20),
               const Text(
-                'กรอกรหัสผ่าน',
+                'ใส่รหัสผ่าน',
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF5A5A5A)),
+                    color: Color(0xFF414141)),
               ),
               const SizedBox(height: 20),
               // รหัสผ่านเดิม
