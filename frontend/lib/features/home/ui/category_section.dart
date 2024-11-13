@@ -5,7 +5,7 @@ import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/core/widgets/home/cash_box.dart';
-import 'package:fundflow/features/home/pages/transfer_category_amount';
+import 'package:fundflow/features/home/pages/transfer_category_amount.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 
 class CategorySection extends StatelessWidget {
