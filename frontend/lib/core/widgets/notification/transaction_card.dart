@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
@@ -16,7 +17,6 @@ class TransactionCard extends StatelessWidget {
 
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
-        // Determine category name based on the category ID
         String categoryName = 'undefined';
         if (transaction.categoryId != 0 && state is CategoriesLoaded) {
           final category = state.categories.firstWhere(
@@ -25,6 +25,10 @@ class TransactionCard extends StatelessWidget {
           categoryName = category?.name ?? 'undefined';
         }
 
+        final categoryColor = (isExpense && categoryName == 'undefined')
+            ? const Color(0xFFFF5C5C)
+            : Colors.grey;
+
         return Card(
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Padding(
@@ -32,38 +36,43 @@ class TransactionCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Memo and Amount
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       transaction.memo.isNotEmpty ? transaction.memo : '',
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: (isExpense && categoryName == 'undefined')
+                              ? const Color(0xFFFF5C5C)
+                              : AppColors.darkGrey),
                     ),
                     Text(
                       formatter.format(transaction.amount),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: isExpense ? Colors.red : Colors.green,
+                        color: (isExpense && categoryName == 'undefined')
+                            ? categoryColor
+                            : isExpense
+                                ? Colors.red
+                                : Colors.green,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
-
-                // Category and Date
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       categoryName,
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      style: TextStyle(fontSize: 14, color: categoryColor),
                     ),
                     Text(
                       transaction.createdAt,
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      style: TextStyle(fontSize: 14, color: categoryColor),
                     ),
                   ],
                 ),

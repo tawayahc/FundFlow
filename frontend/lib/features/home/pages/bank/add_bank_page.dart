@@ -16,7 +16,7 @@ class AddBankPage extends StatefulWidget {
 
 class _AddBankPageState extends State<AddBankPage> {
   String bankName = '';
-  String selectedBank = '';
+  String selectedBank = 'กสิกรไทย';
   Color selectedColor = Colors.blue;
   double bankAmount = 0.0;
 
