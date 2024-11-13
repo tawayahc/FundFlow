@@ -1,4 +1,4 @@
-package controllers
+package handlers
 
 import (
 	"fundflow/pkg/models"
@@ -22,6 +22,7 @@ func GetCategory(c *gin.Context) {
 
 	category, err := services.GetCategory(uint(categoryID), claims.UserID)
 	if err != nil {
+		
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
