@@ -5,6 +5,7 @@ import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
 import 'package:fundflow/features/home/models/bank.dart';
+import 'package:fundflow/features/home/pages/home_page.dart';
 
 class AddBankPage extends StatefulWidget {
   const AddBankPage({Key? key}) : super(key: key);
@@ -43,7 +44,13 @@ class _AddBankPageState extends State<AddBankPage> {
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //   const SnackBar(content: Text('Bank added successfully')),
                 // );
-                Navigator.pop(context); // Go back to the previous screen
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const GlobalPadding(child: HomePage())),
+                );
+                // Navigator.pop(context); // Go back to the previous screen
               } else if (state is BankError) {
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //   const SnackBar(content: Text('Failed to load banks')),

@@ -5,7 +5,7 @@ import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/core/widgets/home/cash_box.dart';
-import 'package:fundflow/features/home/pages/transfer_category_amount.dart';
+import 'package:fundflow/features/home/pages/category/transfer_category_amount.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 
 class CategorySection extends StatelessWidget {
@@ -33,25 +33,30 @@ class CategorySection extends StatelessWidget {
           double horizontalPadding =
               16.0 * 2; // Assuming 16 padding on each side
           double cashBoxWidth = (screenWidth - horizontalPadding);
+
+          List<Category> sortedCategories = List.from(state.categories)
+            ..sort((a, b) => a.id.compareTo(b.id));
           return Stack(
             children: [
               Column(
                 children: [
                   DragTarget<Category>(
-                    onAccept: (fromCategory) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return TransferCategoryAmount(
-                            fromCategory: fromCategory,
-                            toCategory: Category(
-                                id: -1,
-                                name: 'CashBox',
-                                amount: state.cashBox,
-                                color: Colors.black),
-                          );
-                        },
-                      );
+                    onAcceptWithDetails: (fromCategory) {
+                      if (fromCategory.data.id != -1) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return TransferCategoryAmount(
+                              fromCategory: fromCategory.data,
+                              toCategory: Category(
+                                  id: -1,
+                                  name: 'CashBox',
+                                  amount: state.cashBox,
+                                  color: Colors.black),
+                            );
+                          },
+                        );
+                      }
                     },
                     builder: (context, candidateData, rejectedData) {
                       return Draggable(
@@ -76,7 +81,7 @@ class CategorySection extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 10),
-                  ..._buildCategoryRows(context, state.categories),
+                  ..._buildCategoryRows(context, sortedCategories),
                 ],
               ),
             ],

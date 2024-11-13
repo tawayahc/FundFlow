@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
-import 'package:fundflow/features/home/pages/edit_bank_page.dart';
+import 'package:fundflow/features/home/pages/bank/edit_bank_page.dart';
 import 'package:fundflow/features/home/ui/bank_section.dart';
 import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
 
