@@ -57,6 +57,7 @@ func SetupRouter() *gin.Engine {
 	{
 		protectedBank.GET("/:id", handlers.GetBank)
 		protectedBank.GET("/transfer/:bank_id", handlers.GetBankTransfer)
+		protectedBank.GET("/transfer", handlers.GetTransferByUserID)
 		protectedBank.GET("/all", handlers.GetBanks)
 		protectedBank.POST("/create", handlers.CreateBank)
 		protectedBank.POST("/transfer", handlers.TransferMoney)

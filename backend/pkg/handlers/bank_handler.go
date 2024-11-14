@@ -138,3 +138,16 @@ func GetBankTransfer(c *gin.Context) {
 
 	c.JSON(http.StatusOK, transfers)
 }
+
+// Get all transfer transactions by userID
+func GetTransferByUserID(c *gin.Context) {
+	claims, _ := utils.ExtractDataFromToken(c.GetHeader("Authorization"))
+
+	transfers, err := services.GetTransferTransactionsByUserID(claims.UserID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, transfers)
+}
