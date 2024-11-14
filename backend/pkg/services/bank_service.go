@@ -184,3 +184,18 @@ func GetTransferTransactions(fromBankID uint, userID uint) ([]models.TransferDTO
 
 	return transactions, nil
 }
+
+// GetTransferTransactions by userID
+func GetTransferTransactionsByUserID(userID uint) ([]models.TransferDTO, error) {
+	var transactions []models.TransferDTO
+	if err := config.DB.Table("transfer_transactions").
+		Select("transfer_transactions.id, transfer_transactions.amount, transfer_transactions.from_bank_id, transfer_transactions.to_bank_id, transfer_transactions.created_at, bank_details.name as from_bank_name, bank_details.bank_name as from_bank_bank_name, bank_details_2.name as to_bank_name, bank_details_2.bank_name as to_bank_bank_name").
+		Joins("left join bank_details on transfer_transactions.from_bank_id = bank_details.id").
+		Joins("left join bank_details as bank_details_2 on transfer_transactions.to_bank_id = bank_details_2.id").
+		Where("transfer_transactions.user_profile_id = ?", userID).
+		Find(&transactions).Error; err != nil {
+		return nil, errors.New("failed to retrieve transactions")
+	}
+
+	return transactions, nil
+}
