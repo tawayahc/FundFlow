@@ -10,6 +10,8 @@ import 'package:fundflow/features/auth/ui/auth_wrapper.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
+import 'package:fundflow/features/home/bloc/profile/profile_bloc.dart';
+import 'package:fundflow/features/home/bloc/profile/profile_event.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_bloc.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
 import 'package:fundflow/features/home/pages/bank/add_bank_page.dart';
@@ -70,6 +72,7 @@ class MyApp extends StatelessWidget {
     final settingsRepository = SettingsRepository(apiHelper: apiHelper);
     final repasswordRepository = RepasswordRepository(baseUrl: baseUrl);
     final categoryRepository = CategoryRepository(apiHelper: apiHelper);
+    final profileRepository = ProfileRepository(apiHelper: apiHelper);
     final bankRepository = BankRepository(apiHelper: apiHelper);
     final TransactionRepository transactionRepository =
         TransactionRepository(apiHelper: apiHelper);
@@ -78,6 +81,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider.value(value: authenticationRepository),
         RepositoryProvider.value(value: repasswordRepository),
         RepositoryProvider.value(value: settingsRepository),
+        RepositoryProvider.value(value: profileRepository),
         RepositoryProvider.value(value: bankRepository),
         RepositoryProvider.value(
           value: categoryRepository,
@@ -85,7 +89,6 @@ class MyApp extends StatelessWidget {
         RepositoryProvider.value(
           value: transactionRepository,
         ),
-        RepositoryProvider(create: (context) => ProfileRepository()),
       ],
       child: MultiBlocProvider(
         // Wrap with MultiBlocProvider
@@ -119,6 +122,11 @@ class MyApp extends StatelessWidget {
             create: (context) => TransactionBloc(
               transactionRepository: transactionRepository,
             )..add(LoadTransactions()),
+          ),
+          BlocProvider<ProfileBloc>(
+            create: (context) => ProfileBloc(
+              profileRepository: profileRepository,
+            )..add(LoadProfile()),
           ),
           // Add other BlocProviders here if needed
         ],
