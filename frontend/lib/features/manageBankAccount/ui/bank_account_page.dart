@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
-import 'package:fundflow/features/home/pages/edit_bank_page.dart';
+import 'package:fundflow/features/home/pages/bank/edit_bank_page.dart';
 import 'package:fundflow/features/home/ui/bank_section.dart';
 import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
 
@@ -22,6 +22,7 @@ class BankAccountPage extends StatefulWidget {
 class _BankAccountPageState extends State<BankAccountPage>
     with SingleTickerProviderStateMixin {
   String _type = 'income';
+  List<Transaction> transactions = [];
   late TabController _tabController;
 
   @override
@@ -227,7 +228,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                           final filteredItem = filteredTransactions[index];
                           return TransactionItem(
                             amount: filteredItem.amount,
-                            category: filteredItem.category,
+                            category: 'filteredItem.category',
                             type: filteredItem.memo,
                           );
                         },

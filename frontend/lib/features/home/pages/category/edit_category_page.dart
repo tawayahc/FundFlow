@@ -6,6 +6,7 @@ import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
+import 'package:fundflow/features/home/pages/home_page.dart';
 
 class EditCategoryPage extends StatefulWidget {
   final Category category;
@@ -59,7 +60,13 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //   const SnackBar(content: Text('Category updated successfully')),
                 // );
-                Navigator.pop(context); // Go back to the previous screen
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const GlobalPadding(child: HomePage())),
+                );
+                // Navigator.pop(context); // Go back to the previous screen
               } else if (state is CategoryError) {
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //   const SnackBar(content: Text('Failed to update category')),

@@ -16,4 +16,8 @@ class CategoryAdded extends CategoryState {}
 
 class CategoryUpdated extends CategoryState {}
 
+class CategoryTransferred extends CategoryState {}
+
+class CategoryAmountUpdated extends CategoryState {}
+
 class CategoryError extends CategoryState {}
