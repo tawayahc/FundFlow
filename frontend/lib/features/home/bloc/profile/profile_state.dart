@@ -1,12 +1,17 @@
+import 'package:fundflow/features/setting/models/user_profile.dart';
+
 abstract class ProfileState {}
 
 class ProfileLoading extends ProfileState {}
 
 class ProfileLoaded extends ProfileState {
-  final String username;
-  final double totalMoney;
+  final UserProfile userProfile;
+  final double cashBox;
 
-  ProfileLoaded({required this.username, required this.totalMoney});
+  ProfileLoaded({
+    required this.userProfile,
+    required this.cashBox,
+  });
 }
 
 class ProfileError extends ProfileState {

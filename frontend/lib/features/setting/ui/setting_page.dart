@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/auth/bloc/auth_bloc.dart';
 import 'package:fundflow/features/auth/bloc/auth_event.dart';
+import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/widgets/avatar_selection_modal.dart';
 
@@ -32,7 +33,12 @@ class _SettingsPageState extends State<SettingsPage> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
-              Navigator.pop(context); // Go back to the previous page
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const GlobalPadding(child: HomePage())),
+              );
             },
           ),
           centerTitle: true,
