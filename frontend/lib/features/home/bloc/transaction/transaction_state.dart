@@ -7,7 +7,7 @@ class TransactionsLoading extends TransactionState {}
 class TransactionsLoaded extends TransactionState {
   final List<Transaction> transactions;
 
-  TransactionsLoaded(this.transactions);
+  TransactionsLoaded({required this.transactions});
 }
 
 class TransactionsLoadError extends TransactionState {
