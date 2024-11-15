@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/features/home/models/category.dart';
-import 'package:fundflow/core/widgets/global_padding.dart';
 
 class CategoryCard extends StatelessWidget {
   final Category category;
   final double width;
+  final double height;
 
   const CategoryCard({
     super.key,
     required this.category,
     this.width = double.infinity,
+    this.height = 102.0, // Default height, adjust as needed
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: width,
+      height: height, // Set height to make the card taller
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
@@ -54,13 +56,12 @@ class CategoryCard extends StatelessWidget {
                 Text(
                   category.name,
                   style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black,
-                  ),
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                      color: Color(0xFF414141)),
                 ),
                 Text(
-                  '฿ ${formatter.format(category.amount)}',
+                  '฿ ${category.amount.toStringAsFixed(2)}', // No formatter needed
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -83,7 +84,7 @@ class CategoryWhenDragging extends StatelessWidget {
   const CategoryWhenDragging({
     super.key,
     this.width = double.infinity,
-    this.height = 90.0, // Set default height to match CategoryCard if needed
+    this.height = 90.0, // Default height, adjust as needed
   });
 
   @override
