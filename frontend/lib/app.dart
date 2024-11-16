@@ -10,7 +10,14 @@ import 'package:fundflow/features/auth/ui/auth_wrapper.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
-import 'package:fundflow/features/home/pages/add_bank_page.dart';
+import 'package:fundflow/features/home/bloc/profile/profile_bloc.dart';
+import 'package:fundflow/features/home/bloc/profile/profile_event.dart';
+import 'package:fundflow/features/home/bloc/transaction/transaction_bloc.dart';
+import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
+import 'package:fundflow/features/home/pages/bank/add_bank_page.dart';
+import 'package:fundflow/features/home/pages/notification/notification.dart';
+import 'package:fundflow/features/home/pages/notification/test.dart';
+import 'package:fundflow/features/home/repository/transaction_repository.dart';
 import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
 import 'package:fundflow/features/setting/ui/change_password.dart';
@@ -22,7 +29,7 @@ import 'package:fundflow/features/auth/ui/reset_page.dart';
 import 'package:fundflow/features/setting/ui/setting_page.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
-import 'package:fundflow/features/home/pages/add_category_page.dart';
+import 'package:fundflow/features/home/pages/category/add_category_page.dart';
 import 'package:fundflow/utils/api_helper.dart';
 import 'package:logger/logger.dart';
 import 'core/themes/app_theme.dart';
@@ -65,17 +72,23 @@ class MyApp extends StatelessWidget {
     final settingsRepository = SettingsRepository(apiHelper: apiHelper);
     final repasswordRepository = RepasswordRepository(baseUrl: baseUrl);
     final categoryRepository = CategoryRepository(apiHelper: apiHelper);
+    final profileRepository = ProfileRepository(apiHelper: apiHelper);
     final bankRepository = BankRepository(apiHelper: apiHelper);
+    final TransactionRepository transactionRepository =
+        TransactionRepository(apiHelper: apiHelper);
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authenticationRepository),
         RepositoryProvider.value(value: repasswordRepository),
         RepositoryProvider.value(value: settingsRepository),
+        RepositoryProvider.value(value: profileRepository),
         RepositoryProvider.value(value: bankRepository),
         RepositoryProvider.value(
           value: categoryRepository,
         ),
-        RepositoryProvider(create: (context) => ProfileRepository()),
+        RepositoryProvider.value(
+          value: transactionRepository,
+        ),
       ],
       child: MultiBlocProvider(
         // Wrap with MultiBlocProvider
@@ -105,6 +118,16 @@ class MyApp extends StatelessWidget {
               bankRepository: bankRepository, // Pass the repository
             ),
           ),
+          BlocProvider<TransactionBloc>(
+            create: (context) => TransactionBloc(
+              transactionRepository: transactionRepository,
+            )..add(LoadTransactions()),
+          ),
+          BlocProvider<ProfileBloc>(
+            create: (context) => ProfileBloc(
+              profileRepository: profileRepository,
+            )..add(LoadProfile()),
+          ),
           // Add other BlocProviders here if needed
         ],
         child: MaterialApp(
@@ -112,8 +135,8 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme, // Apply the Poppins light theme
           darkTheme: AppTheme.darkTheme, // Apply the Poppins dark theme
           themeMode: ThemeMode.system,
-          home: const BottomNavBar(),
-          // const AuthenticationWrapper(), // Decide whether to show login or HomePage
+          home:
+              const AuthenticationWrapper(), // Decide whether to show login or HomePage
           routes: {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegistrationPage(),
@@ -129,6 +152,7 @@ class MyApp extends StatelessWidget {
             '/home': (context) => const BottomNavBar(),
             '/addBank': (context) => const AddBankPage(),
             '/addCategory': (context) => const AddCategoryPage(),
+            '/notification': (context) => const NotificationPage(),
             // '/manageBankAccount': (context) => const BankAccountPage(bank: bank,),
           },
           // builder: (context, child) => const BottomNavBar(), // Apply padding only to the body

@@ -50,6 +50,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             }
 
             return SingleChildScrollView(
+              padding: const EdgeInsets.only(top: 40),
               child: Form(
                 key: _formKey,
                 child: Column(

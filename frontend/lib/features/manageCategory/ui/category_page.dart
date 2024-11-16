@@ -5,7 +5,7 @@ import 'package:fundflow/features/home/models/category.dart' as categories;
 
 import '../../../core/themes/app_styles.dart';
 import '../../home/models/transaction.dart';
-import '../../home/pages/edit_category_page.dart';
+import '../../home/pages/category/edit_category_page.dart';
 import '../../home/repository/transaction_repository.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -20,6 +20,7 @@ class _CategoryPageState extends State<CategoryPage>
     with SingleTickerProviderStateMixin {
   String _type = 'income';
   late TabController _tabController;
+  List<Transaction> transactions = [];
 
   @override
   void initState() {
@@ -142,33 +143,39 @@ class _CategoryPageState extends State<CategoryPage>
                   preferredSize: const Size.fromHeight(40),
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Container(
-                      height: 40,
-                      width: 200,
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: AppColors.primary,
-                      ),
-                      child: TabBar(
-                        controller: _tabController,
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        dividerColor: Colors.transparent,
-                        indicator: const BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 40,
+                          width: 200,
+                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            color: AppColors.primary,
+                          ),
+                          child: TabBar(
+                            controller: _tabController,
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            dividerColor: Colors.transparent,
+                            indicator: const BoxDecoration(
+                              color: Colors.green,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            labelColor: Colors.white,
+                            unselectedLabelColor: Colors.white,
+                            tabs: const [
+                              Tab(
+                                icon: Icon(Icons.download),
+                              ),
+                              Tab(
+                                icon: Icon(Icons.upload),
+                              ),
+                            ],
+                          ),
                         ),
-                        labelColor: Colors.white,
-                        unselectedLabelColor: Colors.white,
-                        tabs: const [
-                          Tab(
-                            icon: Icon(Icons.download),
-                          ),
-                          Tab(
-                            icon: Icon(Icons.upload),
-                          ),
-                        ],
-                      ),
+                      ],
                     ),
                   ),
                 ),
@@ -183,7 +190,7 @@ class _CategoryPageState extends State<CategoryPage>
                             final filteredItem = filteredTransactions[index];
                             return TransactionItem(
                               amount: filteredItem.amount,
-                              category: filteredItem.category,
+                              category: 'filteredItem.category',
                               type: filteredItem.memo,
                             );
                           },

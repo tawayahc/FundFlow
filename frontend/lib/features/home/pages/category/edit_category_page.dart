@@ -6,6 +6,7 @@ import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
+import 'package:fundflow/features/home/pages/home_page.dart';
 
 class EditCategoryPage extends StatefulWidget {
   final Category category;
@@ -56,14 +57,20 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
           child: BlocListener<CategoryBloc, CategoryState>(
             listener: (context, state) {
               if (state is CategoryUpdated) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Category updated successfully')),
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   const SnackBar(content: Text('Category updated successfully')),
+                // );
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const GlobalPadding(child: HomePage())),
                 );
-                Navigator.pop(context); // Go back to the previous screen
+                // Navigator.pop(context); // Go back to the previous screen
               } else if (state is CategoryError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Failed to update category')),
-                );
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   const SnackBar(content: Text('Failed to update category')),
+                // );
               }
             },
             child: Column(
@@ -104,18 +111,10 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
-                TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    hintText: 'กรอกจำนวนเงิน',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      categoryAmount = double.tryParse(value) ?? 0.0;
-                    });
-                  },
-                  // controller:                    TextEditingController(text: categoryAmount.toString()),
+                Text(
+                  '฿ ${widget.category.amount}',
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 20),
                 // Color Selector
@@ -159,7 +158,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
                           amount: categoryAmount,
                           color: selectedColor,
                         );
-      
+
                         BlocProvider.of<CategoryBloc>(context).add(
                           EditCategory(
                               originalCategory: originalCategory,

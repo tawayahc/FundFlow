@@ -5,6 +5,7 @@ import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
 import 'package:fundflow/features/home/models/bank.dart';
+import 'package:fundflow/features/home/pages/home_page.dart';
 
 class AddBankPage extends StatefulWidget {
   const AddBankPage({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class AddBankPage extends StatefulWidget {
 
 class _AddBankPageState extends State<AddBankPage> {
   String bankName = '';
-  String selectedBank = '';
+  String selectedBank = 'กสิกรไทย';
   Color selectedColor = Colors.blue;
   double bankAmount = 0.0;
 
@@ -39,15 +40,21 @@ class _AddBankPageState extends State<AddBankPage> {
           padding: const EdgeInsets.all(16.0),
           child: BlocListener<BankBloc, BankState>(
             listener: (context, state) {
-              if (state is BanksLoaded) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Bank added successfully')),
+              if (state is BankAdded) {
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   const SnackBar(content: Text('Bank added successfully')),
+                // );
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const GlobalPadding(child: HomePage())),
                 );
-                Navigator.pop(context); // Go back to the previous screen
+                // Navigator.pop(context); // Go back to the previous screen
               } else if (state is BankError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message)),
-                );
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   const SnackBar(content: Text('Failed to load banks')),
+                // );
               }
             },
             child: Column(
@@ -72,7 +79,7 @@ class _AddBankPageState extends State<AddBankPage> {
                     final bank = availableBank[index];
                     final bankName = bank.keys.first;
                     final bankColor = bank.values.first;
-      
+
                     return GestureDetector(
                       onTap: () {
                         setState(() {
@@ -150,11 +157,12 @@ class _AddBankPageState extends State<AddBankPage> {
                     onPressed: () {
                       if (bankName.isNotEmpty && selectedBank.isNotEmpty) {
                         final newBank = Bank(
+                          id: -1,
                           name: bankName,
                           bank_name: 'ธนาคาร$selectedBank',
                           amount: bankAmount,
                         );
-      
+
                         BlocProvider.of<BankBloc>(context)
                             .add(AddBank(bank: newBank));
                       }

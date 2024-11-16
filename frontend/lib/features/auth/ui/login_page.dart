@@ -59,6 +59,7 @@ class _LoginPageState extends State<LoginPage> {
             }
 
             return SingleChildScrollView(
+              padding: const EdgeInsets.only(top: 40),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
