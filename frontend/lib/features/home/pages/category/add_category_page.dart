@@ -9,9 +9,10 @@ import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_text_ip.dart';
+import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 
 class AddCategoryPage extends StatefulWidget {
-  const AddCategoryPage({Key? key}) : super(key: key);
+  const AddCategoryPage({super.key});
 
   @override
   State<AddCategoryPage> createState() => _AddCategoryPageState();
@@ -22,24 +23,24 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
   TextEditingController amountController =
       TextEditingController(); // Controller for amount input
   Color selectedColor =
-      Color(0xFFFFA726); // Default color to match provided colors
+      const Color(0xFFFFA726); // Default color to match provided colors
   double categoryAmount = 0.00;
 
   // Updated color palette to match provided colors in the image
   final List<Color> availableColors = [
-    Color(0xFFB39DDB), // Purple
-    Color(0xFF64B5F6), // Light Blue
-    Color(0xFF4DD0E1), // Cyan
-    Color(0xFF81C784), // Green
-    Color(0xFFAED581), // Light Green
-    Color(0xFFFFF176), // Yellow
-    Color(0xFFFFA726), // Orange
-    Color(0xFFE57373), // Red
-    Color(0xFFF06292), // Pink
-    Color(0xFFF8BBD0), // Light Pink
-    Color(0xFFE0E0E0), // Light Gray
-    Color(0xFF757575), // Dark Gray
-    Color(0xFF000000), // Black
+    const Color(0xFFB39DDB), // Purple
+    const Color(0xFF64B5F6), // Light Blue
+    const Color(0xFF4DD0E1), // Cyan
+    const Color(0xFF81C784), // Green
+    const Color(0xFFAED581), // Light Green
+    const Color(0xFFFFF176), // Yellow
+    const Color(0xFFFFA726), // Orange
+    const Color(0xFFE57373), // Red
+    const Color(0xFFF06292), // Pink
+    const Color(0xFFF8BBD0), // Light Pink
+    const Color(0xFFE0E0E0), // Light Gray
+    const Color(0xFF757575), // Dark Gray
+    const Color(0xFF000000), // Black
   ];
 
   final List<String> categoryTags = [
@@ -58,6 +59,12 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
     return GlobalPadding(
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
+            },
+          ),
           title: const Text(
             'เพิ่มหมวดหมู่',
             style: TextStyle(color: Color(0xFF414141)),
@@ -98,6 +105,8 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                     ),
                     height: 120,
                     width: 320,
+                    fontSize: 15,
+                    amountFontSize: 20,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -172,33 +181,33 @@ class CategoryNameInput extends StatefulWidget {
   final ValueChanged<String> onChanged;
 
   const CategoryNameInput({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   _CategoryNameInputState createState() => _CategoryNameInputState();
 }
 
 class _CategoryNameInputState extends State<CategoryNameInput> {
-  Color iconColor = Color(0xFFD0D0D0);
-  Color textColor = Color(0xFFD0D0D0);
+  Color iconColor = const Color(0xFFD0D0D0);
+  Color textColor = const Color(0xFFD0D0D0);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 20),
-        const Text(
+        SizedBox(height: 20),
+        Text(
           'ระบุหมวดหมู่',
           style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Color(0xFF414141)),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
       ],
     );
   }
@@ -211,11 +220,11 @@ class CategoryTagSelection extends StatelessWidget {
   final ValueChanged<String> onTagSelected;
 
   const CategoryTagSelection({
-    Key? key,
+    super.key,
     required this.tags,
     required this.selectedTag,
     required this.onTagSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -242,7 +251,7 @@ class CategoryTagSelection extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: selectedTag == tag
-                          ? Color(0xFF41486D)
+                          ? const Color(0xFF41486D)
                           : Colors.grey.shade300,
                       width: 1.5,
                     ),
@@ -259,8 +268,8 @@ class CategoryTagSelection extends StatelessWidget {
                       tag,
                       style: TextStyle(
                         color: selectedTag == tag
-                            ? Color(0xFF41486D)
-                            : Color(0xFF414141),
+                            ? const Color(0xFF41486D)
+                            : const Color(0xFF414141),
                         fontSize: 14,
                       ),
                     ),
@@ -281,26 +290,26 @@ class ColorSelector extends StatelessWidget {
 
   // Define the colors list
   final List<Color> colors = [
-    Color(0xFFB39DDB), // Purple
-    Color(0xFF64B5F6), // Light Blue
-    Color(0xFF4DD0E1), // Cyan
-    Color(0xFF81C784), // Green
-    Color(0xFFAED581), // Light Green
-    Color(0xFFFFF176), // Yellow
-    Color(0xFFFFA726), // Orange
-    Color(0xFFE57373), // Red
-    Color(0xFFF06292), // Pink
-    Color(0xFFF8BBD0), // Light Pink
-    Color(0xFFE0E0E0), // Light Gray
-    Color(0xFF757575), // Dark Gray
-    Color(0xFF000000), // Black
+    const Color(0xFFB39DDB), // Purple
+    const Color(0xFF64B5F6), // Light Blue
+    const Color(0xFF4DD0E1), // Cyan
+    const Color(0xFF81C784), // Green
+    const Color(0xFFAED581), // Light Green
+    const Color(0xFFFFF176), // Yellow
+    const Color(0xFFFFA726), // Orange
+    const Color(0xFFE57373), // Red
+    const Color(0xFFF06292), // Pink
+    const Color(0xFFF8BBD0), // Light Pink
+    const Color(0xFFE0E0E0), // Light Gray
+    const Color(0xFF757575), // Dark Gray
+    const Color(0xFF000000), // Black
   ];
 
   ColorSelector({
-    Key? key,
+    super.key,
     required this.selectedColor,
     required this.onColorSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -318,7 +327,7 @@ class ColorSelector extends StatelessWidget {
         const SizedBox(height: 10),
         GridView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 6, // 6 colors per row
             crossAxisSpacing: 30,
@@ -336,7 +345,7 @@ class ColorSelector extends StatelessWidget {
                   color: color,
                   shape: BoxShape.circle,
                   border: selectedColor == color
-                      ? Border.all(width: 2.5, color: Color(0xFF41486D))
+                      ? Border.all(width: 2.5, color: const Color(0xFF41486D))
                       : Border.all(
                           width: 1.5,
                           color: const Color.fromARGB(0, 42, 32, 32)),
