@@ -13,7 +13,8 @@ class OverviewPage extends StatefulWidget {
   State<StatefulWidget> createState() => OverviewPageState();
 }
 
-class OverviewPageState extends State<OverviewPage> with SingleTickerProviderStateMixin{
+class OverviewPageState extends State<OverviewPage>
+    with SingleTickerProviderStateMixin {
   String _type = 'overview';
   late TabController _tabController;
 
@@ -57,26 +58,18 @@ class OverviewPageState extends State<OverviewPage> with SingleTickerProviderSta
               ),
               indicatorSize: TabBarIndicatorSize.tab,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
                 children: const [
                   // Content for the 'Overview' tab
                   SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        TabOverview()
-                      ],
-                    ),
+                    child: TabOverview(),
                   ),
                   // Content for the 'Categorized' tab
                   SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        TabCategorized()
-                      ],
-                    ),
+                    child: TabCategorized(),
                   ),
                 ],
               ),
