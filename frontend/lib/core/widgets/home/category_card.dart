@@ -6,13 +6,16 @@ class CategoryCard extends StatelessWidget {
   final Category category;
   final double width;
   final double height;
+  final double fontSize;
+  final double amountFontSize;
 
-  const CategoryCard({
-    super.key,
-    required this.category,
-    this.width = double.infinity,
-    this.height = 102.0, // Default height, adjust as needed
-  });
+  const CategoryCard(
+      {super.key,
+      required this.category,
+      this.width = double.infinity,
+      this.height = 102.0, // Default height, adjust as needed
+      this.fontSize = 12,
+      this.amountFontSize = 16});
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +58,15 @@ class CategoryCard extends StatelessWidget {
               children: [
                 Text(
                   category.name,
-                  style: const TextStyle(
-                      fontSize: 14,
+                  style: TextStyle(
+                      fontSize: fontSize,
                       fontWeight: FontWeight.normal,
-                      color: Color(0xFF414141)),
+                      color: const Color(0xFF414141)),
                 ),
                 Text(
                   '฿ ${category.amount.toStringAsFixed(2)}', // No formatter needed
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: amountFontSize,
                     fontWeight: FontWeight.w600,
                     color: category.color,
                   ),

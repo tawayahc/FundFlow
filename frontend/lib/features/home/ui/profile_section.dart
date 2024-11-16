@@ -4,8 +4,23 @@ import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_bloc.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_state.dart';
 
-class ProfileSection extends StatelessWidget {
-  const ProfileSection({super.key});
+class ProfileSection extends StatefulWidget {
+  const ProfileSection({Key? key}) : super(key: key);
+
+  @override
+  _ProfileSectionState createState() => _ProfileSectionState();
+}
+
+class _ProfileSectionState extends State<ProfileSection> {
+  bool isNotificationActive = false;
+  bool isSettingsActive = false;
+
+  void resetState() {
+    setState(() {
+      isNotificationActive = false;
+      isSettingsActive = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +37,7 @@ class ProfileSection extends StatelessWidget {
             children: [
               Row(
                 children: [
+                  const SizedBox(height: 10),
                   CircleAvatar(
                     radius: 30,
                     backgroundImage: userProfile.profileImageUrl?.isNotEmpty ==
@@ -32,42 +48,84 @@ class ProfileSection extends StatelessWidget {
                             as ImageProvider,
                   ),
                   const SizedBox(width: 10),
-                  // Username and Balance
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        formatter.format(cashBox),
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const Text(
+                            '฿',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF41486D),
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            formatter.format(cashBox),
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF41486D),
+                            ),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 0),
                       Text(
                         userProfile.username ?? 'Unknown User',
                         style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
+                          fontSize: 14,
+                          color: Color(0xFF414141),
                         ),
                       ),
                     ],
                   ),
                 ],
               ),
-              // Notification and Settings Icons
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.notifications, color: Colors.black),
+                    icon: Icon(
+                      isNotificationActive
+                          ? Icons.notifications
+                          : Icons.notifications_outlined,
+                      color: isNotificationActive
+                          ? Color(0xFF41486D)
+                          : const Color(0xFF414141),
+                    ),
+                    iconSize: 28,
                     onPressed: () {
-                      Navigator.pushNamed(context, '/notification');
+                      setState(() {
+                        isNotificationActive = !isNotificationActive;
+                      });
+
+                      // ทำงานแล้วรีเซ็ตสถานะ
+                      Navigator.pushNamed(context, '/notification')
+                          .then((_) => resetState());
                     },
                   ),
+                  const SizedBox(width: 0),
                   IconButton(
-                    icon: const Icon(Icons.settings, color: Colors.black),
+                    icon: Icon(
+                      isSettingsActive
+                          ? Icons.settings
+                          : Icons.settings_outlined,
+                      color: isSettingsActive
+                          ? Color(0xFF41486D)
+                          : const Color(0xFF414141),
+                    ),
+                    iconSize: 28,
                     onPressed: () {
-                      Navigator.pushNamed(context, '/setting_page');
+                      setState(() {
+                        isSettingsActive = !isSettingsActive;
+                      });
+
+                      // ทำงานแล้วรีเซ็ตสถานะ
+                      Navigator.pushNamed(context, '/setting_page')
+                          .then((_) => resetState());
                     },
                   ),
                 ],

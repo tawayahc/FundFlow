@@ -121,6 +121,8 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
                     ),
                     height: 120,
                     width: 320,
+                    fontSize: 15,
+                    amountFontSize: 20,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -164,7 +166,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
 
                 // Custom Button
                 CustomButton(
-                  text: 'อัปเดตหมวดหมู่',
+                  text: 'ยืนยันการแก้ไข',
                   onPressed: () {
                     if (categoryController.text.isNotEmpty) {
                       final updatedCategory = Category(
