@@ -178,42 +178,36 @@ class _BankAccountPageState extends State<BankAccountPage>
                   preferredSize: const Size.fromHeight(40),
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 40,
-                          width: 200,
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: AppColors.primary,
-                          ),
-                          child: TabBar(
-                            controller: _tabController,
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            dividerColor: Colors.transparent,
-                            indicator: const BoxDecoration(
-                              color: Colors.green,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            labelColor: Colors.white,
-                            unselectedLabelColor: Colors.white,
-                            tabs: const [
-                              Tab(
-                                icon: Icon(Icons.download),
-                              ),
-                              Tab(
-                                icon: Icon(Icons.upload),
-                              ),
-                              Tab(
-                                icon: Icon(Icons.compare_arrows),
-                              ),
-                            ],
-                          ),
+                    child: Container(
+                      height: 40,
+                      width: 200,
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: AppColors.primary,
+                      ),
+                      child: TabBar(
+                        controller: _tabController,
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        dividerColor: Colors.transparent,
+                        indicator: const BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
-                      ],
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.white,
+                        tabs: const [
+                          Tab(
+                            icon: Icon(Icons.download),
+                          ),
+                          Tab(
+                            icon: Icon(Icons.upload),
+                          ),
+                          Tab(
+                            icon: Icon(Icons.compare_arrows),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
