@@ -56,48 +56,59 @@ class _ForgetPageState extends State<ForgetPage> {
             ),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize
-                    .min, // ทำให้ Column มีขนาดเล็กที่สุดเท่าที่เนื้อหากำหนด
-                children: [
-                  const SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft, // ทำให้ข้อความชิดซ้าย
-                    child: const Text(
-                      'กรอกอีเมลเพื่อยืนยันตัวตน',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5A5A5A),
+        body: BlocConsumer<RepasswordBloc, RepasswordState>(
+          listener: (context, state) {
+            if (state is RepasswordOTPSent) {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>
+                      VerificationPage(email: _emailController.text)));
+            }
+          },
+          builder: (context, state) {
+            return SingleChildScrollView(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize
+                        .min, // ทำให้ Column มีขนาดเล็กที่สุดเท่าที่เนื้อหากำหนด
+                    children: [
+                      const SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerLeft, // ทำให้ข้อความชิดซ้าย
+                        child: const Text(
+                          'กรอกอีเมลเพื่อยืนยันตัวตน',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF5A5A5A),
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 12),
+                      CustomInputBox(
+                        labelText: 'อีเมล',
+                        prefixIcon: const Icon(
+                          Icons.email,
+                          color: Color(0xFFD0D0D0),
+                        ),
+                        controller: _emailController,
+                      ),
+                      const SizedBox(height: 30),
+                      Center(
+                        child: CustomButton(
+                          text: 'ยืนยัน',
+                          onPressed: _submitEmail,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 12),
-                  CustomInputBox(
-                    labelText: 'อีเมล',
-                    prefixIcon: const Icon(
-                      Icons.email,
-                      color: Color(0xFFD0D0D0),
-                    ),
-                    controller: _emailController,
-                  ),
-                  const SizedBox(height: 30),
-                  Center(
-                    child: CustomButton(
-                      text: 'ยืนยัน',
-                      onPressed: _submitEmail,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

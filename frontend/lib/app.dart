@@ -112,8 +112,7 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme, // Apply the Poppins light theme
           darkTheme: AppTheme.darkTheme, // Apply the Poppins dark theme
           themeMode: ThemeMode.system,
-          home: //ResetPasswordPage(email: 'p.ploy547@gmail.com'),
-              //VerificationPage(email: 'p.ploy547@gmail.com'),
+          home:
               const AuthenticationWrapper(), // Decide whether to show login or HomePage
           routes: {
             '/login': (context) => const LoginPage(),
