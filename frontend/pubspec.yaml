@@ -30,7 +30,6 @@ dependencies:
   cached_network_image: ^3.4.1
   flutter_dotenv: ^5.2.1
   bottom_picker: ^2.9.0
-  fl_chart: ^0.69.0
 
 dev_dependencies:
   flutter_test:

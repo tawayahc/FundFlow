@@ -4,10 +4,10 @@ import 'package:fundflow/features/transaction/bloc/transaction_event.dart';
 import 'package:fundflow/features/transaction/bloc/transaction_state.dart';
 import '../repository/transaction_repository.dart';
 
-class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
-  final TransactionRepository repository;
+class TransactionAddBloc extends Bloc<TransactionEvent, TransactionState> {
+  final TransactionAddRepository repository;
 
-  TransactionBloc({required this.repository}) : super(TransactionInitial()) {
+  TransactionAddBloc({required this.repository}) : super(TransactionInitial()) {
     on<FetchBanksAndCategories>(_onFetchBanksAndCategories);
     on<AddTransactionEvent>(_onAddTransaction);
     on<AddTransferEvent>(_onAddTransfer);

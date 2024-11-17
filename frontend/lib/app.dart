@@ -79,6 +79,8 @@ class MyApp extends StatelessWidget {
     final profileRepository = ProfileRepository(apiHelper: apiHelper);
     final bankRepository = BankRepository(apiHelper: apiHelper);
     final transactionRepository = TransactionRepository(apiHelper: apiHelper);
+    final transactionAddRepository =
+        TransactionAddRepository(apiHelper: apiHelper);
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authenticationRepository),
@@ -89,7 +91,8 @@ class MyApp extends StatelessWidget {
         RepositoryProvider.value(
           value: categoryRepository,
         ),
-        RepositoryProvider(create: (context) => ProfileRepository()),
+        RepositoryProvider(
+            create: (context) => ProfileRepository(apiHelper: apiHelper)),
         RepositoryProvider.value(value: transactionRepository),
       ],
       child: MultiBlocProvider(
@@ -130,10 +133,10 @@ class MyApp extends StatelessWidget {
               profileRepository: profileRepository,
             )..add(LoadProfile()),
           ),
-          // Add other BlocProviders here if needed
-          BlocProvider<TransactionBloc>(
-            create: (context) => TransactionBloc(
-              repository: transactionRepository,
+          // Note: OAT's Bloc
+          BlocProvider<TransactionAddBloc>(
+            create: (context) => TransactionAddBloc(
+              repository: transactionAddRepository,
             ),
           ),
         ],
