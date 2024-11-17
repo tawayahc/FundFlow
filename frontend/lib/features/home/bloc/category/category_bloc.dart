@@ -48,5 +48,31 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         emit(CategoryError()); // New error state
       }
     });
+
+    on<TransferAmount>((event, emit) async {
+      try {
+        // Add the new category to the repository
+        await categoryRepository.transferAmount(
+            event.fromCategoryId, event.toCategoryId, event.amount);
+        // Reload categories after addition
+        add(LoadCategories());
+        emit(CategoryTransferred());
+      } catch (error) {
+        emit(CategoriesLoading()); // Handle error as needed
+      }
+    });
+
+    on<UpdateAmount>((event, emit) async {
+      try {
+        // Edit the category using the repository
+        await categoryRepository.updateCategoryAmount(
+            event.categoryId, event.newAmount);
+        // If successful, reload categories or navigate to the previous screen
+        emit(CategoryAmountUpdated());
+      } catch (error) {
+        print("Error updated category: $error");
+        emit(CategoryError()); // New error state
+      }
+    });
   }
 }

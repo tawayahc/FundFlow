@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
-import 'package:fundflow/features/home/pages/edit_bank_page.dart';
+import 'package:fundflow/features/home/pages/bank/edit_bank_page.dart';
 import 'package:fundflow/features/home/ui/bank_section.dart';
 import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
 
@@ -22,6 +22,7 @@ class BankAccountPage extends StatefulWidget {
 class _BankAccountPageState extends State<BankAccountPage>
     with SingleTickerProviderStateMixin {
   String _type = 'income';
+  List<Transaction> transactions = [];
   late TabController _tabController;
 
   @override
@@ -177,42 +178,36 @@ class _BankAccountPageState extends State<BankAccountPage>
                   preferredSize: const Size.fromHeight(40),
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 40,
-                          width: 200,
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: AppColors.primary,
-                          ),
-                          child: TabBar(
-                            controller: _tabController,
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            dividerColor: Colors.transparent,
-                            indicator: const BoxDecoration(
-                              color: Colors.green,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            labelColor: Colors.white,
-                            unselectedLabelColor: Colors.white,
-                            tabs: const [
-                              Tab(
-                                icon: Icon(Icons.download),
-                              ),
-                              Tab(
-                                icon: Icon(Icons.upload),
-                              ),
-                              Tab(
-                                icon: Icon(Icons.compare_arrows),
-                              ),
-                            ],
-                          ),
+                    child: Container(
+                      height: 40,
+                      width: 200,
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: AppColors.primary,
+                      ),
+                      child: TabBar(
+                        controller: _tabController,
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        dividerColor: Colors.transparent,
+                        indicator: const BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
-                      ],
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.white,
+                        tabs: const [
+                          Tab(
+                            icon: Icon(Icons.download),
+                          ),
+                          Tab(
+                            icon: Icon(Icons.upload),
+                          ),
+                          Tab(
+                            icon: Icon(Icons.compare_arrows),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -227,7 +222,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                           final filteredItem = filteredTransactions[index];
                           return TransactionItem(
                             amount: filteredItem.amount,
-                            category: filteredItem.category,
+                            category: 'filteredItem.category',
                             type: filteredItem.memo,
                           );
                         },

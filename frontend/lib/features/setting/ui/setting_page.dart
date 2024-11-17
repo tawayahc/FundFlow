@@ -4,6 +4,7 @@ import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/auth/bloc/auth_bloc.dart';
 import 'package:fundflow/features/auth/bloc/auth_event.dart';
 import 'package:fundflow/features/auth/bloc/auth_state.dart';
+import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/widgets/avatar_selection_modal.dart';
 
