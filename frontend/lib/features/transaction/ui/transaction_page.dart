@@ -110,7 +110,7 @@ class _TransactionPageState extends State<TransactionPage>
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              ),
+            ),
           ),
         ),
         body: BlocListener<TransactionBloc, TransactionState>(
@@ -143,31 +143,29 @@ class _TransactionPageState extends State<TransactionPage>
                 child: Column(
                   children: [
                     // Tabs for Transaction Type
-                    
+
                     Container(
                       width: 259,
                       height: 43,
                       margin: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                        color: AppColors.white,
-                        boxShadow:  [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(0, 0),
-                            blurRadius: 3.6,
-                            spreadRadius: 1,
-                          )
-                        ]
-                      ),
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                          color: AppColors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0, 0),
+                              blurRadius: 3.6,
+                              spreadRadius: 1,
+                            )
+                          ]),
                       child: TabBar(
                         controller: _tabController,
                         indicatorSize: TabBarIndicatorSize.tab,
                         dividerColor: Colors.transparent,
                         indicator: const BoxDecoration(
                           color: AppColors.primary,
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(30)),
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
                         ),
                         labelColor: AppColors.white,
                         unselectedLabelColor: AppColors.primary,

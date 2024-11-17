@@ -4,10 +4,10 @@ import 'package:fundflow/features/transaction/bloc/transaction_event.dart';
 import 'package:fundflow/features/transaction/bloc/transaction_state.dart';
 import '../repository/transaction_repository.dart';
 
-class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
-  final TransactionRepository repository;
+class TransactionAddBloc extends Bloc<TransactionEvent, TransactionState> {
+  final TransactionAddRepository repository;
 
-  TransactionBloc({required this.repository}) : super(TransactionInitial()) {
+  TransactionAddBloc({required this.repository}) : super(TransactionInitial()) {
     on<FetchBanksAndCategories>(_onFetchBanksAndCategories);
     on<AddTransactionEvent>(_onAddTransaction);
     on<AddTransferEvent>(_onAddTransfer);
@@ -42,9 +42,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       AddTransferEvent event, Emitter<TransactionState> emit) async {
     emit(TransactionLoading());
     try {
-      // await repository.addTransfer(event.request);
+      await repository.addTransfer(event.request);
+      logger.d('Transfer added successfully');
       emit(TransactionSuccess());
     } catch (e) {
+      logger.e('Failed to add transfer: $e');
       emit(TransactionFailure(e.toString()));
     }
   }

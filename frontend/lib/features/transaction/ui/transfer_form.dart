@@ -31,7 +31,8 @@ class _TransferFormState extends State<TransferForm> {
   void initState() {
     super.initState();
     if (widget.banks.length < 2) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _showNotEnoughBanksDialog());
+      WidgetsBinding.instance
+          .addPostFrameCallback((_) => _showNotEnoughBanksDialog());
     }
   }
 
@@ -71,9 +72,7 @@ class _TransferFormState extends State<TransferForm> {
                 const Text(
                   'คุณมีบัญชีธนาคารไม่พอ\nกรุณากดเพิ่มธนาคาร',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.red
-                  ),
+                  style: TextStyle(color: Colors.red),
                 ),
                 const SizedBox(height: 16),
                 Container(
@@ -89,11 +88,12 @@ class _TransferFormState extends State<TransferForm> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
                       ),
-                      backgroundColor: const Color(0xFF41486D), 
+                      backgroundColor: const Color(0xFF41486D),
                     ),
                     child: const Text(
                       'เพิ่มธนาคาร',
-                      style:  TextStyle(fontSize: 16, color: Color(0xffffffff)),),
+                      style: TextStyle(fontSize: 16, color: Color(0xffffffff)),
+                    ),
                   ),
                 ),
               ],
@@ -224,24 +224,25 @@ class _TransferFormState extends State<TransferForm> {
             child: const Text(
               'ระบุธนาคาร',
               style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
           // Bank Dropdown
           CustomDropdown<Bank>(
             prefixIcon: Icons.balance,
-            hintText: 'กรอกธนาคาร', 
-            selectedItem:  _fromBank, 
-            items: widget.banks, 
+            hintText: 'กรอกธนาคาร',
+            selectedItem: _fromBank,
+            items: widget.banks,
             onChanged: (Bank? newValue) {
-                setState(() {
-                  _fromBank = newValue;
-                });
-              }, 
+              setState(() {
+                _fromBank = newValue;
+              });
+            },
             displayItem: (Bank bank) => bank.name,
-            validator: (value) => value == null ? 'Please select a bank' : null,),
+            validator: (value) => value == null ? 'Please select a bank' : null,
+          ),
           /*DropdownButtonFormField<Bank>(
             value: _fromBank,
             hint: const Text('Select From Bank'),
@@ -274,24 +275,26 @@ class _TransferFormState extends State<TransferForm> {
             child: const Text(
               'ระบุธนาคาร',
               style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
           // Bank Dropdown
           CustomDropdown<Bank>(
             prefixIcon: Icons.balance,
-            hintText: 'กรอกธนาคาร', 
-            selectedItem:  _toBank, 
-            items: widget.banks, 
+            hintText: 'กรอกธนาคาร',
+            selectedItem: _toBank,
+            items: widget.banks,
             onChanged: (Bank? newValue) {
-                setState(() {
-                  _toBank = newValue;
-                });
-              }, 
+              setState(() {
+                _toBank = newValue;
+              });
+            },
             displayItem: (Bank bank) => bank.name,
-            validator: (value) => value == null ? 'Please select a to bank' : null,),
+            validator: (value) =>
+                value == null ? 'Please select a to bank' : null,
+          ),
           /*DropdownButtonFormField<Bank>(
             value: _toBank,
             hint: const Text('Select To Bank'),
@@ -324,17 +327,17 @@ class _TransferFormState extends State<TransferForm> {
             child: const Text(
               'ระบุจำนวนเงิน',
               style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
           CustomInputBox(
-            labelText: 'ระบุจำนวนเงิน', 
+            labelText: 'ระบุจำนวนเงิน',
             prefixIcon: const Icon(
               Icons.account_balance_wallet,
               color: Color(0xFFD0D0D0),
-            ), 
+            ),
             controller: _amountController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             validator: (value) {
@@ -345,7 +348,8 @@ class _TransferFormState extends State<TransferForm> {
                 return 'Please enter a valid number';
               }
               return null;
-            },),
+            },
+          ),
           /*TextFormField(
             controller: _amountController,
             decoration: const InputDecoration(
@@ -370,15 +374,15 @@ class _TransferFormState extends State<TransferForm> {
             child: const Text(
               'ระบุวันที่',
               style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
           CustomInputInkwell(
-            prefixIcon: Icons.calendar_today, 
-            labelText: "${_selectedDate.toLocal()}".split(' ')[0], 
-            onTap: _selectDate),
+              prefixIcon: Icons.calendar_today,
+              labelText: "${_selectedDate.toLocal()}".split(' ')[0],
+              onTap: _selectDate),
           /*InkWell(
             onTap: _selectDate,
             child: InputDecorator(
@@ -404,18 +408,18 @@ class _TransferFormState extends State<TransferForm> {
             child: const Text(
               'ระบุเวลา',
               style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
           // Time Picker
           CustomInputInkwell(
-            prefixIcon: Icons.access_time, 
-            labelText: _selectedTime != null
-                          ? _selectedTime!.format(context)
-                          : 'กรอกเวลา(ไม่จำเป็น)', 
-            onTap: _selectTime),
+              prefixIcon: Icons.access_time,
+              labelText: _selectedTime != null
+                  ? _selectedTime!.format(context)
+                  : 'กรอกเวลา(ไม่จำเป็น)',
+              onTap: _selectTime),
           /*InkWell(
             onTap: _selectTime,
             child: InputDecorator(
@@ -438,9 +442,7 @@ class _TransferFormState extends State<TransferForm> {
           ),*/
           const SizedBox(height: 16),
           // Note Field
-          CustomButton(
-            text: 'ยืนยัน', 
-            onPressed: _submit),
+          CustomButton(text: 'ยืนยัน', onPressed: _submit),
           /*ElevatedButton(
             onPressed: _submit,
             child: const Text('Submit'),

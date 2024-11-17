@@ -5,16 +5,18 @@ import 'package:fundflow/core/widgets/global_padding.dart';
 
 class CategoryCard extends StatelessWidget {
   final Category category;
+  final double width;
 
   const CategoryCard({
     super.key,
     required this.category,
+    this.width = double.infinity,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
+      width: width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
@@ -74,43 +76,25 @@ class CategoryCard extends StatelessWidget {
   }
 }
 
-class CustomDraggableCategoryCard extends StatefulWidget {
-  final Category category;
+class CategoryWhenDragging extends StatelessWidget {
+  final double width;
+  final double height;
 
-  const CustomDraggableCategoryCard({
+  const CategoryWhenDragging({
     super.key,
-    required this.category,
+    this.width = double.infinity,
+    this.height = 90.0, // Set default height to match CategoryCard if needed
   });
 
   @override
-  _CustomDraggableCategoryCardState createState() =>
-      _CustomDraggableCategoryCardState();
-}
-
-class _CustomDraggableCategoryCardState
-    extends State<CustomDraggableCategoryCard> {
-  Offset position = Offset.zero; // Initial position
-
-  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanUpdate: (details) {
-        setState(() {
-          // Update position based on the drag details
-          position += details.delta;
-        });
-      },
-      onPanEnd: (details) {
-        // Reset position to initial position when dragging ends
-        setState(() {
-          position = Offset.zero;
-        });
-      },
-      child: Transform.translate(
-        offset: position,
-        child: CategoryCard(
-          category: widget.category,
-        ),
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.grey.withOpacity(0.5),
+        border: Border.all(color: Colors.grey.shade300),
       ),
     );
   }
