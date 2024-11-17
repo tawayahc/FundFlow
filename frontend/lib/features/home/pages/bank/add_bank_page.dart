@@ -8,7 +8,7 @@ import 'package:fundflow/features/home/models/bank.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 
 class AddBankPage extends StatefulWidget {
-  const AddBankPage({Key? key}) : super(key: key);
+  const AddBankPage({super.key});
 
   @override
   _AddBankPageState createState() => _AddBankPageState();

@@ -140,8 +140,8 @@ class MyApp extends StatelessWidget {
           routes: {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegistrationPage(),
-            '/forget1': (context) => ForgetPage(),
-            '/setting_page': (context) => SettingsPage(),
+            '/forget1': (context) => const ForgetPage(),
+            '/setting_page': (context) => const SettingsPage(),
             // '/pocket_management': (context) => CategoryPage(),
             '/setting_page/edit_email': (context) =>
                 EditEmailPage(repository: settingsRepository),
