@@ -47,7 +47,7 @@ class _TransactionPageState extends State<TransactionPage>
     });
 
     // Fetch banks and categories when the page initializes
-    context.read<TransactionBloc>().add(FetchBanksAndCategories());
+    context.read<TransactionAddBloc>().add(FetchBanksAndCategories());
   }
 
   @override
@@ -73,7 +73,7 @@ class _TransactionPageState extends State<TransactionPage>
       createdAtTime: data.time != null ? formatTimeOfDay(data.time!) : null,
       memo: data.note,
     );
-    context.read<TransactionBloc>().add(AddTransactionEvent(request));
+    context.read<TransactionAddBloc>().add(AddTransactionEvent(request));
   }
 
   void _onExpenseSubmit(CreateExpenseData data) {
@@ -86,7 +86,7 @@ class _TransactionPageState extends State<TransactionPage>
       createdAtTime: data.time != null ? formatTimeOfDay(data.time!) : null,
       memo: data.note,
     );
-    context.read<TransactionBloc>().add(AddTransactionEvent(request));
+    context.read<TransactionAddBloc>().add(AddTransactionEvent(request));
   }
 
   void _onTransferSubmit(CreateTransferData data) {
@@ -97,7 +97,7 @@ class _TransactionPageState extends State<TransactionPage>
       createdAtDate: data.date.toIso8601String().split('T').first,
       createdAtTime: data.time != null ? formatTimeOfDay(data.time!) : null,
     );
-    context.read<TransactionBloc>().add(AddTransferEvent(request));
+    context.read<TransactionAddBloc>().add(AddTransferEvent(request));
   }
 
   @override
@@ -113,7 +113,7 @@ class _TransactionPageState extends State<TransactionPage>
             ),
           ),
         ),
-        body: BlocListener<TransactionBloc, TransactionState>(
+        body: BlocListener<TransactionAddBloc, TransactionState>(
           listener: (context, state) {
             if (state is TransactionSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -125,7 +125,7 @@ class _TransactionPageState extends State<TransactionPage>
               );
             }
           },
-          child: BlocBuilder<TransactionBloc, TransactionState>(
+          child: BlocBuilder<TransactionAddBloc, TransactionState>(
             builder: (context, state) {
               if (state is TransactionLoading) {
                 return const Center(child: CircularProgressIndicator());
