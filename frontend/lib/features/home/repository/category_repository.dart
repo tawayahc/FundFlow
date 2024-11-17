@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/utils/api_helper.dart';
@@ -130,6 +129,60 @@ class CategoryRepository {
         logger.e('Error editing category: $error');
       }
       throw Exception('Error editing category: $error');
+    }
+  }
+
+  Future<void> transferAmount(
+      int fromCategoryId, int toCategoryId, double amount) async {
+    try {
+      logger.i('Editing category: $amount $fromCategoryId $toCategoryId ');
+
+      final data = {
+        'from_category_id': fromCategoryId,
+        'to_category_id': toCategoryId,
+        'amount': amount,
+      };
+
+      final response = await dio.post(
+        "/categories/transfer",
+        data: data,
+      );
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        logger.e('Failed to transfer amount, Response: ${response.data}');
+        throw Exception('Failed to transfer amount');
+      }
+    } catch (error) {
+      // Detailed error logging
+      if (error is DioException) {
+        logger.e('Dio Error: ${error.response?.data ?? error.message}');
+      } else {
+        logger.e('Error transfer amount: $error');
+      }
+      throw Exception('Error transfer amount: $error');
+    }
+  }
+
+  Future<void> updateCategoryAmount(int categoryId, double newAmount) async {
+    try {
+      final data = {
+        'new_amount': newAmount,
+      };
+
+      final response = await dio.put("/categories/$categoryId", data: data);
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        logger
+            .e('Failed to update category amount, Response: ${response.data}');
+        throw Exception('Failed to update category amount');
+      }
+    } catch (error) {
+      if (error is DioException) {
+        logger.e('Dio Error: ${error.response?.data ?? error.message}');
+      } else {
+        logger.e('Error updating category amount: $error');
+      }
+      throw Exception('Error updating category amount: $error');
     }
   }
 }

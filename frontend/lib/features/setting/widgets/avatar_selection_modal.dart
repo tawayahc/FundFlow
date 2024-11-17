@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 
 class AvatarSelectionModal extends StatelessWidget {
+  const AvatarSelectionModal({super.key});
+
   @override
   Widget build(BuildContext context) {
     final bloc = BlocProvider.of<UserProfileBloc>(context);
     bloc.add(FetchAvatarPresets());
 
-    return Container(
+    return SizedBox(
       height: 400,
       child: BlocConsumer<UserProfileBloc, UserProfileState>(
         listener: (context, state) {
