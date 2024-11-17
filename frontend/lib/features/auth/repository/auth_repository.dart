@@ -6,7 +6,7 @@ import '../models/user_model.dart';
 class AuthenticationRepository {
   final Dio _dio;
   final String baseUrl;
-  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   AuthenticationRepository({required this.baseUrl})
       : _dio = Dio(

@@ -11,7 +11,7 @@ import 'package:fundflow/features/home/pages/home_page.dart';
 class EditCategoryPage extends StatefulWidget {
   final Category category;
 
-  const EditCategoryPage({Key? key, required this.category}) : super(key: key);
+  const EditCategoryPage({super.key, required this.category});
 
   @override
   State<EditCategoryPage> createState() => _EditCategoryPageState();

@@ -9,7 +9,7 @@ import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 
 class AddCategoryPage extends StatefulWidget {
-  const AddCategoryPage({Key? key}) : super(key: key);
+  const AddCategoryPage({super.key});
 
   @override
   State<AddCategoryPage> createState() => _AddCategoryPageState();
