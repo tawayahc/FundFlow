@@ -1,8 +1,9 @@
-package controllers
+package handlers
 
 import (
 	"fundflow/pkg/models"
 	"fundflow/pkg/services"
+	"fundflow/pkg/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,8 +23,10 @@ func Register(c *gin.Context) {
 		return
 	}
 
+	userID, _ := utils.GetUserIDByUserName(creds.Username)
+
 	// Generate JWT token
-	tokenString, err := services.GenerateJWTToken(creds.Username)
+	tokenString, err := services.GenerateJWTToken(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error generating token"})
 		return
@@ -49,7 +52,7 @@ func Login(c *gin.Context) {
 	}
 
 	// Generate JWT token
-	tokenString, err := services.GenerateJWTToken(user.Username)
+	tokenString, err := services.GenerateJWTToken(user.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error generating token"})
 		return

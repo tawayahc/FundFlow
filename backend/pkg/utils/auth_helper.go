@@ -26,19 +26,27 @@ func ComparePasswords(hashedPassword string, password string) error {
 	return nil
 }
 
-// GetUserProfileByUsername retrieves the UserProfile given a username
-func GetUserProfileByUsername(username string) (*models.UserProfile, error) {
+// GetUserProfileByUserID retrieves a user profile by user ID
+func GetUserProfileByUserID(userID uint) (*models.UserProfile, error) {
 	var auth models.Authentication
-	if err := config.DB.Where("username = ?", username).First(&auth).Error; err != nil {
+	if err := config.DB.Where("id = ?", userID).First(&auth).Error; err != nil {
 		return nil, errors.New("user not found")
 	}
 
 	var userProfile models.UserProfile
-	if err := config.DB.Where("auth_id = ?", auth.ID).First(&userProfile).Error; err != nil {
+	if err := config.DB.Where("auth_id = ?", userID).First(&userProfile).Error; err != nil {
 		return nil, errors.New("user profile not found")
 	}
 
 	return &userProfile, nil
 }
 
+// GetUserProfileByUserName retrieves a user profile by username
+func GetUserIDByUserName(username string) (uint, error) {
+	var auth models.Authentication
+	if err := config.DB.Where("username = ?", username).First(&auth).Error; err != nil {
+		return 0, errors.New("user not found")
+	}
 
+	return auth.ID, nil
+}

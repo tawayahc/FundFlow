@@ -7,15 +7,18 @@ import (
 	"fundflow/pkg/utils"
 )
 
-func ChangeEmail(email string, userName string) error {
+func ChangeEmail(email string, userID uint) error {
 	// Check if the email already exists
 	var user models.UserProfile
 	if err := config.DB.Where("email = ?", email).First(&user).Error; err == nil {
 		return errors.New("email already exists")
 	}
 
-	// Get the userProfile from username
-	userProfile, _ := utils.GetUserProfileByUsername(userName)
+	// Get the userProfile from userID
+	var userProfile models.UserProfile
+	if err := config.DB.Where("auth_id = ?", userID).First(&userProfile).Error; err != nil {
+		return errors.New("user not found")
+	}
 
 	// Update the email
 	if err := config.DB.Model(&userProfile).Update("email", email).Error; err != nil {
@@ -25,10 +28,10 @@ func ChangeEmail(email string, userName string) error {
 	return nil
 }
 
-func ChangePassword(oldPassword string, newPassword string, userName string) error {
+func ChangePassword(oldPassword string, newPassword string, userID uint) error {
 	// Get userAuthentication from username
 	var userAuthentication models.Authentication
-	config.DB.Where("username = ?", userName).First(&userAuthentication)
+	config.DB.Where("id = ?", userID).First(&userAuthentication)
 
 	// Validate the old password
 	if err := utils.ComparePasswords(userAuthentication.Password, oldPassword); err != nil {
@@ -48,10 +51,10 @@ func ChangePassword(oldPassword string, newPassword string, userName string) err
 	return nil
 }
 
-func DeleteAccount(userName string, password string) error {
+func DeleteAccount(userID uint, password string) error {
 	// Get userAuthentication from username
 	var userAuthentication models.Authentication
-	config.DB.Where("username = ?", userName).First(&userAuthentication)
+	config.DB.Where("id = ?", userID).First(&userAuthentication)
 
 	// Validate the password
 	if err := utils.ComparePasswords(userAuthentication.Password, password); err != nil {

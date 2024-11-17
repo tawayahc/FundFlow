@@ -17,20 +17,6 @@ type Authentication struct {
 	UserProfile    *UserProfile `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:AuthID"` // One-to-one relation with UserProfile
 }
 
-// UserProfile model
-type UserProfile struct {
-	gorm.Model
-	AuthID         uint            `gorm:"unique;not null"` // Foreign key referencing Authentication
-	FirstName      string          // First name
-	LastName       string          // Last name
-	UserProfilePic string          // Profile picture
-	Email          string          `gorm:"unique;not null"` // Email must be unique
-	PhoneNumber    string          // Phone
-	Address        string          // Address
-	DateOfBirth    time.Time       // Date of birth
-	Authentication *Authentication `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:AuthID"` // Belongs to Authentication
-}
-
 // Credentials struct for login (no email required for login)
 type Credentials struct {
 	Username string `json:"username" binding:"required"`
@@ -47,5 +33,6 @@ type Registration struct {
 // Claims for JWT token
 type Claims struct {
 	Username string `json:"username"`
+	UserID   uint   `json:"user_id"`
 	jwt.RegisteredClaims
 }
