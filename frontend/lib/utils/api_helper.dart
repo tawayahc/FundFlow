@@ -34,7 +34,7 @@ class ApiHelper {
             String? token = await storage.read(key: 'token');
             if (token != null) {
               options.headers['Authorization'] = 'Bearer $token';
-              logger.d('Authorization header set with token: $token');
+              // logger.d('Authorization header set with token: $token');
             } else {
               logger.w('No token found in secure storage.');
             }
