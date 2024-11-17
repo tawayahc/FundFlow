@@ -1,7 +1,9 @@
+import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/custom_tab.dart';
 
 import '../../../core/themes/app_styles.dart';
+import '../../../core/widgets/overview/summary_card.dart';
 import 'bar_chart.dart';
 
 class TabOverview extends StatefulWidget {
@@ -15,12 +17,22 @@ class TabOverviewState extends State<TabOverview>
     with SingleTickerProviderStateMixin {
   String _type = 'daily';
   late TabController _tabController;
+  String? selectedValue;
+
+  late SingleValueDropDownController _cnt;
+  final List<String> dropDownItems = [
+    "เงินเข้า-เงินออก",
+    "เงินเข้า",
+    "เงินออก"
+  ];
 
   @override
   void initState() {
     super.initState();
+
     _tabController = TabController(length: 2, vsync: this);
     _tabController.index = ['daily', 'monthly'].indexOf(_type);
+    _cnt = SingleValueDropDownController();
 
     _tabController.addListener(() {
       setState(() {
@@ -32,6 +44,7 @@ class TabOverviewState extends State<TabOverview>
   @override
   void dispose() {
     _tabController.dispose();
+    // _cnt.dispose();
     super.dispose();
   }
 
@@ -46,10 +59,10 @@ class TabOverviewState extends State<TabOverview>
           child: const ExpenseBarChart(),
         ),
         const SizedBox(height: 10),
-        Row(
+        const Row(
           children: [
-            SummaryCard(true, 'ยอดรวมเงินเข้า (บาท)', 10000.00, 5, 200.5),
-            SummaryCard(false, 'ยอดรวมเงินออก (บาท)', 10000.00, 7, 150.56)
+            SummaryCard(type: true, title: 'ยอดรวมเงินเข้า (บาท)', amount: 10000.00, items: 5, avgPerMonth: 200.5),
+            SummaryCard(type: false, title: 'ยอดรวมเงินออก (บาท)', amount: 10000.00, items: 7, avgPerMonth: 150.56,)
           ],
         ),
         const SizedBox(height: 10),
@@ -78,14 +91,78 @@ class TabOverviewState extends State<TabOverview>
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
-                        children: [Text('ประเภทรายการ'), Text('Dropdown here')],
+                        children: [
+                          const Text('ประเภทรายการ'),
+                          SizedBox(
+                            width: 150,
+                            child: DropDownTextField(
+                              textFieldDecoration: const InputDecoration(
+                                hintText: 'เงินเข้า-เงินออก', // Placeholder text
+                                hintStyle: TextStyle(
+                                  color: Colors.grey, // Text color
+                                  fontSize: 16, // Font size
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.grey, // Border color
+                                    width: 1.0, // Border width
+                                  ),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.grey, // Same color as enabled for consistency
+                                    width: 1.0,
+                                  ),
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.grey, // Border color
+                                    width: 1.0,
+                                  ),
+                                ),
+                              ),
+                              controller: _cnt,
+                              clearOption: true,
+                              clearIconProperty: IconProperty(color: Colors.green),
+                              validator: (value) {
+                                if (value == null) {
+                                  return "Required field";
+                                } else {
+                                  return null;
+                                }
+                              },
+                              dropDownItemCount: 6,
+                              dropDownList: const [
+                                DropDownValueModel(name: 'name1', value: "value1"),
+                                DropDownValueModel(
+                                    name: 'name2',
+                                    value: "value2",
+                                    toolTipMsg:
+                                    "DropDownButton is a widget that we can use to select one unique value from a set of values"),
+                                DropDownValueModel(name: 'name3', value: "value3"),
+                                DropDownValueModel(
+                                    name: 'name4',
+                                    value: "value4",
+                                    toolTipMsg:
+                                    "DropDownButton is a widget that we can use to select one unique value from a set of values"),
+                                DropDownValueModel(name: 'name5', value: "value5"),
+                                DropDownValueModel(name: 'name6', value: "value6"),
+                                DropDownValueModel(name: 'name7', value: "value7"),
+                                DropDownValueModel(name: 'name8', value: "value8"),
+                              ],
+                              onChanged: (val) {},
+                            ),
+                          )
+                        ],
                       ),
-                      Column(
-                        children: [Text('ช่วงเวลา'), Text('Date picker here')],
+                      const Column(
+                        children: [
+                          Text('ช่วงเวลา'),
+                          Text('Date picker here')],
                       ),
                     ],
                   ),
@@ -180,63 +257,8 @@ class TabOverviewState extends State<TabOverview>
   }
 }
 
-Widget SummaryCard(bool type, String title, double amount, double items, double avgPerMonth) {
-  Color numColor;
-  type ? numColor = Colors.green : numColor = Colors.red;
-  return Expanded(
-    child: Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 10, 14, 6),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.grey[700],
-                  fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 5),
-            Text(
-              amount.toStringAsFixed(2),
-              style: TextStyle(fontSize: 13, color: numColor),
-            ),
-            Row(
-              children: [
-                Text(
-                  "รายการ",
-                  style: TextStyle(fontSize: 9, color: Colors.grey[600]),
-                ),
-                const Spacer(),
-                Text(
-                  items.toStringAsFixed(0),
-                  style: TextStyle(fontSize: 9, color: numColor),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Text(
-                  'เฉลี่ยต่อเดือน',
-                  style: TextStyle(fontSize: 9, color: Colors.grey[600]),
-                ),
-                const Spacer(),
-                Text(
-                  avgPerMonth.toStringAsFixed(2),
-                  style: TextStyle(fontSize: 9, color: numColor),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-Widget RoutineSummaryItem(String month, double totalIn, double totalOut, double balance) {
+Widget RoutineSummaryItem(
+    String month, double totalIn, double totalOut, double balance) {
   Color balanceColor;
   totalIn - totalOut > 0
       ? balanceColor = Colors.green
@@ -287,5 +309,65 @@ Widget RoutineSummaryItem(String month, double totalIn, double totalOut, double 
         ],
       ),
     ),
+  );
+}
+
+Widget ExpenseTypeDropDown(SingleValueDropDownController _cnt, List<String> dropDownItems) {
+  return DropDownTextField(
+    textFieldDecoration: const InputDecoration(
+      hintText: 'เงินเข้า-เงินออก', // Placeholder text
+      hintStyle: TextStyle(
+        color: Colors.grey, // Text color
+        fontSize: 16, // Font size
+      ),
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.grey, // Border color
+          width: 1.0, // Border width
+        ),
+      ),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.grey, // Same color as enabled for consistency
+          width: 1.0,
+        ),
+      ),
+      border: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.grey, // Border color
+          width: 1.0,
+        ),
+      ),
+    ),
+    controller: _cnt,
+    clearOption: true,
+    clearIconProperty: IconProperty(color: Colors.green),
+    validator: (value) {
+      if (value == null) {
+        return "Required field";
+      } else {
+        return null;
+      }
+    },
+    dropDownItemCount: 6,
+    dropDownList: const [
+      DropDownValueModel(name: 'name1', value: "value1"),
+      DropDownValueModel(
+          name: 'name2',
+          value: "value2",
+          toolTipMsg:
+          "DropDownButton is a widget that we can use to select one unique value from a set of values"),
+      DropDownValueModel(name: 'name3', value: "value3"),
+      DropDownValueModel(
+          name: 'name4',
+          value: "value4",
+          toolTipMsg:
+          "DropDownButton is a widget that we can use to select one unique value from a set of values"),
+      DropDownValueModel(name: 'name5', value: "value5"),
+      DropDownValueModel(name: 'name6', value: "value6"),
+      DropDownValueModel(name: 'name7', value: "value7"),
+      DropDownValueModel(name: 'name8', value: "value8"),
+    ],
+    onChanged: (val) {},
   );
 }
