@@ -9,7 +9,7 @@ import (
 )
 
 // ExtractUsernameFromToken extracts the username from the JWT token
-func ExtractUsernameFromToken(authHeader string) (string, error) {
+func ExtractDataFromToken(authHeader string) (*models.Claims, error) {
 	// The Authorization header should contain "Bearer <token>"
 	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
@@ -17,15 +17,15 @@ func ExtractUsernameFromToken(authHeader string) (string, error) {
 	claims := &models.Claims{}
 	_, _, err := new(jwt.Parser).ParseUnverified(tokenString, claims)
 	if err != nil {
-		return "", errors.New("invalid token")
+		return nil, errors.New("invalid token")
 	}
 
-	return claims.Username, nil
+	return claims, nil
 }
 
 // Check that username in token was in database
-func ValidateTokenUsername(username string) error {
-	_, err := GetUserProfileByUsername(username)
+func ValidateTokenUserID(userID uint) error {
+	_, err := GetUserProfileByUserID(userID)
 	if err != nil {
 		return errors.New("user not found")
 	}
