@@ -32,6 +32,7 @@ import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 import 'package:fundflow/features/home/pages/category/add_category_page.dart';
 import 'package:fundflow/utils/api_helper.dart';
 import 'package:logger/logger.dart';
+import 'package:fundflow/features/transaction/ui/gallery_page.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/auth/bloc/auth_event.dart';
@@ -45,6 +46,9 @@ import 'features/manageBankAccount/ui/bank_account_page.dart';
 import 'features/home/repository/bank_repository.dart';
 import 'features/home/repository/category_repository.dart';
 import 'features/home/repository/profile_repository.dart';
+import 'features/transaction/ui/transaction_page.dart';
+import 'features/transaction/bloc/transaction_bloc.dart';
+import 'features/transaction/repository/transaction_repository.dart';
 
 final logger = Logger(
   printer: PrettyPrinter(
@@ -74,8 +78,9 @@ class MyApp extends StatelessWidget {
     final categoryRepository = CategoryRepository(apiHelper: apiHelper);
     final profileRepository = ProfileRepository(apiHelper: apiHelper);
     final bankRepository = BankRepository(apiHelper: apiHelper);
-    final TransactionRepository transactionRepository =
-        TransactionRepository(apiHelper: apiHelper);
+    final transactionRepository = TransactionRepository(apiHelper: apiHelper);
+    final transactionAddRepository =
+        TransactionAddRepository(apiHelper: apiHelper);
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authenticationRepository),
@@ -86,9 +91,9 @@ class MyApp extends StatelessWidget {
         RepositoryProvider.value(
           value: categoryRepository,
         ),
-        RepositoryProvider.value(
-          value: transactionRepository,
-        ),
+        RepositoryProvider(
+            create: (context) => ProfileRepository(apiHelper: apiHelper)),
+        RepositoryProvider.value(value: transactionRepository),
       ],
       child: MultiBlocProvider(
         // Wrap with MultiBlocProvider
@@ -128,7 +133,12 @@ class MyApp extends StatelessWidget {
               profileRepository: profileRepository,
             )..add(LoadProfile()),
           ),
-          // Add other BlocProviders here if needed
+          // Note: OAT's Bloc
+          BlocProvider<TransactionAddBloc>(
+            create: (context) => TransactionAddBloc(
+              repository: transactionAddRepository,
+            ),
+          ),
         ],
         child: MaterialApp(
           title: 'FundFlow',
@@ -152,6 +162,7 @@ class MyApp extends StatelessWidget {
             '/home': (context) => const BottomNavBar(),
             '/addBank': (context) => const AddBankPage(),
             '/addCategory': (context) => const AddCategoryPage(),
+            '/transaction': (context) => TransactionPage(),
             '/notification': (context) => const NotificationPage(),
             // '/manageBankAccount': (context) => const BankAccountPage(bank: bank,),
           },
