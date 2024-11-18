@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:fundflow/features/setting/models/user_profile.dart';
-import '../models/user_model.dart';
 
 abstract class AuthenticationState extends Equatable {
   const AuthenticationState();

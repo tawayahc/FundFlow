@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_input_box.dart';
+import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
 import 'package:fundflow/utils/validator.dart';
@@ -13,29 +14,33 @@ class EditEmailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              iconSize: 20,
-              onPressed: () {
-                Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
-              },
+    return GlobalPadding(
+      child: Scaffold(
+        appBar: AppBar(
+          leading: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                color: Color(0xFF414141),
+                iconSize: 20,
+                onPressed: () {
+                  Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
+                },
+              ),
+            ],
+          ),
+          centerTitle: true,
+          title: const Text(
+            'เปลี่ยนอีเมล',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF414141),
             ),
-          ],
-        ),
-        centerTitle: true,
-        title: const Text(
-          'แก้ไขอีเมล',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
           ),
         ),
+        body: const EditEmailForm(),
       ),
-      body: const EditEmailForm(),
     );
   }
 }
@@ -69,22 +74,20 @@ class _EditEmailFormState extends State<EditEmailForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 20),
             const Text(
-              'กรอกอีเมลใหม่',
+              'ใส่อีเมลใหม่',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF5A5A5A),
+                color: Color(0xFF414141),
               ),
             ),
             const SizedBox(height: 12),
             CustomInputBox(
               labelText: 'อีเมล',
               controller: _newEmailController,
-              prefixIcon: const Icon(
-                Icons.email,
-               color: Color(0xFFD0D0D0),
-              ),
+              prefixIcon: const Icon(Icons.email, color: Color(0xFFD0D0D0)),
             ),
             const SizedBox(height: 30),
             BlocBuilder<UserProfileBloc, UserProfileState>(
