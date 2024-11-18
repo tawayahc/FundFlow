@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final storage = const FlutterSecureStorage();
 
-// to get token from local storage
+  // to get token from local storage
   Future<void> getToken() async {
     var value = await storage.read(key: 'token');
     logger.d(value);
@@ -37,24 +37,24 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Check if the keyboard is visible
+    bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+
     return GlobalPadding(
       child: Scaffold(
-        // Listen to authentication state changes
         body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is Authenticated) {
-              // Navigate to home page
               Navigator.of(context).pushReplacementNamed('/home');
               logger.d('Authenticated');
             } else if (state is AuthenticationFailure) {
               logger.e('AuthenticationFailure: ${state.error}');
             } else {
-              logger.d('AuthenticationBloc state: Unkonwn $state');
+              logger.d('AuthenticationBloc state: Unknown $state');
             }
           },
           builder: (context, state) {
             if (state is AuthenticationLoading) {
-              // Show loading indicator
               return const Center(child: CircularProgressIndicator());
             }
 
@@ -63,17 +63,27 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(
-                    height: 30,
+                  const SizedBox(height: 70),
+
+                  // Adjust logo image based on keyboard visibility
+                  Align(
+                    alignment: isKeyboardVisible
+                        ? Alignment.centerLeft
+                        : Alignment.center,
+                    child: Image.asset(
+                      isKeyboardVisible
+                          ? 'assets/logo.png'
+                          : 'assets/logo_FundFlow.png',
+                      width: isKeyboardVisible
+                          ? 180
+                          : 240, // Smaller when keyboard is visible
+                      height: isKeyboardVisible ? 180 : 240,
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                  // Circular avatar placeholder
-                  const CircleAvatar(
-                    radius: 120,
-                    backgroundColor: Color(0xFF41486D),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
+
+                  const SizedBox(height: 20),
+
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -85,14 +95,12 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
+                  const SizedBox(height: 16),
+
                   Form(
                     key: _formKey,
                     child: Column(
                       children: [
-                        // Username Input Field
                         CustomInputBox(
                           labelText: 'ชื่อบัญชีผู้ใช้',
                           prefixIcon: const Icon(
@@ -107,10 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                             return null;
                           },
                         ),
-
                         const SizedBox(height: 12),
-
-                        // Password Input Field
                         CustomPasswordInputBox(
                           labelText: 'รหัสผ่าน',
                           focusNode: FocusNode(),
@@ -120,10 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                             return result.isEmpty ? null : result;
                           },
                         ),
-
                         const SizedBox(height: 8),
-
-                        // "Forgot Password?" Button and Error Message
                         Align(
                           alignment: Alignment.topRight,
                           child: Column(
@@ -136,17 +138,15 @@ class _LoginPageState extends State<LoginPage> {
                                 child: const Text(
                                   'ลืมรหัสผ่านใช่ไหม?',
                                   style: TextStyle(
-                                      fontSize: 12, // Font size
-                                      color: Color(0xFFFF9595)),
+                                    fontSize: 12,
+                                    color: Color(0xFFFF9595),
+                                  ),
                                 ),
                               ),
-                              // Optional: Additional space or widgets can be added here
                             ],
                           ),
                         ),
-
                         const SizedBox(height: 12),
-                        // Error Message
                         if (state is AuthenticationFailure)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
@@ -158,12 +158,10 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
-                        // Login Button
                         CustomButton(
                           text: 'เข้าสู่ระบบ',
                           onPressed: () {
                             if (_formKey.currentState?.validate() ?? false) {
-                              // Trigger login event
                               context.read<AuthenticationBloc>().add(
                                     AuthenticationLoginRequested(
                                       username: _usernameController.text,
@@ -173,8 +171,6 @@ class _LoginPageState extends State<LoginPage> {
                             }
                           },
                         ),
-
-                        // Registration Prompt
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

@@ -11,7 +11,7 @@ import 'package:fundflow/features/auth/ui/reset_page.dart';
 class VerificationPage extends StatefulWidget {
   final String email;
 
-  VerificationPage({required this.email});
+  const VerificationPage({super.key, required this.email});
 
   @override
   State<VerificationPage> createState() => _VerificationPageState();
@@ -31,8 +31,12 @@ class _VerificationPageState extends State<VerificationPage> {
   @override
   void dispose() {
     // Dispose controllers and focus nodes
-    _controllers.forEach((controller) => controller.dispose());
-    _focusNodes.forEach((focusNode) => focusNode.dispose());
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    for (var focusNode in _focusNodes) {
+      focusNode.dispose();
+    }
     super.dispose();
   }
 
@@ -46,7 +50,7 @@ class _VerificationPageState extends State<VerificationPage> {
     _collectOTP();
     if (_otp.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter all 6 digits of the OTP')),
+        const SnackBar(content: Text('Please enter all 6 digits of the OTP')),
       );
       return;
     }
@@ -58,7 +62,7 @@ class _VerificationPageState extends State<VerificationPage> {
     );
   }
 
-  // Widget for each OTP input field
+// Widget for each OTP input field
   Widget _buildOTPField(int index) {
     return SizedBox(
       height: 50,
@@ -74,9 +78,18 @@ class _VerificationPageState extends State<VerificationPage> {
           FilteringTextInputFormatter.digitsOnly,
         ],
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.all(8),
+          contentPadding: const EdgeInsets.all(8),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Color(0xFFD0D0D0), width: 2),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Color(0xFFD0D0D0), width: 2),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Color(0xFF41486D), width: 3),
           ),
         ),
         onChanged: (value) {
@@ -140,12 +153,13 @@ class _VerificationPageState extends State<VerificationPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 20),
               const Text(
                 'ใส่รหัสยืนยันตัวตน 6 หลัก',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF5A5A5A),
+                  color: Color(0xFF414141),
                 ),
               ),
               const SizedBox(height: 12),
@@ -167,25 +181,18 @@ class _VerificationPageState extends State<VerificationPage> {
                   bool isLoading = state is RepasswordLoading;
                   return SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: isLoading ? null : _verifyOTP,
-                      child: isLoading
-                          ? SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : Text('ยืนยัน'),
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
+                    child: Center(
+                        child: isLoading
+                            ? SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : CustomButton(
+                                text: 'ยืนยัน', onPressed: _verifyOTP)),
                   );
                 },
               ),

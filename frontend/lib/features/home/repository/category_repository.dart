@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/utils/api_helper.dart';

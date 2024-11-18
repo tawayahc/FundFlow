@@ -3,8 +3,6 @@ import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/models/bank.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
-import '../../../features/manageBankAccount/ui/bank_account_page.dart';
-
 class BankCard extends StatelessWidget {
   final Bank bank;
   final Map<String, Color> bankColorMap;

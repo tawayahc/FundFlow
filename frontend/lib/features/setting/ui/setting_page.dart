@@ -32,6 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
+            color: Color(0xFF414141),
             onPressed: () {
               Navigator.pushReplacement(
                 context,
@@ -47,7 +48,7 @@ class _SettingsPageState extends State<SettingsPage> {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-
+              color: Color(0xFF414141),
             ),
           ),
         ),
@@ -85,21 +86,23 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         ),
                         const SizedBox(width: 16),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              user.username?.isEmpty ?? true
-                                  ? 'ชื่อผู้ใช้'
-                                  : user.username!,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF414141),
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                user.username?.isEmpty ?? true
+                                    ? 'ชื่อผู้ใช้'
+                                    : user.username!,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF414141),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                     const Divider(thickness: 0.5, color: Colors.grey),
@@ -114,6 +117,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                     ListTile(
+                      contentPadding: EdgeInsets.zero,
                       leading: const Icon(Icons.email_outlined,
                           color: Color(0xFF5A5A5A)),
                       title: Row(
@@ -141,6 +145,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       },
                     ),
                     ListTile(
+                      contentPadding: EdgeInsets.zero,
                       leading: const Icon(Icons.lock_outline,
                           color: Color(0xFF5A5A5A)),
                       title: const Text(
@@ -156,6 +161,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       },
                     ),
                     ListTile(
+                      contentPadding: EdgeInsets.zero,
                       leading: const Icon(Icons.delete_outline,
                           color: Color(0xFF5A5A5A)),
                       title: const Text(
@@ -172,6 +178,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     const Divider(thickness: 0.5, color: Colors.grey),
                     ListTile(
+                      contentPadding: EdgeInsets.zero,
                       leading:
                           const Icon(Icons.logout, color: Color(0xFF5A5A5A)),
                       title: const Text(
