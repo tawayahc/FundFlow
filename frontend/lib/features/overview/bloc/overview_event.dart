@@ -1,3 +1,11 @@
-abstract class OverviewEvent {}
+// features/overview/bloc/overview_event.dart
+import 'package:equatable/equatable.dart';
 
-class LoadOverview extends OverviewEvent {}
+abstract class OverviewEvent extends Equatable {
+  const OverviewEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class FetchTransactionsEvent extends OverviewEvent {}

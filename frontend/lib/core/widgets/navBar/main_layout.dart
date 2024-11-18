@@ -11,7 +11,6 @@ import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 import 'package:fundflow/features/transaction/ui/transaction_page.dart';
 import 'package:fundflow/features/overview/ui/overview_page.dart';
 import 'package:fundflow/features/setting/ui/setting_page.dart';
-// import 'package:fundflow/features/test/ui/test_page.dart';
 
 class BottomNavBar extends StatefulWidget {
   // final Bank bank;
@@ -46,7 +45,7 @@ class _NavBarState extends State<BottomNavBar>
     final List<Widget> onNavBarPages = [
       const HomePage(),
       TransactionPage(),
-      const AddBankPage()
+      const OverviewPage()
     ];
 
     return Scaffold(

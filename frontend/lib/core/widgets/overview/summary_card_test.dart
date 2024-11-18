@@ -1,18 +1,21 @@
+// core/widgets/overview/summary_card.dart
 import 'package:flutter/material.dart';
 
 class SummaryCard extends StatelessWidget {
-  final bool type;
+  final bool type; // true for income, false for expense
   final String title;
   final double amount;
   final int items;
   final double avgPerMonth;
-  const SummaryCard(
-      {super.key,
-      required this.type,
-      required this.title,
-      required this.amount,
-      required this.items,
-      required this.avgPerMonth});
+
+  const SummaryCard({
+    Key? key,
+    required this.type,
+    required this.title,
+    required this.amount,
+    required this.items,
+    required this.avgPerMonth,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
