@@ -83,6 +83,7 @@ class _EditEmailFormState extends State<EditEmailForm> {
               controller: _newEmailController,
               prefixIcon: const Icon(
                 Icons.email,
+               color: Color(0xFFD0D0D0),
               ),
             ),
             const SizedBox(height: 30),
