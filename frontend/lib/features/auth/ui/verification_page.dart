@@ -135,72 +135,71 @@ class _VerificationPageState extends State<VerificationPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        //child: BlocListener<RepasswordBloc, RepasswordState>(
-        // listener: (context, state) {
-        //   if (state is RepasswordOTPVerified) {
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //         builder: (context) => ResetPasswordPage(email: widget.email),
-        //       ),
-        //     );
-        //   } else if (state is RepasswordFailure) {
-        //     ScaffoldMessenger.of(context).showSnackBar(
-        //       SnackBar(content: Text(state.error)),
-        //     );
-        //   }
-        // },
-
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            const Text(
-              'ใส่รหัสยืนยันตัวตน 6 หลัก',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF414141),
+        child: BlocListener<RepasswordBloc, RepasswordState>(
+          listener: (context, state) {
+            if (state is RepasswordOTPVerified) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ResetPasswordPage(email: widget.email),
+                ),
+              );
+            } else if (state is RepasswordFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.error)),
+              );
+            }
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              const Text(
+                'ใส่รหัสยืนยันตัวตน 6 หลัก',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF414141),
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            Center(
-              child: SizedBox(
-                width: 328,
-                child: Form(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children:
-                        List.generate(6, (index) => _buildOTPField(index)),
+              const SizedBox(height: 12),
+              Center(
+                child: SizedBox(
+                  width: 328,
+                  child: Form(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:
+                          List.generate(6, (index) => _buildOTPField(index)),
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 30),
-            BlocBuilder<RepasswordBloc, RepasswordState>(
-              builder: (context, state) {
-                bool isLoading = state is RepasswordLoading;
-                return SizedBox(
-                  width: double.infinity,
-                  child: Center(
-                      child: isLoading
-                          ? SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : CustomButton(
-                              text: 'ยืนยัน', onPressed: _verifyOTP)),
-                );
-              },
-            ),
-          ],
+              const SizedBox(height: 30),
+              BlocBuilder<RepasswordBloc, RepasswordState>(
+                builder: (context, state) {
+                  bool isLoading = state is RepasswordLoading;
+                  return SizedBox(
+                    width: double.infinity,
+                    child: Center(
+                        child: isLoading
+                            ? SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : CustomButton(
+                                text: 'ยืนยัน', onPressed: _verifyOTP)),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
-      //     ),
     );
   }
 }
