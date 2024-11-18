@@ -26,7 +26,7 @@ class _ForgetPageState extends State<ForgetPage> {
           .add(GenerateOTPEvent(OTPRequest(email: email)));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid email address')),
+        const SnackBar(content: Text('กรุณากรอกอีเมลให้ถูกต้อง')),
       );
     }
   }
@@ -44,7 +44,7 @@ class _ForgetPageState extends State<ForgetPage> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
-              Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
+              Navigator.pop(context);
             },
           ),
           centerTitle: true,
@@ -56,45 +56,63 @@ class _ForgetPageState extends State<ForgetPage> {
             ),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize
-                    .min, // ทำให้ Column มีขนาดเล็กที่สุดเท่าที่เนื้อหากำหนด
-                children: [
-                  const SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft, // ทำให้ข้อความชิดซ้าย
-                    child: const Text(
-                      'กรอกอีเมลเพื่อยืนยันตัวตน',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5A5A5A),
+        body: BlocListener<RepasswordBloc, RepasswordState>(
+          listener: (context, state) {
+            if (state is RepasswordOTPSent) {
+              // Navigate to VerificationPage if OTP is sent successfully
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      VerificationPage(email: _emailController.text),
+                ),
+              );
+            } else if (state is RepasswordFailure) {
+              // Show error message
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.error)),
+              );
+            }
+          },
+          child: SingleChildScrollView(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 20),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'กรอกอีเมลเพื่อยืนยันตัวตน',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5A5A5A),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  CustomInputBox(
-                    labelText: 'อีเมล',
-                    prefixIcon: const Icon(
-                      Icons.email,
-                      color: Color(0xFFD0D0D0),
+                    const SizedBox(height: 12),
+                    CustomInputBox(
+                      labelText: 'อีเมล',
+                      prefixIcon: const Icon(
+                        Icons.email,
+                        color: Color(0xFFD0D0D0),
+                      ),
+                      controller: _emailController,
                     ),
-                    controller: _emailController,
-                  ),
-                  const SizedBox(height: 30),
-                  Center(
-                    child: CustomButton(
-                      text: 'ยืนยัน',
-                      onPressed: _submitEmail,
+                    const SizedBox(height: 30),
+                    Center(
+                      child: CustomButton(
+                        text: 'ยืนยัน',
+                        onPressed: _submitEmail,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
