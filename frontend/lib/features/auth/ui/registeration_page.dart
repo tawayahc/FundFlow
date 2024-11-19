@@ -21,7 +21,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   // Controllers for text fields
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   final TextEditingController _usernameController = TextEditingController();
 
   // Key for form validation
@@ -29,6 +28,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Check if the keyboard is visible
+    bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+
     return GlobalPadding(
       child: Scaffold(
         body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
@@ -50,19 +52,30 @@ class _RegistrationPageState extends State<RegistrationPage> {
             }
 
             return SingleChildScrollView(
+              padding: const EdgeInsets.only(top: 40),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 30),
-                    // Circular avatar placeholder
-                    const CircleAvatar(
-                      radius: 120,
-                      backgroundColor: Color(0xFF41486D),
+                    const SizedBox(height: 70),
+
+                    // Change logo based on keyboard visibility
+                    Align(
+                      alignment: isKeyboardVisible
+                          ? Alignment.centerLeft
+                          : Alignment.center,
+                      child: Image.asset(
+                        isKeyboardVisible
+                            ? 'assets/logo.png'
+                            : 'assets/logo_FundFlow.png',
+                        width: isKeyboardVisible ? 180 : 240,
+                        height: isKeyboardVisible ? 180 : 240,
+                        fit: BoxFit.contain,
+                      ),
                     ),
 
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 20),
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -76,8 +89,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
 
                     const SizedBox(height: 16),
-                    // Input for Username
 
+                    // Input for Username
                     CustomInputBox(
                       labelText: 'ชื่อบัญชีผู้ใช้',
                       prefixIcon: const Icon(
@@ -88,8 +101,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
 
                     const SizedBox(height: 12),
-                    // Input for email
 
+                    // Input for Email
                     CustomInputBox(
                       labelText: 'อีเมล',
                       prefixIcon: const Icon(
@@ -100,6 +113,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
 
                     const SizedBox(height: 12),
+
                     // Input for Password
                     CustomPasswordInputBox(
                       labelText: 'รหัสผ่าน',
@@ -112,6 +126,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
 
                     const SizedBox(height: 30),
+
                     // Register button
                     CustomButton(
                       text: 'สมัครสมาชิก',
@@ -128,7 +143,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         }
                       },
                     ),
+
                     const SizedBox(height: 12),
+
+                    // Login prompt
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();

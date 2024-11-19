@@ -10,9 +10,7 @@ class ApiHelper {
   static ApiHelper? _instance;
 
   factory ApiHelper({required String baseUrl}) {
-    if (_instance == null) {
-      _instance = ApiHelper._internal(baseUrl);
-    }
+    _instance ??= ApiHelper._internal(baseUrl);
     return _instance!;
   }
 

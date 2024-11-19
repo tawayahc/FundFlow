@@ -4,12 +4,15 @@ import 'package:fundflow/core/widgets/global_padding.dart';
 
 class CashBox extends StatelessWidget {
   final double cashBox;
+  final double width;
 
-  const CashBox({super.key, required this.cashBox});
+  const CashBox(
+      {super.key, required this.cashBox, this.width = double.infinity});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: width,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -77,42 +80,25 @@ class CashBox extends StatelessWidget {
   }
 }
 
-class CustomDraggableCashBox extends StatefulWidget {
-  final double cashBox;
+class CashBoxWhenDragging extends StatelessWidget {
+  final double width;
+  final double height;
 
-  const CustomDraggableCashBox({super.key, required this.cashBox});
-
-  @override
-  _CustomDraggableCashBoxState createState() => _CustomDraggableCashBoxState();
-}
-
-class _CustomDraggableCashBoxState extends State<CustomDraggableCashBox> {
-  Offset position = Offset.zero; // Starting position
-  final Offset initialPosition =
-      Offset.zero; // Save initial position to reset later
+  const CashBoxWhenDragging({
+    super.key,
+    this.width = double.infinity,
+    this.height = 94.0, // Set default height to match CategoryCard if needed
+  });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanUpdate: (details) {
-        setState(() {
-          // Update the position based on the drag
-          position += details.delta;
-        });
-      },
-      onPanEnd: (details) {
-        // Reset the position to the initial position when drag ends
-        setState(() {
-          position = initialPosition;
-        });
-      },
-      child: Stack(
-        children: [
-          Transform.translate(
-            offset: position,
-            child: CashBox(cashBox: widget.cashBox),
-          ),
-        ],
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.grey.withOpacity(0.5),
+        border: Border.all(color: Colors.grey.shade300),
       ),
     );
   }

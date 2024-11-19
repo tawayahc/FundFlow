@@ -9,3 +9,10 @@ class AddBank extends BankEvent {
   final Bank bank;
   AddBank({required this.bank});
 }
+
+class EditBank extends BankEvent {
+  final Bank originalBank;
+  final Bank bank; // The bank with new details
+
+  EditBank({required this.originalBank, required this.bank});
+}

@@ -9,10 +9,11 @@ import 'package:fundflow/features/transaction/model/form_model.dart';
 import 'package:fundflow/utils/api_helper.dart';
 import '../model/transaction_model.dart';
 
-class TransactionRepository {
+class TransactionAddRepository {
   final Dio dio;
 
-  TransactionRepository({required ApiHelper apiHelper}) : dio = apiHelper.dio;
+  TransactionAddRepository({required ApiHelper apiHelper})
+      : dio = apiHelper.dio;
 
   Future<List<Bank>> fetchBanks() async {
     try {
