@@ -18,8 +18,8 @@ class TransactionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isIncome = amount > 0;
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      padding: EdgeInsets.all(AppSpacing.medium),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(AppSpacing.medium),
       decoration: BoxDecoration(
         color: isIncome ? Colors.green[400] : Colors.red[400],
         borderRadius: BorderRadius.circular(12),
@@ -32,36 +32,38 @@ class TransactionItem extends StatelessWidget {
             children: [
               Text(
                 category,
-                style: TextStyle(color: Colors.white,fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Container(
-                width: 50,
-                padding: EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Text(
-                    type,
-                    style: TextStyle(color: Colors.grey[600], fontSize: 10),
+                  width: 50,
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                )
-              )
+                  child: Center(
+                    child: Text(
+                      type,
+                      style: TextStyle(color: Colors.grey[600], fontSize: 10),
+                    ),
+                  ))
             ],
           ),
           Row(
             children: [
               Text(
                 '฿ ${amount.toStringAsFixed(2)}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               IconButton(
                 icon: Icon(Icons.edit, color: Colors.grey[300]),
                 onPressed: () {

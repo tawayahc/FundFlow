@@ -1,8 +1,25 @@
 class Transaction {
+  final int id;
+  final String type;
   final double amount;
-  final String category;
+  final int bankId;
+  final String bankNickname;
+  final String bankName;
+  final int categoryId;
+  final String? metaData;
   final String memo;
-  final String? date;
+  final String createdAt;
 
-  Transaction({required this.amount, required this.category, required this.memo, this.date});
+  Transaction({
+    required this.id,
+    required this.type,
+    required this.amount,
+    required this.bankId,
+    required this.bankNickname,
+    required this.bankName,
+    required this.categoryId,
+    this.metaData,
+    required this.memo,
+    required this.createdAt,
+  });
 }

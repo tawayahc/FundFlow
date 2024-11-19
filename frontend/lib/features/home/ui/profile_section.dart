@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_bloc.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_state.dart';
 
@@ -13,19 +14,22 @@ class ProfileSection extends StatelessWidget {
         if (state is ProfileLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is ProfileLoaded) {
+          final userProfile = state.userProfile;
+          final cashBox = state.cashBox;
+
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
-                  // Profile Image
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: const BoxDecoration(
-                      color: Colors.grey,
-                      shape: BoxShape.circle,
-                    ),
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: userProfile.profileImageUrl?.isNotEmpty ==
+                            true
+                        ? NetworkImage(userProfile.profileImageUrl!)
+                        : const NetworkImage(
+                                'https://placehold.co/200x200/png?text=Select')
+                            as ImageProvider,
                   ),
                   const SizedBox(width: 10),
                   // Username and Balance
@@ -33,7 +37,7 @@ class ProfileSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '฿ ${state.totalMoney.toStringAsFixed(2)}',
+                        formatter.format(cashBox),
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -41,7 +45,7 @@ class ProfileSection extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        state.username,
+                        userProfile.username ?? 'Unknown User',
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black,
@@ -57,7 +61,7 @@ class ProfileSection extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.notifications, color: Colors.black),
                     onPressed: () {
-                      // Handle notification icon press
+                      Navigator.pushNamed(context, '/notification');
                     },
                   ),
                   IconButton(
@@ -71,7 +75,7 @@ class ProfileSection extends StatelessWidget {
             ],
           );
         } else if (state is ProfileError) {
-          return Center(child: Text(state.message));
+          return Center(child: Text('Error: ${state.message}'));
         }
         return const Text('Unknown state');
       },

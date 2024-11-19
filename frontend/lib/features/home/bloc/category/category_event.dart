@@ -16,3 +16,21 @@ class EditCategory extends CategoryEvent {
 
   EditCategory({required this.originalCategory, required this.category});
 }
+
+class TransferAmount extends CategoryEvent {
+  final int fromCategoryId;
+  final int toCategoryId;
+  final double amount;
+
+  TransferAmount(
+      {required this.fromCategoryId,
+      required this.toCategoryId,
+      required this.amount});
+}
+
+class UpdateAmount extends CategoryEvent {
+  final int categoryId;
+  final double newAmount;
+
+  UpdateAmount({required this.categoryId, required this.newAmount});
+}
