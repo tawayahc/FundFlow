@@ -18,6 +18,8 @@ import 'package:fundflow/features/home/pages/bank/add_bank_page.dart';
 import 'package:fundflow/features/home/pages/notification/notification.dart';
 import 'package:fundflow/features/home/pages/notification/test.dart';
 import 'package:fundflow/features/home/repository/transaction_repository.dart';
+import 'package:fundflow/features/image_upload/bloc/image_upload_bloc.dart';
+import 'package:fundflow/features/image_upload/repository/image_repository.dart';
 import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
 import 'package:fundflow/features/setting/ui/change_password.dart';
@@ -32,7 +34,7 @@ import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 import 'package:fundflow/features/home/pages/category/add_category_page.dart';
 import 'package:fundflow/utils/api_helper.dart';
 import 'package:logger/logger.dart';
-import 'package:fundflow/features/transaction/ui/gallery_page.dart';
+import 'package:fundflow/features/image_upload/ui/gallery_page.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/auth/bloc/auth_event.dart';
@@ -137,6 +139,11 @@ class MyApp extends StatelessWidget {
           BlocProvider<TransactionAddBloc>(
             create: (context) => TransactionAddBloc(
               repository: transactionAddRepository,
+            ),
+          ),
+          BlocProvider<ImageBloc>(
+            create: (context) => ImageBloc(
+              imageRepository: ImageRepository(),
             ),
           ),
         ],
