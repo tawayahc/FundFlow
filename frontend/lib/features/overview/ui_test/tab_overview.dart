@@ -98,19 +98,29 @@ class TabOverviewState extends State<TabOverview>
                 ],
               ),
               const SizedBox(height: 10),
-              CustomTab(
-                tabController: _tabController,
-                tabs: const [
-                  Tab(text: 'รายวัน'),
-                  Tab(text: 'รายเดือน'),
+              Row(
+                children: [
+                  CustomTab(
+                    tabController: _tabController,
+                    tabs: const [
+                      Tab(text: 'รายวัน'),
+                      Tab(text: 'รายเดือน'),
+                    ],
+                    shadowOpacity: 0.5,
+                    blurRadius: 5,
+                    indicatorDecoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      // FIX: Implement date range selection
+                    },
+                    icon: const Icon(Icons.call_made),
+                  ),
                 ],
-                shadowOpacity: 0.5,
-                blurRadius: 5,
-                indicatorDecoration: const BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                indicatorSize: TabBarIndicatorSize.tab,
               ),
               const SizedBox(height: 8),
               Expanded(
