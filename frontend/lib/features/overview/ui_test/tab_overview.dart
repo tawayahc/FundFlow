@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:fundflow/core/widgets/overview/summary_card.dart';
 import 'package:fundflow/features/overview/bloc/overview_event.dart';
+import 'package:fundflow/features/overview/ui_test/daily_summary_screen.dart';
+import 'package:fundflow/features/overview/ui_test/monthly_summary_screen.dart';
 import 'package:fundflow/features/overview/widget/daily_summary_view.dart';
 import 'package:fundflow/features/overview/widget/monthly_summary_view.dart';
 import 'package:logger/logger.dart';
@@ -57,6 +59,26 @@ class TabOverviewState extends State<TabOverview>
     _tabController.dispose();
     _cnt.dispose();
     super.dispose();
+  }
+
+  void _navigateToSummary() {
+    if (_tabController.index == 0) {
+      // Navigate to Daily Summary Screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const DailySummaryScreen(),
+        ),
+      );
+    } else if (_tabController.index == 1) {
+      // Navigate to Monthly Summary Screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MonthlySummaryScreen(),
+        ),
+      );
+    }
   }
 
   @override
@@ -115,10 +137,9 @@ class TabOverviewState extends State<TabOverview>
                     indicatorSize: TabBarIndicatorSize.tab,
                   ),
                   IconButton(
-                    onPressed: () {
-                      // FIX: Implement date range selection
-                    },
+                    onPressed: _navigateToSummary,
                     icon: const Icon(Icons.call_made),
+                    tooltip: 'Open Summary',
                   ),
                 ],
               ),
