@@ -119,7 +119,7 @@ class _TransferFormState extends State<TransferForm> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/add-bank');
+                Navigator.pushNamed(context, '/addBank');
               },
               child: const Text('Add Bank'),
             ),

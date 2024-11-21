@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/home/category_card.dart';
+import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
@@ -64,7 +65,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          const GlobalPadding(child: HomePage())),
+                          const GlobalPadding(child: BottomNavBar())),
                 );
                 // Navigator.pop(context); // Go back to the previous screen
               } else if (state is CategoryError) {

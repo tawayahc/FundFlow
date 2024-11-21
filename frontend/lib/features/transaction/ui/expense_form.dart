@@ -127,7 +127,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/add-bank');
+                Navigator.pushNamed(context, '/addBank');
               },
               child: const Text('Add Bank'),
             ),
@@ -145,7 +145,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/add-category');
+                Navigator.pushNamed(context, '/addCategory');
               },
               child: const Text('Add Category'),
             ),
