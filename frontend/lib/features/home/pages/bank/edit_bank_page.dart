@@ -95,7 +95,7 @@ class _EditBankPageState extends State<EditBankPage> {
           padding: const EdgeInsets.all(16.0),
           child: BlocListener<BankBloc, BankState>(
             listener: (context, state) {
-              if (state is BankUpdated) {
+              if (state is BankUpdated || state is BankDeleted) {
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //   const SnackBar(content: Text('Bank updated successfully')),
                 // );
@@ -246,11 +246,12 @@ class _EditBankPageState extends State<EditBankPage> {
                 Center(
                   child: TextButton(
                     onPressed: () {
-                      //make function to delete bank account
+                      BlocProvider.of<BankBloc>(context)
+                          .add(DeleteBank(bankId: widget.bank.id));
                     },
-                    child: Row(
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
+                      children: [
                         Icon(
                           Icons.delete,
                           color: Color(0xFFFF5C5C),

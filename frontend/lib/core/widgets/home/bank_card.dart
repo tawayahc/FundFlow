@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/models/bank.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:intl/intl.dart';
 
 class BankCard extends StatelessWidget {
   final Bank bank;
@@ -11,13 +11,15 @@ class BankCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat.currency(locale: 'th_TH', symbol: '฿');
     Color color = bankColorMap[bank.bank_name] ?? Colors.grey;
+
     return Material(
       child: Container(
         margin: const EdgeInsets.only(right: 12),
-        width: 170, // Set the width to avoid overflow
+        width: 170,
         decoration: BoxDecoration(
-          color: Colors.white, // Set background color to white
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey.shade300),
           boxShadow: [
@@ -32,20 +34,30 @@ class BankCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // Center along Y-axis
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                crossAxisAlignment:
-                    CrossAxisAlignment.center, // Center vertically
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Placeholder for bank logo
+                  // Bank Logo
                   Container(
-                    width: 30,
-                    height: 35,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: color.withOpacity(0.9), // Placeholder color
+                      color: Colors.grey.shade200,
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        _getBankLogo(bank.bank_name),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          debugPrint(
+                              'Error loading image for ${bank.bank_name}');
+                          return Icon(Icons.error, color: Colors.red);
+                        },
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -59,7 +71,7 @@ class BankCard extends StatelessWidget {
                           style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
-                              height: 1.1), // Set text color to black
+                              height: 1.1),
                           maxLines: 1,
                           minFontSize: 10,
                           overflow: TextOverflow.ellipsis,
@@ -90,7 +102,7 @@ class BankCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     gradient: LinearGradient(
                       colors: [
-                        color.darken(0.1),
+                        color.withOpacity(0.9),
                         color,
                         color.withOpacity(0.7),
                       ],
@@ -100,34 +112,18 @@ class BankCard extends StatelessWidget {
                     ),
                   ),
                   child: Center(
-                    // Center the content vertically
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          '฿',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Flexible(
-                          child: AutoSizeText(
-                            formatter.format(bank.amount),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                            maxLines: 1,
-                            minFontSize: 5,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                      ],
+                    child: AutoSizeText(
+                      formatter.format(
+                          bank.amount), // Already includes the "฿" symbol
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      maxLines: 1,
+                      minFontSize: 5,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.left,
                     ),
                   ),
                 ),
@@ -138,13 +134,35 @@ class BankCard extends StatelessWidget {
       ),
     );
   }
-}
 
-extension ColorBrightness on Color {
-  Color darken([double amount = .1]) {
-    assert(amount >= 0 && amount <= 1);
-    final hsl = HSLColor.fromColor(this);
-    final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
-    return hslDark.toColor();
+  String _getBankLogo(String bankName) {
+    final logos = {
+      'ธนาคารกสิกรไทย': 'assets/LogoBank/Kplus.png',
+      'ธนาคารกรุงไทย': 'assets/LogoBank/Krungthai.png',
+      'ธนาคารไทยพาณิชย์': 'assets/LogoBank/SCB.png',
+      'ธนาคารกรุงเทพ': 'assets/LogoBank/Krungthep.png',
+      'ธนาคารกรุงศรีอยุธยา': 'assets/LogoBank/krungsri.png',
+      'ธนาคารออมสิน': 'assets/LogoBank/GSB.png',
+      'ธนาคารธนชาต': 'assets/LogoBank/ttb.png',
+      'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
+      'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
+      'ธนาคารเมกะ': 'assets/LogoBank/make.png',
+    };
+
+    final trimmedBankName = bankName.trim();
+
+    String? matchedKey = logos.keys.firstWhere(
+      (key) => key == trimmedBankName,
+      orElse: () => '',
+    );
+
+    if (matchedKey.isEmpty) {
+      debugPrint('No exact match for $trimmedBankName, using default image.');
+      return 'assets/CashBox.png'; // Default fallback image
+    }
+
+    final path = logos[matchedKey];
+    debugPrint('Matched bank name: $matchedKey, using path: $path');
+    return path!;
   }
 }
