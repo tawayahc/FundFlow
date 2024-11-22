@@ -132,6 +132,24 @@ class CategoryRepository {
     }
   }
 
+  Future<void> deleteCategory(int categoryId) async {
+    try {
+      final response = await dio.delete("/categories/$categoryId");
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        logger.e('Failed to delete category, Response: ${response.data}');
+        throw Exception('Failed to delete category');
+      }
+    } catch (error) {
+      if (error is DioException) {
+        logger.e('Dio Error: ${error.response?.data ?? error.message}');
+      } else {
+        logger.e('Error deleting category: $error');
+      }
+      throw Exception('Error deleting category: $error');
+    }
+  }
+
   Future<void> transferAmount(
       int fromCategoryId, int toCategoryId, double amount) async {
     try {
