@@ -44,9 +44,13 @@ class _NavBarState extends State<BottomNavBar>
   @override
   Widget build(BuildContext context) {
     final List<Widget> onNavBarPages = [
-      const HomePage(),
+      HomePage(pageController: _pageController,),
       TransactionPage(),
-      const AddBankPage()
+      AddBankPage(),
+
+      // HomePage section
+
+      SettingsPage(pageController: _pageController,),
     ];
 
     return Scaffold(

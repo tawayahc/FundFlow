@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/home/category_balance_box.dart';
-import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
 import 'package:fundflow/features/home/models/category.dart' as categories;
 
 import '../../../core/themes/app_styles.dart';
+import '../../../core/widgets/navBar/main_layout.dart';
+import '../../../core/widgets/notification/transaction_card.dart';
+import '../../home/bloc/category/category_bloc.dart';
+import '../../home/bloc/category/category_state.dart';
+import '../../home/bloc/transaction/transaction_bloc.dart';
+import '../../home/bloc/transaction/transaction_state.dart';
 import '../../home/models/transaction.dart';
 import '../../home/pages/category/edit_category_page.dart';
 import '../../home/repository/transaction_repository.dart';
@@ -14,53 +20,32 @@ class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key, required this.category});
 
   @override
-  _CategoryPageState createState() => _CategoryPageState();
+  State<StatefulWidget> createState() => _CategoryPageState();
 }
 
 class _CategoryPageState extends State<CategoryPage>
     with SingleTickerProviderStateMixin {
-  String _type = 'income';
-  late TabController _tabController;
-  List<Transaction> transactions = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    _tabController.index = ['income', 'expense'].indexOf(_type);
-
-    _tabController.addListener(() {
-      setState(() {
-        _type = ['income', 'expense'][_tabController.index];
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  List<Transaction> get filteredTransactions {
-    if (_tabController.index == 0) {
-      // Show only income transactions
-      return transactions
-          .where((transaction) => transaction.amount > 0)
-          .toList();
-    } else {
-      // Show only outcome transactions
-      return transactions
-          .where((transaction) => transaction.amount < 0)
-          .toList();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return GlobalPadding(
       child: Scaffold(
           appBar: AppBar(
+            leading: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back_ios),
+                  iconSize: 20,
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                        builder: (context) =>
+                    const BottomNavBar())); // กลับไปหน้าก่อนหน้า (SettingsPage)
+                  },
+                ),
+              ],
+            ),
             // ----------- ชื่อ category
             title: Text(widget.category.name),
             centerTitle: true,
@@ -99,68 +84,49 @@ class _CategoryPageState extends State<CategoryPage>
                   'ประวัติการทำรายการ',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 12),
-                PreferredSize(
-                  preferredSize: const Size.fromHeight(40),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 40,
-                          width: 200,
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: AppColors.primary,
-                          ),
-                          child: TabBar(
-                            controller: _tabController,
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            dividerColor: Colors.transparent,
-                            indicator: const BoxDecoration(
-                              color: Colors.green,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            labelColor: Colors.white,
-                            unselectedLabelColor: Colors.white,
-                            tabs: const [
-                              Tab(
-                                icon: Icon(Icons.download),
-                              ),
-                              Tab(
-                                icon: Icon(Icons.upload),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 // Transaction ตรงนี้
                 Expanded(
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final filteredItem = filteredTransactions[index];
-                            return TransactionItem(
-                              amount: filteredItem.amount,
-                              category: 'filteredItem.category',
-                              type: filteredItem.memo,
+                  child: BlocBuilder<TransactionBloc, TransactionState>(
+                    builder: (context, transactionState) {
+                      if (transactionState is TransactionsLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (transactionState is TransactionsLoaded) {
+                        final categoryTransactions = transactionState.transactions
+                            .where((transaction) => transaction.categoryId == widget.category.id)
+                            .toList();
+
+                        final sortedTransactions = List.from(categoryTransactions)
+                          ..sort((a, b) => DateTime.parse(b.createdAt)
+                              .compareTo(DateTime.parse(a.createdAt)));
+
+
+                        return BlocBuilder<CategoryBloc, CategoryState>(
+                          builder: (context, categoryState) {
+                            return ListView.builder(
+                              itemCount: sortedTransactions.length,
+                              itemBuilder: (context, index) {
+                                final transaction = sortedTransactions[index];
+                                final isExpense = transaction.type == 'expense';
+
+                                return GestureDetector(
+                                  onTap: () {
+
+                                  },
+                                  child: TransactionCard(transaction: transaction),
+                                );
+                              },
                             );
                           },
-                          childCount: filteredTransactions.length,
-                        ),
-                      ),
-                    ],
+                        );
+                      } else if (transactionState is TransactionsLoadError) {
+                        return Center(child: Text(transactionState.message));
+                      } else {
+                        return const Center(child: Text('Unknown error'));
+                      }
+                    },
                   ),
-                )
+                ),
               ],
             ),
           )),
