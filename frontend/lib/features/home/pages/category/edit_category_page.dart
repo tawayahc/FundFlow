@@ -10,6 +10,7 @@ import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_text_ip.dart';
+import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 
 class EditCategoryPage extends StatefulWidget {
   final Category category;
@@ -52,6 +53,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
   ];
 
   late Category originalCategory;
+  late Category updatedCategory;
 
   @override
   void initState() {
@@ -65,6 +67,14 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
         ? originalCategory.name
         : '';
 
+    updatedCategory = Category(
+      id: originalCategory.id,
+      name: categoryController.text,
+      amount: categoryAmount,
+      color: selectedColor,
+    );
+
+
     // Add listener to update UI when text changes
     categoryController.addListener(() {
       setState(() {});
@@ -77,16 +87,28 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return GlobalPadding(
       child: Scaffold(
         appBar: AppBar(
+          leading: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                iconSize: 20,
+                onPressed: () {
+                  Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
+                },
+              ),
+            ],
+          ),
+          centerTitle: true,
           title: const Text(
             'แก้ไขหมวดหมู่',
             style: TextStyle(color: Color(0xFF414141)),
           ),
-          centerTitle: true,
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -97,7 +119,12 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          const GlobalPadding(child: BottomNavBar())),
+                          CategoryPage(category: updatedCategory)),
+                );
+              } else if (state is CategoryDeleted) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const BottomNavBar()),
                 );
               } else if (state is CategoryError) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -170,7 +197,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
                   text: 'ยืนยันการแก้ไข',
                   onPressed: () {
                     if (categoryController.text.isNotEmpty) {
-                      final updatedCategory = Category(
+                      updatedCategory = Category(
                         id: originalCategory.id,
                         name: categoryController.text,
                         amount: categoryAmount,
@@ -200,7 +227,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
                           color: Color(0xFFFF5C5C),
                         ),
                         Text(
-                          'ลบธนาคาร',
+                          'ลบหมวดหมู่',
                           style: TextStyle(
                             color: Color(0xFFFF5C5C),
                             fontSize: 14,

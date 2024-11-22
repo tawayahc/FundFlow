@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/auth/bloc/auth_bloc.dart';
 import 'package:fundflow/features/auth/bloc/auth_event.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
@@ -8,7 +9,8 @@ import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.da
 import 'package:fundflow/features/setting/widgets/avatar_selection_modal.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final PageController pageController;
+  const SettingsPage({super.key, required this.pageController});
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -32,14 +34,9 @@ class _SettingsPageState extends State<SettingsPage> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
-            color: Color(0xFF414141),
+            color: const Color(0xFF414141),
             onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        const GlobalPadding(child: HomePage())),
-              );
+              widget.pageController.jumpToPage(0);
             },
           ),
           centerTitle: true,

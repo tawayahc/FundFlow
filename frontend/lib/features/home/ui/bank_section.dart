@@ -30,8 +30,7 @@ class BankSection extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => BankAccountPage(
-                            bank: bank, bankColorMap: bankColorMap),
+                        builder: (context) => BankAccountPage(bank: bank),
                       ),
                     );
                   },

@@ -152,7 +152,6 @@ class MyApp extends StatelessWidget {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegistrationPage(),
             '/forget1': (context) => const ForgetPage(),
-            '/setting_page': (context) => const SettingsPage(),
             // '/pocket_management': (context) => CategoryPage(),
             '/setting_page/edit_email': (context) =>
                 EditEmailPage(repository: settingsRepository),

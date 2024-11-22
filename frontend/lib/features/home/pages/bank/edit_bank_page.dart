@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
@@ -8,6 +9,7 @@ import 'package:fundflow/features/home/models/bank.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/core/widgets/custom_text_ip.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
+import 'package:fundflow/features/manageBankAccount/ui/bank_account_page.dart';
 
 class EditBankPage extends StatefulWidget {
   final Bank bank;
@@ -95,7 +97,7 @@ class _EditBankPageState extends State<EditBankPage> {
           padding: const EdgeInsets.all(16.0),
           child: BlocListener<BankBloc, BankState>(
             listener: (context, state) {
-              if (state is BankUpdated || state is BankDeleted) {
+              if (state is BankUpdated) {
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //   const SnackBar(content: Text('Bank updated successfully')),
                 // );
@@ -103,10 +105,18 @@ class _EditBankPageState extends State<EditBankPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          const GlobalPadding(child: HomePage())),
+                          BankAccountPage(bank: widget.bank)),
                 );
                 // Navigator.pop(context); // Go back to the previous screen
-              } else if (state is BankError) {
+              } else if (state is BankDeleted) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          BottomNavBar()),
+                );
+              }
+              else if (state is BankError) {
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //   const SnackBar(content: Text('Failed to load banks')),
                 // );

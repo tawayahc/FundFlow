@@ -6,7 +6,8 @@ import 'package:fundflow/features/home/ui/profile_section.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 
 class HomeUI extends StatelessWidget {
-  const HomeUI({super.key});
+  final PageController pageController;
+  const HomeUI({super.key, required this.pageController});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class HomeUI extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 15),
-              const ProfileSection(),
+              ProfileSection(pageController: pageController,),
               const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
