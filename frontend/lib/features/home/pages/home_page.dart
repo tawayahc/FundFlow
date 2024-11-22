@@ -16,7 +16,8 @@ import 'package:fundflow/features/home/repository/profile_repository.dart';
 import 'package:fundflow/features/home/ui/home_ui.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final PageController pageController;
+  const HomePage({super.key, required this.pageController});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class HomePage extends StatelessWidget {
               );
           }
         },
-        child: const HomeUI(),
+        child: HomeUI(pageController: pageController,),
       ),
     );
   }

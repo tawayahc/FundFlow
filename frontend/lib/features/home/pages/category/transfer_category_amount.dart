@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
@@ -13,10 +14,10 @@ class TransferCategoryAmount extends StatelessWidget {
   final Category toCategory;
 
   const TransferCategoryAmount({
-    Key? key,
+    super.key,
     required this.fromCategory,
     required this.toCategory,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class TransferCategoryAmount extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        const GlobalPadding(child: HomePage()),
+                        const BottomNavBar(),
                   ),
                 );
               } else if (state is CategoryError) {

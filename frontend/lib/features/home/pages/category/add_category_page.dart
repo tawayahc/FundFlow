@@ -80,7 +80,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          const GlobalPadding(child: HomePage())),
+                          const BottomNavBar()),
                 );
               } else if (state is CategoryError) {
                 ScaffoldMessenger.of(context).showSnackBar(

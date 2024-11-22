@@ -5,7 +5,8 @@ import 'package:fundflow/features/home/bloc/profile/profile_bloc.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_state.dart';
 
 class ProfileSection extends StatefulWidget {
-  const ProfileSection({Key? key}) : super(key: key);
+  final PageController pageController;
+  const ProfileSection({super.key, required this.pageController});
 
   @override
   _ProfileSectionState createState() => _ProfileSectionState();
@@ -123,9 +124,8 @@ class _ProfileSectionState extends State<ProfileSection> {
                         isSettingsActive = !isSettingsActive;
                       });
 
-                      // ทำงานแล้วรีเซ็ตสถานะ
-                      Navigator.pushNamed(context, '/setting_page')
-                          .then((_) => resetState());
+                      widget.pageController.jumpToPage(3);
+
                     },
                   ),
                 ],

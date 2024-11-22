@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/home/bank_balance_box.dart';
+import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/pages/bank/edit_bank_page.dart';
 import 'package:fundflow/features/home/ui/bank_section.dart';
-import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
 
 import '../../../core/themes/app_styles.dart';
 import '../../../core/widgets/notification/transaction_card.dart';
@@ -20,12 +20,10 @@ import '../../home/repository/transaction_repository.dart';
 
 class BankAccountPage extends StatefulWidget {
   final Bank bank;
-  final Map<String, Color> bankColorMap;
-  const BankAccountPage(
-      {super.key, required this.bank, required this.bankColorMap});
+  const BankAccountPage({super.key, required this.bank});
 
   @override
-  _BankAccountPageState createState() => _BankAccountPageState();
+  State<StatefulWidget> createState() => _BankAccountPageState();
 }
 
 class _BankAccountPageState extends State<BankAccountPage>
@@ -53,28 +51,30 @@ class _BankAccountPageState extends State<BankAccountPage>
     super.dispose();
   }
 
-  List<Transaction> get filteredTransactions {
-    if (_tabController.index == 0) {
-      // Show only income transactions
-      return transactions
-          .where((transaction) => transaction.amount > 0)
-          .toList();
-    } else {
-      // Show only outcome transactions
-      return transactions
-          .where((transaction) => transaction.amount < 0)
-          .toList();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     context.read<TransactionBloc>().add(LoadTransactions());
-    Color color = bankColorMap[widget.bank.bank_name] ?? Colors.black;
+    Color color = bankColorMap[widget.bank.bank_name] ?? Colors.grey;
 
     return GlobalPadding(
       child: Scaffold(
         appBar: AppBar(
+          leading: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                iconSize: 20,
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                          const BottomNavBar()));
+                },
+              ),
+            ],
+          ),
+          centerTitle: true,
           actions: [
             IconButton(
               icon: const Icon(Icons.edit),
@@ -184,17 +184,25 @@ class _BankAccountPageState extends State<BankAccountPage>
                       if (transactionState is TransactionsLoading) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (transactionState is TransactionsLoaded) {
-                        final sortedTransactions = List.from(transactionState.transactions)
-                          ..sort((a, b) => DateTime.parse(b.createdAt)
-                              .compareTo(DateTime.parse(a.createdAt)));
+                      final bankTransactions = transactionState.transactions
+                          .where((transaction) => transaction.bankId == widget.bank.id)
+                          .toList();
+
+                      final sortedTransactions = List.from(bankTransactions)
+                      ..sort((a, b) => DateTime.parse(b.createdAt)
+                          .compareTo(DateTime.parse(a.createdAt)));
+
+                      final filteredTransactions = sortedTransactions
+                          .where((transaction) => transaction.type == _type)
+                          .toList();
 
                         return BlocBuilder<CategoryBloc, CategoryState>(
                           builder: (context, categoryState) {
                             return ListView.builder(
-                              itemCount: sortedTransactions.length,
+                              itemCount: filteredTransactions.length,
                               itemBuilder: (context, index) {
-                                final transactions = sortedTransactions[index];
-                                final isExpense = transactions.type == 'expense';
+                                final transaction = filteredTransactions[index];
+                                final isExpense = transaction.type == 'expense';
 
                                 // Retrieve the matching Category object based on the transaction categoryId
                                 Category category = Category(
@@ -204,10 +212,10 @@ class _BankAccountPageState extends State<BankAccountPage>
                                   color: Colors.grey,
                                 );
 
-                                if (transactions.categoryId != 0 &&
+                                if (transaction.categoryId != 0 &&
                                     categoryState is CategoriesLoaded) {
                                   category = categoryState.categories.firstWhere(
-                                        (cat) => cat.id == transactions.categoryId,
+                                        (cat) => cat.id == transaction.categoryId,
                                     orElse: () => category,
                                   );
                                 }
@@ -231,7 +239,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                                       // );
                                     }
                                   },
-                                  child: TransactionCard(transaction: transactions),
+                                  child: TransactionCard(transaction: transaction),
                                 );
                               },
                             );
@@ -245,25 +253,6 @@ class _BankAccountPageState extends State<BankAccountPage>
                     },
                   ),
               ),
-              // Expanded(
-              //   child: CustomScrollView(
-              //     slivers: [
-              //       SliverList(
-              //         delegate: SliverChildBuilderDelegate(
-              //           (context, index) {
-              //             final filteredItem = filteredTransactions[index];
-              //             return TransactionItem(
-              //               amount: filteredItem.amount,
-              //               category: 'filteredItem.category',
-              //               type: filteredItem.memo,
-              //             );
-              //           },
-              //           childCount: filteredTransactions.length,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // )
             ],
           ),
         ),
@@ -271,3 +260,16 @@ class _BankAccountPageState extends State<BankAccountPage>
     );
   }
 }
+
+Map<String, Color> bankColorMap = {
+  'ธนาคารกสิกรไทย': Colors.green, // Kasikorn Bank
+  'ธนาคารกรุงไทย': Colors.blue, // Krung Thai Bank
+  'ธนาคารไทยพาณิชย์': Colors.purple, // Siam Commercial Bank
+  'ธนาคารกรุงเทพ': const Color.fromARGB(255, 10, 35, 145), // Bangkok Bank
+  'ธนาคารกรุงศรีอยุธยา': const Color(0xFFffe000), // Krungsri (Bank of Ayudhya)
+  'ธนาคารออมสิน': Colors.pink, // Government Savings Bank
+  'ธนาคารธนชาต': const Color(0xFFF68B1F), // Thanachart Bank
+  'ธนาคารเกียรตินาคิน': const Color(0xFF004B87), // Kiatnakin Bank
+  'ธนาคารซิตี้แบงก์': const Color(0xFF1E90FF), // Citibank
+  'ธนาคารเมกะ': const Color(0xFF3B5998), // Mega Bank
+};
