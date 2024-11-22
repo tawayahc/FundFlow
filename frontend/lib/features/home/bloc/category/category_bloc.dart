@@ -49,6 +49,18 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       }
     });
 
+    on<DeleteCategory>((event, emit) async {
+      try {
+        // Add the new category to the repository
+        await categoryRepository.deleteCategory(event.categoryId);
+        // Reload categories after addition
+        add(LoadCategories());
+        emit(CategoryDeleted());
+      } catch (error) {
+        emit(CategoriesLoading()); // Handle error as needed
+      }
+    });
+
     on<TransferAmount>((event, emit) async {
       try {
         // Add the new category to the repository

@@ -41,5 +41,15 @@ class BankBloc extends Bloc<BankEvent, BankState> {
         emit(BankError()); // New error state
       }
     });
+
+    on<DeleteBank>((event, emit) async {
+      try {
+        await bankRepository.deleteBank(event.bankId);
+        add(LoadBanks());
+        emit(BankDeleted());
+      } catch (error) {
+        emit(BankError());
+      }
+    });
   }
 }

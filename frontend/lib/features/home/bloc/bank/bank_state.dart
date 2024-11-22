@@ -15,4 +15,6 @@ class BankAdded extends BankState {}
 
 class BankUpdated extends BankState {}
 
+class BankDeleted extends BankState {}
+
 class BankError extends BankState {}

@@ -186,6 +186,30 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
                     }
                   },
                 ),
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      BlocProvider.of<CategoryBloc>(context)
+                          .add(DeleteCategory(categoryId: originalCategory.id));
+                    },
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.delete,
+                          color: Color(0xFFFF5C5C),
+                        ),
+                        Text(
+                          'ลบธนาคาร',
+                          style: TextStyle(
+                            color: Color(0xFFFF5C5C),
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -398,7 +422,7 @@ class ColorSelector extends StatelessWidget {
                   color: color,
                   shape: BoxShape.circle,
                   border: selectedColor == color
-                      ? Border.all(width: 2.5, color: Color(0xFF41486D))
+                      ? Border.all(width: 2.5, color: const Color(0xFF41486D))
                       : Border.all(
                           width: 1.5,
                           color: const Color.fromARGB(0, 42, 32, 32)),

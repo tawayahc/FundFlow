@@ -16,3 +16,9 @@ class EditBank extends BankEvent {
 
   EditBank({required this.originalBank, required this.bank});
 }
+
+class DeleteBank extends BankEvent {
+  final int bankId;
+
+  DeleteBank({required this.bankId});
+}
