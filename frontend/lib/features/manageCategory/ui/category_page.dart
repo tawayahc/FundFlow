@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/core/widgets/home/category_balance_box.dart';
 import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
 import 'package:fundflow/features/home/models/category.dart' as categories;
 
@@ -91,48 +92,8 @@ class _CategoryPageState extends State<CategoryPage>
               children: [
                 const SizedBox(height: 16),
                 //---------- **กล่องเงิน
-                Container(
-                  padding: const EdgeInsets.fromLTRB(
-                      0, 8, 4, 0), // padding (left, top, right, bottom)
-                  width: double.infinity, // สุดขอบ
-                  decoration: BoxDecoration(
-                    //---------- **สี category
-                    color: widget.category.color,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Row(
-                        children: [
-                          SizedBox(width: 16),
-                          Text(
-                            'ยอดเงินคงเหลือ',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 0),
-                      const Divider(
-                        color: Colors.white,
-                        thickness: 2,
-                        height: 3,
-                        indent: 2,
-                      ),
-                      const SizedBox(height: 16),
-                      Center(
-                        child: Text(
-                          '฿ ${widget.category.amount.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                    ],
-                  ),
-                ),
+                CategoryBalanceBox(color: widget.category.color, category: widget.category, date: '00:00 น.'),
+
                 const SizedBox(height: 30),
                 const Text(
                   'ประวัติการทำรายการ',
