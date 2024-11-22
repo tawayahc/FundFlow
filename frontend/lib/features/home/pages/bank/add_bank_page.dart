@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
-import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
@@ -22,7 +21,7 @@ class _AddBankPageState extends State<AddBankPage> {
   double bankAmount = 0.0;
 
   final List<Map<String, Color>> availableBank = [
-    {'กสิกรไทย': Colors.green},
+    {'กสิกรไทย': Colors.blue},
     {'กรุงไทย': Colors.green},
     {'ไทยพาณิชย์': Colors.red},
     {'กรุงเทพ': Colors.orange},
@@ -47,7 +46,9 @@ class _AddBankPageState extends State<AddBankPage> {
                 // );
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => BottomNavBar()),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const GlobalPadding(child: HomePage())),
                 );
                 // Navigator.pop(context); // Go back to the previous screen
               } else if (state is BankError) {

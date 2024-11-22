@@ -34,6 +34,8 @@ dependencies:
   bottom_picker: ^2.9.0
   dropdown_textfield: ^1.2.0
   calendar_date_picker2: ^1.1.7
+  archive: ^3.6.1
+  http_parser: ^4.0.0
 
 dev_dependencies:
   flutter_test:

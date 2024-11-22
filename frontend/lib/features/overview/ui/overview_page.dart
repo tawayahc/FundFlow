@@ -1,23 +1,18 @@
-// features/overview/ui/overview_page.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
-import 'package:fundflow/core/widgets/custom_tab.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/models/transaction.dart';
-import 'package:fundflow/features/overview/bloc/overview_bloc.dart';
-import 'package:fundflow/features/overview/bloc/overview_event.dart';
 import 'package:fundflow/features/overview/ui/tab_categorized.dart';
-import 'package:fundflow/features/overview/ui_test/tab_overview.dart';
-// import 'package:fundflow/features/overview/ui/tab_overview.dart';
+import 'package:fundflow/features/overview/ui/tab_overview.dart';
 
 import '../../../core/widgets/custom_tab.dart';
 
 class OverviewPage extends StatefulWidget {
+  // final Transaction transaction;
   const OverviewPage({super.key});
 
   @override
-  State<OverviewPage> createState() => OverviewPageState();
+  State<StatefulWidget> createState() => OverviewPageState();
 }
 
 class OverviewPageState extends State<OverviewPage>
@@ -32,16 +27,9 @@ class OverviewPageState extends State<OverviewPage>
     _tabController.index = ['overview', 'categorized'].indexOf(_type);
 
     _tabController.addListener(() {
-      if (_tabController.indexIsChanging) {
-        setState(() {
-          _type = ['overview', 'categorized'][_tabController.index];
-        });
-        context.read<OverviewBloc>().add(FetchTransactionsEvent());
-      }
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<OverviewBloc>().add(FetchTransactionsEvent());
+      setState(() {
+        _type = ['overview', 'categorized'][_tabController.index];
+      });
     });
   }
 
@@ -78,15 +66,13 @@ class OverviewPageState extends State<OverviewPage>
                 controller: _tabController,
                 children: const [
                   // Content for the 'Overview' tab
-                  // SingleChildScrollView(
-                  //   child: TabOverview(),
-                  // ),
-                  TabOverview(),
+                  SingleChildScrollView(
+                    child: TabOverview(),
+                  ),
                   // Content for the 'Categorized' tab
-                  // SingleChildScrollView(
-                  //   child: TabCategorized(),
-                  // ),
-                  TabCategorized(),
+                  SingleChildScrollView(
+                    child: TabCategorized(),
+                  ),
                 ],
               ),
             ),

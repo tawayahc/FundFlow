@@ -121,7 +121,7 @@ class _IncomeFormState extends State<IncomeForm> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/addBank');
+                Navigator.pushNamed(context, '/add-bank');
               },
               child: const Text('Add Bank'),
             ),
