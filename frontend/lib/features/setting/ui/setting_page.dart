@@ -28,32 +28,26 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthenticationBloc, AuthenticationState>(
-      listener: (context, state) {
-        if (state is Unauthenticated) {
-          // Navigate to the login screen and remove all previous routes
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/login', (Route<dynamic> route) => false);
-        }
-      },
-      child: GlobalPadding(
-        child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              color: Color(0xFF414141),
-              onPressed: () {
-                Navigator.pop(context); // Go back to the previous page
-              },
-            ),
-            centerTitle: true,
-            title: const Text(
-              'ตั้งค่า',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF414141),
-              ),
+    return GlobalPadding(
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const GlobalPadding(child: HomePage())),
+              );
+            },
+          ),
+          centerTitle: true,
+          title: const Text(
+            'ตั้งค่า',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
           ),
           body: SingleChildScrollView(
