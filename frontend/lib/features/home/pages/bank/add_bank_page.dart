@@ -6,6 +6,8 @@ import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
 import 'package:fundflow/features/home/models/bank.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
+import 'package:fundflow/core/widgets/custom_button.dart';
+import 'package:fundflow/core/widgets/custom_text_ip.dart';
 
 class AddBankPage extends StatefulWidget {
   const AddBankPage({super.key});
@@ -17,44 +19,59 @@ class AddBankPage extends StatefulWidget {
 class _AddBankPageState extends State<AddBankPage> {
   String bankName = '';
   String selectedBank = 'กสิกรไทย';
-  Color selectedColor = Colors.blue;
+  String selectedLogo = 'assets/LogoBank/Kplus.png';
   double bankAmount = 0.0;
 
-  final List<Map<String, Color>> availableBank = [
-    {'กสิกรไทย': Colors.blue},
-    {'กรุงไทย': Colors.green},
-    {'ไทยพาณิชย์': Colors.red},
-    {'กรุงเทพ': Colors.orange},
-    {'ออมสิน': Colors.purple},
+  final List<Map<String, String>> availableBank = [
+    {'กสิกรไทย': 'assets/LogoBank/Kplus.png'},
+    {'กรุงไทย': 'assets/LogoBank/Krungthai.png'},
+    {'ไทยพาณิชย์': 'assets/LogoBank/SCB.png'},
+    {'กรุงเทพ': 'assets/LogoBank/Krungthep.png'},
+    {'ออมสิน': 'assets/LogoBank/GSB.png'},
+    {'กรุงศรี': 'assets/LogoBank/krungsri.png'},
+    {'ธนชาติ': 'assets/LogoBank/ttb.png'},
+    {'เกียรตินาคิน': 'assets/LogoBank/knk.png'},
+    {'City': 'assets/LogoBank/city.png'},
+    {'Make': 'assets/LogoBank/make.png'},
   ];
+
+  final TextEditingController bankNameController = TextEditingController();
+  final TextEditingController bankAmountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return GlobalPadding(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('เพิ่มธนาคาร'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            iconSize: 20,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
           centerTitle: true,
+          title: const Text(
+            'เพิ่มธนาคาร',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF414141),
+            ),
+          ),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: BlocListener<BankBloc, BankState>(
             listener: (context, state) {
               if (state is BankAdded) {
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   const SnackBar(content: Text('Bank added successfully')),
-                // );
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          const GlobalPadding(child: HomePage())),
+                    builder: (context) =>
+                        const GlobalPadding(child: HomePage()),
+                  ),
                 );
-                // Navigator.pop(context); // Go back to the previous screen
-              } else if (state is BankError) {
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   const SnackBar(content: Text('Failed to load banks')),
-                // );
               }
             },
             child: Column(
@@ -65,66 +82,76 @@ class _AddBankPageState extends State<AddBankPage> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
-                // Bank Color Boxes with Names
-                GridView.builder(
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 5, // 5 banks per row
-                    childAspectRatio: 1,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                  ),
-                  itemCount: availableBank.length,
-                  itemBuilder: (context, index) {
-                    final bank = availableBank[index];
-                    final bankName = bank.keys.first;
-                    final bankColor = bank.values.first;
+GridView.builder(
+  shrinkWrap: true,
+  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: 4,
+    childAspectRatio: 1,
+    mainAxisSpacing: 10,
+    crossAxisSpacing: 10,
+  ),
+  itemCount: availableBank.length,
+  itemBuilder: (context, index) {
+    final bank = availableBank[index];
+    final bankName = bank.keys.first;
+    final bankLogo = bank.values.first;
 
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedBank = bankName;
-                          selectedColor = bankColor;
-                        });
-                      },
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: bankColor,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  width: 2,
-                                  color: selectedColor == bankColor
-                                      ? Colors.black
-                                      : Colors.transparent),
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            bankName,
-                            style: const TextStyle(fontSize: 8),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedBank = bankName;
+          selectedLogo = bankLogo;
+        });
+      },
+      child: Column(
+        children: [
+          Container(
+            width: 45,
+            height: 45,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2), // Shadow color
+                  spreadRadius: 1, // Spread radius
+                  blurRadius: 4, // Blur radius
+                  offset: const Offset(0, 0), // Shadow position
                 ),
+              ],
+              border: Border.all(
+                width: 2,
+                color: selectedBank == bankName
+                    ? Color(0xFF41486D)
+                    : Colors.transparent,
+              ),
+            ),
+            child: ClipOval(
+              child: Image.asset(
+                bankLogo,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(Icons.error); // Fallback if image fails to load
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            bankName,
+            style: const TextStyle(fontSize: 14),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  },
+),
                 const SizedBox(height: 20),
-                // Bank Name Input
-                const Text(
-                  'ชื่อบัญชีธนาคาร',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  decoration: const InputDecoration(
-                    hintText: 'กรอกชื่อบัญชีธนาคาร',
-                    border: OutlineInputBorder(),
-                  ),
+                TextInput(
+                  controller: bankNameController,
+                  hintText: 'กรอกชื่อกล่องธนาคาร(ไม่จำเป็น)',
+                  labelText: 'ชื่อกล่องธนาคาร',
+                  icon: Icons.edit,
                   onChanged: (value) {
                     setState(() {
                       bankName = value;
@@ -132,18 +159,11 @@ class _AddBankPageState extends State<AddBankPage> {
                   },
                 ),
                 const SizedBox(height: 20),
-                // Bank Amount Input
-                const Text(
-                  'ยอดเงินเริ่มต้น',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  decoration: const InputDecoration(
-                    hintText: 'กรอกยอดเงินเริ่มต้น',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
+                TextInput(
+                  controller: bankAmountController,
+                  hintText: 'กรอกจำนวนเงิน',
+                  labelText: 'ระบุจำนวนเงิน',
+                  icon: Icons.wallet,
                   onChanged: (value) {
                     setState(() {
                       bankAmount = double.tryParse(value) ?? 0.0;
@@ -151,24 +171,21 @@ class _AddBankPageState extends State<AddBankPage> {
                   },
                 ),
                 const SizedBox(height: 20),
-                // Save Button
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (bankName.isNotEmpty && selectedBank.isNotEmpty) {
-                        final newBank = Bank(
-                          id: -1,
-                          name: bankName,
-                          bank_name: 'ธนาคาร$selectedBank',
-                          amount: bankAmount,
-                        );
+                CustomButton(
+                  text: 'ยืนยัน',
+                  onPressed: () {
+                    if (bankName.isNotEmpty && selectedBank.isNotEmpty) {
+                      final newBank = Bank(
+                        id: -1,
+                        name: bankName,
+                        bank_name: 'ธนาคาร$selectedBank',
+                        amount: bankAmount,
+                      );
 
-                        BlocProvider.of<BankBloc>(context)
-                            .add(AddBank(bank: newBank));
-                      }
-                    },
-                    child: const Text('เพิ่มธนาคาร'),
-                  ),
+                      BlocProvider.of<BankBloc>(context)
+                          .add(AddBank(bank: newBank));
+                    }
+                  },
                 ),
               ],
             ),
