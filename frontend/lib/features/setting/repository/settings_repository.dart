@@ -63,7 +63,7 @@ class SettingsRepository {
   Future<UserProfile> fetchUserProfile() async {
     try {
       final response = await dio.get('/profile');
-      logger.d('Fetched user profile: ${response.data}');
+      // logger.d('Fetched user profile: ${response.data}');
       return UserProfile.fromJson(response.data);
     } on DioException catch (e) {
       logger.e('Failed to fetch user profile: ${e.response?.data}');
