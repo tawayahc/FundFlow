@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
+import 'package:fundflow/core/widgets/custom_text_ip.dart';
 
 class TransferCategoryAmount extends StatelessWidget {
   final Category fromCategory;
   final Category toCategory;
 
   const TransferCategoryAmount({
-    Key? key,
+    super.key,
     required this.fromCategory,
     required this.toCategory,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,47 +27,173 @@ class TransferCategoryAmount extends StatelessWidget {
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: BlocListener<CategoryBloc, CategoryState>(
-        listener: (context, state) {
-          if (state is CategoryTransferred || state is CategoryAmountUpdated) {
-            // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            //     content: Text('Category updated successfully')));
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const GlobalPadding(child: HomePage())),
-            );
-            // Navigator.pop(context);
-          } else if (state is CategoryError) {
-            // Handle error state, show a SnackBar for example
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Failed to load categories')),
-            );
-          }
-        },
+      child: SizedBox(
+        width:
+            MediaQuery.of(context).size.width * 0.9, // Modal width adjustment
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Transfer from: ${fromCategory.name} to: ${toCategory.name}',
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: amountController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Transfer Amount',
-                  border: OutlineInputBorder(),
+          padding: const EdgeInsets.all(25.0),
+          child: BlocListener<CategoryBloc, CategoryState>(
+            listener: (context, state) {
+              if (state is CategoryTransferred ||
+                  state is CategoryAmountUpdated) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        const BottomNavBar(),
+                  ),
+                );
+              } else if (state is CategoryError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Failed to load categories')),
+                );
+              }
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Title and Close Button Row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'ย้ายเงินไป',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF414141), // Text color
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close,
+                          color: Color(0xFFD0D0D0), size: 35),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
+                const SizedBox(height: 10),
+
+                // From and To Categories
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // From Category Icon
+                    Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey
+                                    .withOpacity(0.5), // Shadow color
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundColor: fromCategory.id == -1
+                                ? Colors.transparent
+                                : fromCategory.color,
+                            child: fromCategory.id == -1
+                                ? ClipOval(
+                                    child: Image.asset(
+                                      'assets/CashBox.png',
+                                      fit: BoxFit.cover,
+                                      width: 60,
+                                      height: 60,
+                                    ),
+                                  )
+                                : Text(
+                                    fromCategory.name[0],
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          fromCategory.name,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF414141),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 20),
+                    const Icon(Icons.arrow_forward,
+                        size: 32, color: Colors.red),
+                    const SizedBox(width: 20),
+                    // To Category Icon
+                    Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 2,
+                                offset: Offset(0, 0),
+                              ),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundColor: toCategory.color,
+                            child: Text(
+                              toCategory.name[0],
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          toCategory.name,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF414141),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Amount Input
+                TextInput(
+                  controller: amountController,
+                  hintText: 'ระบุจำนวนเงิน',
+                  labelText: 'ระบุจำนวนเงิน',
+                  icon: Icons.wallet, // Wallet icon
+                  onChanged: (value) {},
+                ),
+                const SizedBox(height: 20),
+
+                // Confirm Button
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF41486D), // Custom color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    minimumSize: const Size(150, 45), // Adjust button size
+                  ),
                   onPressed: () {
                     final amount = double.tryParse(amountController.text);
                     if (amount != null && amount > 0) {
@@ -92,12 +220,24 @@ class TransferCategoryAmount extends StatelessWidget {
                           ),
                         );
                       }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('กรุณากรอกจำนวนเงินที่ถูกต้อง')),
+                      );
                     }
                   },
-                  child: const Text('Transfer'),
+                  child: const Text(
+                    'ยืนยัน',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
