@@ -25,7 +25,6 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage>
     with SingleTickerProviderStateMixin {
-
   @override
   Widget build(BuildContext context) {
     return GlobalPadding(
@@ -40,8 +39,8 @@ class _CategoryPageState extends State<CategoryPage>
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                        builder: (context) =>
-                    const BottomNavBar())); // กลับไปหน้าก่อนหน้า (SettingsPage)
+                            builder: (context) =>
+                                const BottomNavBar())); // กลับไปหน้าก่อนหน้า (SettingsPage)
                   },
                 ),
               ],
@@ -77,7 +76,10 @@ class _CategoryPageState extends State<CategoryPage>
               children: [
                 const SizedBox(height: 16),
                 //---------- **กล่องเงิน
-                CategoryBalanceBox(color: widget.category.color, category: widget.category, date: '00:00 น.'),
+                CategoryBalanceBox(
+                    color: widget.category.color,
+                    category: widget.category,
+                    date: '00:00 น.'),
 
                 const SizedBox(height: 30),
                 const Text(
@@ -92,14 +94,16 @@ class _CategoryPageState extends State<CategoryPage>
                       if (transactionState is TransactionsLoading) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (transactionState is TransactionsLoaded) {
-                        final categoryTransactions = transactionState.transactions
-                            .where((transaction) => transaction.categoryId == widget.category.id)
+                        final categoryTransactions = transactionState
+                            .transactions
+                            .where((transaction) =>
+                                transaction.categoryId == widget.category.id)
                             .toList();
 
-                        final sortedTransactions = List.from(categoryTransactions)
-                          ..sort((a, b) => DateTime.parse(b.createdAt)
-                              .compareTo(DateTime.parse(a.createdAt)));
-
+                        final sortedTransactions =
+                            List.from(categoryTransactions)
+                              ..sort((a, b) => DateTime.parse(b.createdAt)
+                                  .compareTo(DateTime.parse(a.createdAt)));
 
                         return BlocBuilder<CategoryBloc, CategoryState>(
                           builder: (context, categoryState) {
@@ -110,10 +114,9 @@ class _CategoryPageState extends State<CategoryPage>
                                 final isExpense = transaction.type == 'expense';
 
                                 return GestureDetector(
-                                  onTap: () {
-
-                                  },
-                                  child: TransactionCard(transaction: transaction),
+                                  onTap: () {},
+                                  child:
+                                      TransactionCard(transaction: transaction),
                                 );
                               },
                             );
