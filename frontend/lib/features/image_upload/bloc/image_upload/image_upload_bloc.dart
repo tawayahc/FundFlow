@@ -95,6 +95,7 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
             .toList();
 
         if (matchingBanks.length >= 2) {
+          // FIX: handle fluke's function
           // User has two or more accounts with the same bank_name
           // Send to notification system
           // await _notificationRepository.sendNotification(transaction.toJson());
