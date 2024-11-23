@@ -19,7 +19,8 @@ import 'package:fundflow/features/image_upload/bloc/slip/slip_event.dart';
 import 'package:fundflow/features/image_upload/bloc/slip/slip_state.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final PageController pageController;
+  const HomePage({super.key, required this.pageController});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -27,6 +28,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late SlipBloc _slipBloc;
+
+  _HomePageState();
 
   @override
   void initState() {
@@ -127,7 +130,9 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ],
-        child: const HomeUI(),
+        child: HomeUI(
+          pageController: widget.pageController,
+        ),
       ),
     );
   }
