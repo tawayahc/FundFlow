@@ -30,8 +30,7 @@ class BankSection extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => BankAccountPage(
-                            bank: bank, bankColorMap: bankColorMap),
+                        builder: (context) => BankAccountPage(bank: bank),
                       ),
                     );
                   },
@@ -54,9 +53,14 @@ class BankSection extends StatelessWidget {
 }
 
 Map<String, Color> bankColorMap = {
-  'ธนาคารกสิกรไทย': Colors.green,
-  'ธนาคารกรุงไทย': Colors.blue,
-  'ธนาคารไทยพาณิชย์': Colors.purple,
-  'ธนาคารกรุงเทพ': Colors.lightBlue,
-  'ธนาคารกรุงศรี': const Color(0xFFffe000),
+  'ธนาคารกสิกรไทย': Colors.green, // Kasikorn Bank
+  'ธนาคารกรุงไทย': Colors.blue, // Krung Thai Bank
+  'ธนาคารไทยพาณิชย์': Colors.purple, // Siam Commercial Bank
+  'ธนาคารกรุงเทพ': const Color.fromARGB(255, 10, 35, 145), // Bangkok Bank
+  'ธนาคารกรุงศรีอยุธยา': const Color(0xFFffe000), // Krungsri (Bank of Ayudhya)
+  'ธนาคารออมสิน': Colors.pink, // Government Savings Bank
+  'ธนาคารธนชาต': const Color(0xFFF68B1F), // Thanachart Bank
+  'ธนาคารเกียรตินาคิน': const Color(0xFF004B87), // Kiatnakin Bank
+  'ธนาคารซิตี้แบงก์': const Color(0xFF1E90FF), // Citibank
+  'ธนาคารเมกะ': const Color(0xFF3B5998), // Mega Bank
 };

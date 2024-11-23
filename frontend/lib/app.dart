@@ -152,13 +152,13 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme, // Apply the Poppins light theme
           darkTheme: AppTheme.darkTheme, // Apply the Poppins dark theme
           themeMode: ThemeMode.system,
-          home:
+          home: //ResetPasswordPage(email: 'p.ploy547@gmail.com'),
+              //VerificationPage(email: 'p.ploy547@gmail.com'),
               const AuthenticationWrapper(), // Decide whether to show login or HomePage
           routes: {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegistrationPage(),
             '/forget1': (context) => const ForgetPage(),
-            '/setting_page': (context) => const SettingsPage(),
             // '/pocket_management': (context) => CategoryPage(),
             '/setting_page/edit_email': (context) =>
                 EditEmailPage(repository: settingsRepository),
