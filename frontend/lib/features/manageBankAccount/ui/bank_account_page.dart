@@ -68,8 +68,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                          const BottomNavBar()));
+                          builder: (context) => const BottomNavBar()));
                 },
               ),
             ],
@@ -179,79 +178,81 @@ class _BankAccountPageState extends State<BankAccountPage>
               ),
               const SizedBox(height: 12),
               Expanded(
-                  child: BlocBuilder<TransactionBloc, TransactionState>(
-                    builder: (context, transactionState) {
-                      if (transactionState is TransactionsLoading) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (transactionState is TransactionsLoaded) {
+                child: BlocBuilder<TransactionBloc, TransactionState>(
+                  builder: (context, transactionState) {
+                    if (transactionState is TransactionsLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (transactionState is TransactionsLoaded) {
                       final bankTransactions = transactionState.transactions
-                          .where((transaction) => transaction.bankId == widget.bank.id)
+                          .where((transaction) =>
+                              transaction.bankId == widget.bank.id)
                           .toList();
 
                       final sortedTransactions = List.from(bankTransactions)
-                      ..sort((a, b) => DateTime.parse(b.createdAt)
-                          .compareTo(DateTime.parse(a.createdAt)));
+                        ..sort((a, b) => DateTime.parse(b.createdAt)
+                            .compareTo(DateTime.parse(a.createdAt)));
 
                       final filteredTransactions = sortedTransactions
                           .where((transaction) => transaction.type == _type)
                           .toList();
 
-                        return BlocBuilder<CategoryBloc, CategoryState>(
-                          builder: (context, categoryState) {
-                            return ListView.builder(
-                              itemCount: filteredTransactions.length,
-                              itemBuilder: (context, index) {
-                                final transaction = filteredTransactions[index];
-                                final isExpense = transaction.type == 'expense';
+                      return BlocBuilder<CategoryBloc, CategoryState>(
+                        builder: (context, categoryState) {
+                          return ListView.builder(
+                            itemCount: filteredTransactions.length,
+                            itemBuilder: (context, index) {
+                              final transaction = filteredTransactions[index];
+                              final isExpense = transaction.type == 'expense';
 
-                                // Retrieve the matching Category object based on the transaction categoryId
-                                Category category = Category(
-                                  id: 0,
-                                  name: 'undefined',
-                                  amount: 0.0,
-                                  color: Colors.grey,
+                              // Retrieve the matching Category object based on the transaction categoryId
+                              Category category = Category(
+                                id: 0,
+                                name: 'undefined',
+                                amount: 0.0,
+                                color: Colors.grey,
+                              );
+
+                              if (transaction.categoryId != 0 &&
+                                  categoryState is CategoriesLoaded) {
+                                category = categoryState.categories.firstWhere(
+                                  (cat) => cat.id == transaction.categoryId,
+                                  orElse: () => category,
                                 );
+                              }
 
-                                if (transaction.categoryId != 0 &&
-                                    categoryState is CategoriesLoaded) {
-                                  category = categoryState.categories.firstWhere(
-                                        (cat) => cat.id == transaction.categoryId,
-                                    orElse: () => category,
-                                  );
-                                }
+                              final categoryName = category.name;
+                              final isClickable =
+                                  isExpense && categoryName == 'undefined';
 
-                                final categoryName = category.name;
-                                final isClickable =
-                                    isExpense && categoryName == 'undefined';
+                              return GestureDetector(
+                                onTap: () {
+                                  if (isClickable) {
+                                    // Change this to edit transaction page
 
-                                return GestureDetector(
-                                  onTap: () {
-                                    if (isClickable) {
-                                      // Change this to edit transaction page
-
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) => EditCategoryPage(
-                                      //       category: category,
-                                      //     ),
-                                      //   ),
-                                      // );
-                                    }
-                                  },
-                                  child: TransactionCard(transaction: transaction),
-                                );
-                              },
-                            );
-                          },
-                        );
-                      } else if (transactionState is TransactionsLoadError) {
-                        return Center(child: Text(transactionState.message));
-                      } else {
-                        return const Center(child: Text('Unknown error'));
-                      }
-                    },
-                  ),
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => EditCategoryPage(
+                                    //       category: category,
+                                    //     ),
+                                    //   ),
+                                    // );
+                                  }
+                                },
+                                child:
+                                    TransactionCard(transaction: transaction),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    } else if (transactionState is TransactionsLoadError) {
+                      return Center(child: Text(transactionState.message));
+                    } else {
+                      return const Center(child: Text('Unknown error'));
+                    }
+                  },
+                ),
               ),
             ],
           ),
