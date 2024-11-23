@@ -4,6 +4,7 @@ import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
+import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/features/home/models/transaction.dart';
 
 class TransactionCard extends StatelessWidget {
@@ -18,11 +19,22 @@ class TransactionCard extends StatelessWidget {
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
         String categoryName = 'undefined';
-        if (transaction.categoryId != 0 && state is CategoriesLoaded) {
-          final category = state.categories.firstWhere(
-            (cat) => cat.id == transaction.categoryId,
-          );
-          categoryName = category?.name ?? 'undefined';
+        if (state is CategoriesLoaded) {
+          // Only set "undefined" for expenses with invalid or missing categoryId
+          if (isExpense && transaction.categoryId != 0) {
+            final category = state.categories.firstWhere(
+              (cat) => cat.id == transaction.categoryId,
+              orElse: () => Category(
+                id: 0,
+                name: 'undefined',
+                amount: 0.0,
+                color: Colors.grey,
+              ),
+            );
+            categoryName = category.name;
+          } else if (!isExpense) {
+            categoryName = ''; // Do not show "undefined" for incomes
+          }
         }
 
         final categoryColor = (isExpense && categoryName == 'undefined')
@@ -42,11 +54,12 @@ class TransactionCard extends StatelessWidget {
                     Text(
                       transaction.memo.isNotEmpty ? transaction.memo : '',
                       style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: (isExpense && categoryName == 'undefined')
-                              ? const Color(0xFFFF5C5C)
-                              : AppColors.darkGrey),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: (isExpense && categoryName == 'undefined')
+                            ? const Color(0xFFFF5C5C)
+                            : AppColors.darkGrey,
+                      ),
                     ),
                     Text(
                       formatter.format(transaction.amount),
@@ -67,7 +80,7 @@ class TransactionCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      categoryName,
+                      categoryName.isNotEmpty ? categoryName : '',
                       style: TextStyle(fontSize: 14, color: categoryColor),
                     ),
                     Text(

@@ -6,7 +6,6 @@ import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
 import 'package:fundflow/features/home/models/bank.dart';
-import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/core/widgets/custom_text_ip.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/features/manageBankAccount/ui/bank_account_page.dart';
@@ -24,7 +23,7 @@ class _EditBankPageState extends State<EditBankPage> {
   late String bankName;
   late String selectedBank;
   late Color selectedColor;
-  late double bankAmount = 0.0;
+  late double bankAmount = widget.bank.amount;
 
   final List<Map<String, Color>> availableBank = [
     {'กสิกรไทย': Colors.blue},
@@ -38,6 +37,7 @@ class _EditBankPageState extends State<EditBankPage> {
   final TextEditingController bankAmountController = TextEditingController();
 
   late Bank originalBank;
+  late Bank updatedBank;
 
   @override
   void initState() {
@@ -104,19 +104,15 @@ class _EditBankPageState extends State<EditBankPage> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          BankAccountPage(bank: widget.bank)),
+                      builder: (context) => BankAccountPage(bank: updatedBank)),
                 );
                 // Navigator.pop(context); // Go back to the previous screen
               } else if (state is BankDeleted) {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          BottomNavBar()),
+                  MaterialPageRoute(builder: (context) => const BottomNavBar()),
                 );
-              }
-              else if (state is BankError) {
+              } else if (state is BankError) {
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //   const SnackBar(content: Text('Failed to load banks')),
                 // );
@@ -133,9 +129,9 @@ class _EditBankPageState extends State<EditBankPage> {
                 Row(
                   children: [
                     // รูปธนาคาร
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 24,
-                      backgroundColor: Color.fromARGB(255, 7, 39, 156),
+                      backgroundColor: const Color.fromARGB(255, 7, 39, 156),
                       // backgroundImage: ,
                     ),
                     const SizedBox(width: 10),
@@ -230,7 +226,7 @@ class _EditBankPageState extends State<EditBankPage> {
                   icon: Icons.wallet,
                   onChanged: (value) {
                     setState(() {
-                      bankName = value;
+                      bankAmount = double.parse(value);
                     });
                   },
                 ),
@@ -241,11 +237,11 @@ class _EditBankPageState extends State<EditBankPage> {
                   text: 'ยืนยันการแก้ไข',
                   onPressed: () {
                     if (bankName.isNotEmpty && selectedBank.isNotEmpty) {
-                      final updatedBank = Bank(
+                      updatedBank = Bank(
                         id: widget.bank.id, // Preserve the original bank ID
                         name: bankName,
-                        bank_name: 'ธนาคาร$selectedBank',
-                        amount: widget.bank.amount, // Keep the original amount
+                        bank_name: widget.bank.bank_name,
+                        amount: bankAmount, // Keep the original amount
                       );
 
                       BlocProvider.of<BankBloc>(context).add(EditBank(
