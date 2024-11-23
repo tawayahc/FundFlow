@@ -13,12 +13,12 @@ class MonthlySummaryView extends StatelessWidget {
   final Function(DateTimeRange?)? onDateRangeSelected;
 
   const MonthlySummaryView({
-    Key? key,
+    super.key,
     required this.monthlySummaries,
     required this.dropDownController,
     this.onFilterChanged,
     this.onDateRangeSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

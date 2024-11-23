@@ -4,7 +4,7 @@ import 'package:fundflow/core/widgets/custom_tab.dart';
 
 import '../../../core/themes/app_styles.dart';
 import '../../../core/widgets/overview/summary_card.dart';
-import 'bar_chart.dart';
+import '../widget/bar_chart.dart';
 
 class TabOverview extends StatefulWidget {
   const TabOverview({super.key});
@@ -56,7 +56,7 @@ class TabOverviewState extends State<TabOverview>
           decoration: const BoxDecoration(
             color: Colors.lightBlueAccent,
           ),
-          child: const ExpenseBarChart(),
+          // child: const ExpenseBarChart(),
         ),
         const SizedBox(height: 10),
         const Row(

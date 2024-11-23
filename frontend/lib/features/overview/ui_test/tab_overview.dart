@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:fundflow/core/widgets/overview/summary_card.dart';
 import 'package:fundflow/features/overview/bloc/overview_event.dart';
+import 'package:fundflow/features/overview/widget/bar_chart.dart';
 import 'package:fundflow/features/overview/ui_test/daily_summary_screen.dart';
 import 'package:fundflow/features/overview/ui_test/monthly_summary_screen.dart';
 import 'package:fundflow/features/overview/widget/daily_summary_view.dart';
@@ -93,12 +94,7 @@ class TabOverviewState extends State<TabOverview>
           return Column(
             children: [
               // FIX: Replace chart widget
-              Container(
-                height: 200,
-                color: Colors.blueAccent,
-                child:
-                    const Center(child: Text('Expense Bar Chart Placeholder')),
-              ),
+              ExpenseBarChart(monthlySummaries: state.monthlySummaries,),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

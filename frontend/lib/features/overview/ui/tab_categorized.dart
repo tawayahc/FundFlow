@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fundflow/features/overview/ui/bar_chart.dart';
+import 'package:fundflow/features/overview/widget/bar_chart.dart';
 
 class TabCategorized extends StatefulWidget {
   const TabCategorized({super.key});
@@ -17,7 +17,7 @@ class TabCategorizedState extends State<TabCategorized> {
           decoration: const BoxDecoration(
             color: Colors.lightBlueAccent,
           ),
-          child: ExpenseBarChart(),
+          // child: ExpenseBarChart(),
         ),
         const SizedBox(height: 10),
         Row(

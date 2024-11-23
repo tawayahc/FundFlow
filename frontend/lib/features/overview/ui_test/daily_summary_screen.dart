@@ -10,7 +10,7 @@ import 'package:logger/logger.dart';
 import '../widget/daily_summary_view.dart';
 
 class DailySummaryScreen extends StatefulWidget {
-  const DailySummaryScreen({Key? key}) : super(key: key);
+  const DailySummaryScreen({super.key});
 
   @override
   State<DailySummaryScreen> createState() => _DailySummaryScreenState();

@@ -39,10 +39,12 @@ class DailySummaryView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('ประเภทรายการ'),
+                  const Text('ประเภทรายการ',),
                   SizedBox(
-                    width: 150,
+                    width: 120,
+                    height: 40,
                     child: ExpenseTypeDropDown(
                       controller: dropDownController,
                       onChanged: onFilterChanged!,
@@ -51,6 +53,7 @@ class DailySummaryView extends StatelessWidget {
                 ],
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text('ช่วงเวลา'),
                   // Implement Date Picker here

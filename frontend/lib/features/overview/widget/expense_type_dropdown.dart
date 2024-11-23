@@ -7,10 +7,10 @@ class ExpenseTypeDropDown extends StatelessWidget {
   final Function(String?) onChanged;
 
   const ExpenseTypeDropDown({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +19,9 @@ class ExpenseTypeDropDown extends StatelessWidget {
         hintText: 'เงินเข้า-เงินออก',
         hintStyle: TextStyle(
           color: Colors.grey,
-          fontSize: 16,
+          fontSize: 11,
         ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 3),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(
             color: Colors.grey,
@@ -56,6 +57,10 @@ class ExpenseTypeDropDown extends StatelessWidget {
         DropDownValueModel(name: 'เงินเข้า', value: "income"),
         DropDownValueModel(name: 'เงินออก', value: "expense"),
       ],
+      textStyle: const TextStyle(
+        color: Colors.black,
+        fontSize: 11,
+      ),
       onChanged: (val) {
         onChanged(val?.value as String?);
       },
