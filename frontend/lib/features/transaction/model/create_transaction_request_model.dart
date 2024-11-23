@@ -17,6 +17,18 @@ class CreateTransactionRequest {
     required this.memo,
   });
 
+  factory CreateTransactionRequest.fromJson(Map<String, dynamic> json) {
+    return CreateTransactionRequest(
+      bankId: json['bank_id'],
+      type: json['type'],
+      amount: json['amount'].toDouble(),
+      categoryId: json['category_id'],
+      createdAtDate: json['created_at_date'],
+      createdAtTime: json['created_at_time'],
+      memo: json['memo'],
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'bank_id': bankId,
@@ -24,7 +36,7 @@ class CreateTransactionRequest {
       'amount': amount,
       'category_id': categoryId,
       'created_at_date': createdAtDate,
-      'created_at_time': createdAtTime ?? '00:00:00',
+      'created_at_time': createdAtTime,
       'memo': memo,
     };
   }

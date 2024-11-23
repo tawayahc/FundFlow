@@ -1,10 +1,11 @@
+// image_upload_page.dart
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/features/image_upload/bloc/image_upload_bloc.dart';
-import 'package:fundflow/features/image_upload/bloc/image_upload_event.dart';
-import 'package:fundflow/features/image_upload/bloc/image_upload_state.dart';
+import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_bloc.dart';
+import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_event.dart';
+import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_state.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageUploadPage extends StatelessWidget {
@@ -22,6 +23,10 @@ class ImageUploadPage extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Images sent successfully!')),
           );
+
+          // Optionally, navigate to another page or update UI with transaction data
+          // For example:
+          // Navigator.pushNamed(context, '/transactions', arguments: state.transactions);
         }
       },
       builder: (context, state) {
@@ -50,6 +55,7 @@ class ImageUploadPage extends StatelessWidget {
             children: [
               Column(
                 children: [
+                  // Upload Slip Button
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: InkWell(
@@ -57,22 +63,19 @@ class ImageUploadPage extends StatelessWidget {
                         context.read<ImageBloc>().add(PickImages());
                       },
                       child: Container(
-                        padding: const EdgeInsets.all(
-                            16.0), // Padding inside the container
+                        padding: const EdgeInsets.all(16.0),
                         decoration: BoxDecoration(
-                          color: Colors.grey[300], // Gray color
-                          borderRadius:
-                              BorderRadius.circular(8.0), // Rounded corners
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: const Row(
-                          mainAxisAlignment: MainAxisAlignment
-                              .center, // Center content horizontally
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.add, size: 24.0), // Icon
-                            SizedBox(width: 8.0), // Space between icon and text
+                            Icon(Icons.add, size: 24.0),
+                            SizedBox(width: 8.0),
                             Text(
                               'Upload Slip',
-                              style: TextStyle(fontSize: 18.0), // Text style
+                              style: TextStyle(fontSize: 18.0),
                             ),
                           ],
                         ),
@@ -80,11 +83,13 @@ class ImageUploadPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
+
+                  // Display Selected Images
                   Expanded(
                     child: images.isEmpty
                         ? (isLoading
                             ? const Center(
-                                child: Text("images are uploading..."),
+                                child: Text("Images are uploading..."),
                               )
                             : const Center(
                                 child: Text('No images selected'),
@@ -124,10 +129,12 @@ class ImageUploadPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
-                onPressed: images.isEmpty || isLoading
+                onPressed: (images.isEmpty || isLoading)
                     ? null
                     : () {
-                        context.read<ImageBloc>().add(SendImages());
+                        context
+                            .read<ImageBloc>()
+                            .add(SendImages(images: images));
                       },
                 child: const Text('Send'),
               ),
