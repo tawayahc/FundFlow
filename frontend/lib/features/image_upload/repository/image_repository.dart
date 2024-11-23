@@ -1,10 +1,13 @@
 // image_repository.dart
 import 'package:archive/archive_io.dart';
+import 'package:fundflow/features/transaction/model/category_model.dart';
+import 'package:fundflow/features/transaction/model/transaction.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:http_parser/http_parser.dart';
+import 'dart:convert';
 
 class ImageRepository {
   final ImagePicker _picker;
@@ -53,9 +56,16 @@ class ImageRepository {
     }
   }
 
-  Future<void> uploadImages(List<XFile> images) async {
+  Future<List<TransactionResponse>> uploadImages({
+    required List<XFile> images,
+    required List<Category> categories,
+  }) async {
     if (images.isEmpty) {
       throw Exception('No images selected to send.');
+    }
+
+    if (categories.isEmpty) {
+      throw Exception('No categories selected.');
     }
 
     // Create an Archive object
@@ -85,16 +95,22 @@ class ImageRepository {
       contentType: MediaType('application', 'zip'),
     );
 
-    // Create FormData and add the ZIP file
+    // Serialize categories to JSON
+    String categoriesJson = jsonEncode(
+      categories.map((c) => {'id': c.id, 'name': c.name}).toList(),
+    );
+
+    // Create FormData and add the ZIP file and categories
     FormData formData = FormData.fromMap({
-      'file':
+      'zip_file':
           zipMultipartFile, // Adjust the field name as per your server requirements
+      'categories': categoriesJson, // Send categories as JSON string
     });
 
     try {
       // FIXME: Update with your server's URL
       final response = await _dio.post(
-        'http://10.0.2.2:3000/upload',
+        'http://10.0.2.2:3000/upload', // Update to your server's endpoint
         data: formData,
         options: Options(
           headers: {
@@ -105,12 +121,18 @@ class ImageRepository {
         ),
       );
 
-      if (response.statusCode != 200) {
+      if (response.statusCode == 200) {
+        // Parse transaction data
+        List<dynamic> responseData = response.data;
+        List<TransactionResponse> transactions = responseData
+            .map((transactionJson) =>
+                TransactionResponse.fromJson(transactionJson))
+            .toList();
+        return transactions;
+      } else {
         String errorMsg = response.data['message'] ?? 'Failed to send images';
         throw Exception('Failed to send images: $errorMsg');
       }
-
-      // Optionally, handle the response data if needed
     } on DioException catch (e) {
       _logger.e('DioException: ${e.message}');
       if (e.response != null) {

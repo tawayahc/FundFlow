@@ -8,14 +8,13 @@ import 'package:fundflow/features/image_upload/ui/image_upload_page.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
 import 'package:fundflow/features/transaction/model/category_model.dart';
 import 'package:fundflow/features/transaction/model/create_transfer_request.dart';
-import 'package:fundflow/features/image_upload/ui/gallery_page.dart';
 import 'package:fundflow/features/transaction/widgets/tab_item.dart';
 import 'package:intl/intl.dart';
 import '../bloc/transaction_bloc.dart';
 import '../bloc/transaction_event.dart';
 import '../bloc/transaction_state.dart';
 import '../model/form_model.dart';
-import '../model/transaction_model.dart';
+import '../model/create_transaction_request_model.dart';
 import 'expense_form.dart';
 import 'income_form.dart';
 import 'transfer_form.dart';
@@ -186,14 +185,15 @@ class _TransactionPageState extends State<TransactionPage>
                                       builder: (context) => ImageUploadPage()));
                             },
                             child: Text('image')),
-                        ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => GalleryPage()));
-                            },
-                            child: Text('gallery')),
+                        //FIX: Remove the gallery button
+                        // ElevatedButton(
+                        //     onPressed: () {
+                        //       Navigator.push(
+                        //           context,
+                        //           MaterialPageRoute(
+                        //               builder: (context) => GalleryPage()));
+                        //     },
+                        //     child: Text('gallery')),
                       ],
                     ),
 
