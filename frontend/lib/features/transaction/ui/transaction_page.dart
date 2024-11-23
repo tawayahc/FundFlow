@@ -4,11 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
-import 'package:fundflow/features/image_upload/ui/image_upload_page.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
 import 'package:fundflow/features/transaction/model/category_model.dart';
 import 'package:fundflow/features/transaction/model/create_transfer_request.dart';
-import 'package:fundflow/features/image_upload/ui/gallery_page.dart';
 import 'package:fundflow/features/transaction/widgets/tab_item.dart';
 import 'package:intl/intl.dart';
 import '../bloc/transaction_bloc.dart';
@@ -175,28 +173,6 @@ class _TransactionPageState extends State<TransactionPage>
                         ),
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.medium),
-                    Row(
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ImageUploadPage()));
-                            },
-                            child: Text('image')),
-                        ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => GalleryPage()));
-                            },
-                            child: Text('gallery')),
-                      ],
-                    ),
-
                     const SizedBox(height: AppSpacing.medium),
                     // Form Section
                     if (_type == 'income') ...[

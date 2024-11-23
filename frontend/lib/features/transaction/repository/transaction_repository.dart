@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fundflow/app.dart';
+import 'package:fundflow/features/overview/model/transaction_all_model.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
 import 'package:fundflow/features/transaction/model/category_model.dart';
 import 'package:fundflow/features/transaction/model/create_transfer_request.dart';
@@ -64,6 +65,20 @@ class TransactionAddRepository {
     } on DioException catch (e) {
       logger.e('Failed to add transfer: ${e.response?.data}');
       throw Exception('Failed to add transfer');
+    }
+  }
+
+  Future<List<TransactionAllModel>> fetchTransactions() async {
+    try {
+      final response = await dio.get('/transactions/all');
+      logger.d('API Response: ${response.data}');
+      final List<dynamic> data = response.data;
+      return data
+          .map((transaction) => TransactionAllModel.fromJson(transaction))
+          .toList();
+    } catch (e) {
+      logger.e('Failed to load transactions: $e');
+      throw Exception('Failed to load transactions: $e');
     }
   }
 }
