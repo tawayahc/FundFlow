@@ -97,4 +97,18 @@ class BankRepository {
       throw Exception('Error editing bank: $error');
     }
   }
+
+  Future<void> deleteBank(int bankId) async {
+    try {
+      final response = await dio.delete("/banks/$bankId");
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        logger.e('Failed to delete bank, Response: ${response.data}');
+        throw Exception('Failed to delete bank');
+      }
+    } catch (error) {
+      logger.e('Error deleting bank: $error');
+      throw Exception('Error deleting bank: $error');
+    }
+  }
 }

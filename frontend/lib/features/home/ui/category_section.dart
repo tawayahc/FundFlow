@@ -52,7 +52,7 @@ class CategorySection extends StatelessWidget {
                                   id: -1,
                                   name: 'CashBox',
                                   amount: state.cashBox,
-                                  color: Colors.black),
+                                  color: Color(0xFF414141)),
                             );
                           },
                         );
@@ -74,13 +74,13 @@ class CategorySection extends StatelessWidget {
                             id: -1,
                             name: 'CashBox',
                             amount: state.cashBox,
-                            color: Colors.black),
+                            color: Color(0xFF414141)),
                         child: CashBox(
                             cashBox: state.cashBox, width: cashBoxWidth),
                       );
                     },
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   ..._buildCategoryRows(context, sortedCategories),
                 ],
               ),
@@ -162,7 +162,7 @@ class CategorySection extends StatelessWidget {
 
       // Second card or a spacer if only one card in the row
       if (i + 1 < categories.length) {
-        rowChildren.add(const SizedBox(width: 10)); // Space between cards
+        rowChildren.add(const SizedBox(width: 12)); // Space between cards
         rowChildren.add(
           Expanded(
             child: DragTarget<Category>(
