@@ -10,6 +10,8 @@ import 'package:fundflow/features/auth/ui/auth_wrapper.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
+import 'package:fundflow/features/home/bloc/notification/notification_bloc.dart';
+import 'package:fundflow/features/home/bloc/notification/notification_event.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_bloc.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_event.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_bloc.dart';
@@ -17,6 +19,7 @@ import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
 import 'package:fundflow/features/home/pages/bank/add_bank_page.dart';
 import 'package:fundflow/features/home/pages/notification/notification.dart';
 import 'package:fundflow/features/home/pages/notification/test.dart';
+import 'package:fundflow/features/home/repository/notification_repository.dart';
 import 'package:fundflow/features/home/repository/transaction_repository.dart';
 import 'package:fundflow/features/image_upload/bloc/slip/slip_bloc.dart';
 import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_bloc.dart';
@@ -82,6 +85,7 @@ class MyApp extends StatelessWidget {
     final profileRepository = ProfileRepository(apiHelper: apiHelper);
     final bankRepository = BankRepository(apiHelper: apiHelper);
     final transactionRepository = TransactionRepository(apiHelper: apiHelper);
+    final notificationRepository = NotificationRepository(apiHelper: apiHelper);
     final transactionAddRepository =
         TransactionAddRepository(apiHelper: apiHelper);
     final imageRepository = ImageRepository();
@@ -102,6 +106,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(
             create: (context) => ProfileRepository(apiHelper: apiHelper)),
         RepositoryProvider.value(value: transactionRepository),
+        RepositoryProvider.value(value: notificationRepository),
         RepositoryProvider.value(value: transactionAddRepository),
         RepositoryProvider.value(value: imageRepository),
         RepositoryProvider.value(value: slipRepository),
@@ -138,6 +143,11 @@ class MyApp extends StatelessWidget {
             create: (context) => TransactionBloc(
               transactionRepository: transactionRepository,
             )..add(LoadTransactions()),
+          ),
+          BlocProvider<NotificationBloc>(
+            create: (context) => NotificationBloc(
+              notificationRepository: notificationRepository,
+            )..add(LoadNotifications()),
           ),
           BlocProvider<ProfileBloc>(
             create: (context) => ProfileBloc(
