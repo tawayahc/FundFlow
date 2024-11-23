@@ -12,8 +12,6 @@ class SlipBloc extends Bloc<SlipEvent, SlipState> {
 
   SlipBloc(this.slipRepository) : super(SlipInitial()) {
     on<DetectAndUploadSlips>(_onDetectAndUploadSlips);
-    on<FetchCategories>(_onFetchCategories);
-    on<ManualUploadSlips>(_onManualUploadSlips);
   }
 
   Future<void> _onDetectAndUploadSlips(
@@ -47,31 +45,6 @@ class SlipBloc extends Bloc<SlipEvent, SlipState> {
       }
 
       await slipRepository.uploadDetectedSlips(selectedCategories);
-      emit(SlipSuccess());
-    } catch (e) {
-      emit(SlipFailure(e.toString()));
-    }
-  }
-
-  Future<void> _onFetchCategories(
-      FetchCategories event, Emitter<SlipState> emit) async {
-    emit(SlipLoading());
-    try {
-      List<Category> categories = await slipRepository.getCategories();
-      emit(CategoriesLoaded(categories));
-    } catch (e) {
-      emit(SlipFailure(e.toString()));
-    }
-  }
-
-  Future<void> _onManualUploadSlips(
-      ManualUploadSlips event, Emitter<SlipState> emit) async {
-    emit(SlipLoading());
-    try {
-      await slipRepository.manualUploadSlips(
-        images: event.images,
-        categories: event.categories,
-      );
       emit(SlipSuccess());
     } catch (e) {
       emit(SlipFailure(e.toString()));
