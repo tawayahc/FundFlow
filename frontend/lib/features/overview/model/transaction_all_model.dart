@@ -1,4 +1,7 @@
 // features/overview/model/transaction_model.dart
+import 'package:flutter/material.dart';
+import 'package:fundflow/features/overview/model/category_model.dart';
+
 class TransactionAllModel {
   final int id;
   final int bankId;
@@ -10,6 +13,8 @@ class TransactionAllModel {
   final String metaData;
   final String memo;
   final DateTime createdAt;
+  final String categoryName; // Added
+  final Color categoryColor; // Added
 
   TransactionAllModel({
     required this.id,
@@ -22,9 +27,12 @@ class TransactionAllModel {
     required this.metaData,
     required this.memo,
     required this.createdAt,
+    required this.categoryName,
+    required this.categoryColor,
   });
 
-  factory TransactionAllModel.fromJson(Map<String, dynamic> json) {
+  factory TransactionAllModel.fromJson(
+      Map<String, dynamic> json, CategoryModel category) {
     return TransactionAllModel(
       id: json['id'],
       bankId: json['bank_id'],
@@ -36,6 +44,8 @@ class TransactionAllModel {
       metaData: json['meta_data'] ?? '',
       memo: json['memo'] ?? '',
       createdAt: DateTime.parse(json['created_at']),
+      categoryName: category.name,
+      categoryColor: category.color,
     );
   }
 }

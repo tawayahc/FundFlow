@@ -1,12 +1,10 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fundflow/app.dart';
+import 'package:fundflow/features/overview/model/category_model.dart';
 import 'package:fundflow/features/overview/model/transaction_all_model.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
 import 'package:fundflow/features/transaction/model/category_model.dart';
 import 'package:fundflow/features/transaction/model/create_transfer_request.dart';
-import 'package:fundflow/features/transaction/model/form_model.dart';
 import 'package:fundflow/utils/api_helper.dart';
 import '../model/transaction_model.dart';
 
@@ -68,17 +66,118 @@ class TransactionAddRepository {
     }
   }
 
-  Future<List<TransactionAllModel>> fetchTransactions() async {
+  // Future<List<TransactionAllModel>> fetchTransactions() async {
+  //   try {
+  //     final response = await dio.get('/transactions/all');
+  //     logger.d('API Response: ${response.data}');
+  //     final List<dynamic> data = response.data;
+  //     return data
+  //         .map((transaction) => TransactionAllModel.fromJson(transaction))
+  //         .toList();
+  //   } catch (e) {
+  //     logger.e('Failed to load transactions: $e');
+  //     throw Exception('Failed to load transactions: $e');
+  //   }
+  // }
+
+  /// Fetches all transactions and combines them with category details,
+  /// skipping transactions with categoryId 0 (Uncategorized) or missing categories.
+  Future<List<TransactionAllModel>> fetchCombinedTransactions() async {
     try {
-      final response = await dio.get('/transactions/all');
-      logger.d('API Response: ${response.data}');
-      final List<dynamic> data = response.data;
-      return data
-          .map((transaction) => TransactionAllModel.fromJson(transaction))
+      // Fetch transactions
+      final transactionsResponse = await dio.get('/transactions/all');
+      final List<dynamic> transactionsData = transactionsResponse.data;
+
+      // Fetch categories
+      final categories = await fetchAllCategories();
+      final categoryMap = {for (var cat in categories) cat.id: cat};
+
+      // Combine transactions with category details, skipping categoryId 0 and missing categories
+      return transactionsData
+          .map<TransactionAllModel?>((transactionJson) {
+            final categoryId = transactionJson['category_id'] ?? 0;
+            if (categoryId == 0) {
+              // Skip transactions with categoryId 0 (Uncategorized)
+              return null;
+            }
+            final category = categoryMap[categoryId];
+            if (category == null) {
+              // If category not found, skip this transaction
+              return null;
+            }
+            return TransactionAllModel.fromJson(transactionJson, category);
+          })
+          .whereType<TransactionAllModel>() // Filters out nulls
           .toList();
     } catch (e) {
-      logger.e('Failed to load transactions: $e');
-      throw Exception('Failed to load transactions: $e');
+      throw Exception('Failed to load combined transactions: $e');
+    }
+  }
+
+  /// Fetches all categories.
+  Future<List<CategoryModel>> fetchAllCategories() async {
+    try {
+      final response =
+          await dio.get('/categories/all'); // Adjust endpoint as needed
+      final List<dynamic> data = response.data;
+      return data
+          .map<CategoryModel>(
+              (categoryJson) => CategoryModel.fromJson(categoryJson))
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to load categories: $e');
+    }
+  }
+
+  /// Optional: Fetches transactions filtered by category name.
+  Future<List<TransactionAllModel>> fetchTransactionsByCategory(
+      String categoryName) async {
+    try {
+      // Since you don't have a specific API endpoint for category filtering,
+      // fetch all combined transactions and filter them locally.
+      final allTransactions = await fetchCombinedTransactions();
+      return allTransactions
+          .where((tx) =>
+              tx.categoryName.toLowerCase() == categoryName.toLowerCase())
+          .toList();
+    } catch (e) {
+      throw Exception(
+          'Failed to load transactions for category $categoryName: $e');
+    }
+  }
+
+  /// Fetches transactions filtered by category name and date range.
+  Future<List<TransactionAllModel>> fetchFilteredTransactions({
+    required String? categoryName,
+    required DateTime? startDate,
+    required DateTime? endDate,
+  }) async {
+    try {
+      // Fetch all combined transactions
+      final allTransactions = await fetchCombinedTransactions();
+
+      // Apply category filter if selected
+      List<TransactionAllModel> filtered = allTransactions;
+      if (categoryName != null && categoryName != "all") {
+        filtered = filtered
+            .where((tx) =>
+                tx.categoryName.toLowerCase() == categoryName.toLowerCase())
+            .toList();
+      }
+
+      // Apply date range filter if selected
+      if (startDate != null && endDate != null) {
+        filtered = filtered
+            .where((tx) =>
+                tx.createdAt
+                    .isAfter(startDate.subtract(const Duration(seconds: 1))) &&
+                tx.createdAt.isBefore(endDate.add(const Duration(seconds: 1))))
+            .toList();
+      }
+
+      return filtered;
+    } catch (e) {
+      throw Exception('Failed to load filtered transactions: $e');
     }
   }
 }

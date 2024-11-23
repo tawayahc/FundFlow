@@ -18,6 +18,7 @@ import 'package:fundflow/features/home/pages/bank/add_bank_page.dart';
 import 'package:fundflow/features/home/pages/notification/notification.dart';
 import 'package:fundflow/features/home/pages/notification/test.dart';
 import 'package:fundflow/features/home/repository/transaction_repository.dart';
+import 'package:fundflow/features/overview/bloc/categorized/categorized_bloc.dart';
 import 'package:fundflow/features/overview/bloc/overview_bloc.dart';
 import 'package:fundflow/features/overview/bloc/overview_event.dart';
 import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
@@ -145,6 +146,11 @@ class MyApp extends StatelessWidget {
             create: (context) => OverviewBloc(
               repository: transactionAddRepository,
             )..add(FetchTransactionsEvent()),
+          ),
+          BlocProvider<CategorizedBloc>(
+            create: (context) => CategorizedBloc(
+              repository: transactionAddRepository,
+            ),
           ),
         ],
         child: MaterialApp(

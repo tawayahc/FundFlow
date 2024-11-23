@@ -20,7 +20,7 @@ class OverviewBloc extends Bloc<OverviewEvent, OverviewState> {
       FetchTransactionsEvent event, Emitter<OverviewState> emit) async {
     emit(OverviewLoading());
     try {
-      final transactions = await repository.fetchTransactions();
+      final transactions = await repository.fetchCombinedTransactions();
       final summary = _calculateSummary(transactions);
       final dailySummaries = _calculateDailySummaries(transactions);
       final monthlySummaries = _calculateMonthlySummaries(transactions);
