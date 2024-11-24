@@ -18,7 +18,7 @@ class BankBalanceBox extends StatelessWidget {
     final formatter = NumberFormat.currency(locale: 'th_TH', symbol: '฿');
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 6),
       padding: const EdgeInsets.only(
           top: 10, bottom: 16), // padding (left, top, right, bottom)
       width: double.infinity,
@@ -57,8 +57,8 @@ class BankBalanceBox extends StatelessWidget {
               child: Text(
                 formatter.format(amount),
                 style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                  fontWeight: FontWeight.normal,
                   color: Colors.white,
                 ),
               ),
