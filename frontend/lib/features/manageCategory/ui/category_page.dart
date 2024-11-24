@@ -9,6 +9,7 @@ import '../../home/models/transaction.dart';
 import '../../home/pages/category/edit_category_page.dart';
 import '../../home/repository/transaction_repository.dart';
 
+
 class CategoryPage extends StatefulWidget {
   final categories.Category category;
   const CategoryPage({super.key, required this.category});
@@ -61,9 +62,27 @@ class _CategoryPageState extends State<CategoryPage>
     return GlobalPadding(
       child: Scaffold(
           appBar: AppBar(
-            // ----------- ชื่อ category
-            title: Text(widget.category.name),
-            centerTitle: true,
+             leading: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                color: Color(0xFF414141),
+                iconSize: 20,
+                onPressed: () {
+                  Navigator.pop(context); 
+                },
+              ),
+            ],
+          ),
+          centerTitle: true,
+          title: const Text(
+            'หมวดหมู่',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF414141),
+            ),
+          ),         
             actions: [
               IconButton(
                 icon: const Icon(Icons.edit),
@@ -85,12 +104,20 @@ class _CategoryPageState extends State<CategoryPage>
               ),
             ],
           ),
+          
           body: Padding(
             padding: const EdgeInsets.all(AppSpacing.medium),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 16),
+                // ----------- ชื่อ category
+                    Text(
+                  widget.category.name,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                        ),
+                    ),
                 //---------- **กล่องเงิน
                 CategoryBalanceBox(color: widget.category.color, category: widget.category, date: '00:00 น.'),
 
@@ -100,47 +127,8 @@ class _CategoryPageState extends State<CategoryPage>
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 12),
-                PreferredSize(
-                  preferredSize: const Size.fromHeight(40),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 40,
-                          width: 200,
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: AppColors.primary,
-                          ),
-                          child: TabBar(
-                            controller: _tabController,
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            dividerColor: Colors.transparent,
-                            indicator: const BoxDecoration(
-                              color: Colors.green,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            labelColor: Colors.white,
-                            unselectedLabelColor: Colors.white,
-                            tabs: const [
-                              Tab(
-                                icon: Icon(Icons.download),
-                              ),
-                              Tab(
-                                icon: Icon(Icons.upload),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
+                
+                
                 // Transaction ตรงนี้
                 Expanded(
                   child: CustomScrollView(
