@@ -40,7 +40,7 @@ class CategoryCard extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(top: 15),
-            height: 10,
+            height: 15,
             decoration: BoxDecoration(
               color: category.color,
             ),
