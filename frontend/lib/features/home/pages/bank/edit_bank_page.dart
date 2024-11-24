@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/home/bank_balance_box.dart';
+import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:intl/intl.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/custom_text_ip.dart';
@@ -81,7 +82,7 @@ class _EditBankPageState extends State<EditBankPage> {
               if (state is BankUpdated || state is BankDeleted) {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
+                  MaterialPageRoute(builder: (context) => const BottomNavBar()),
                 );
               } else if (state is BankError) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -102,8 +103,9 @@ class _EditBankPageState extends State<EditBankPage> {
                 ),
                 const SizedBox(height: 10),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Bank Logo
+                    // โลโก้ธนาคาร
                     Container(
                       width: 56,
                       height: 56,
@@ -123,35 +125,48 @@ class _EditBankPageState extends State<EditBankPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 5),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Bank Name
-                        Text(
-                          widget.bank.name,
-                          style: const TextStyle(
+                    const SizedBox(width: 10),
+                    // ชื่อธนาคารและกล่องยอดเงิน
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.bank.name,
+                            style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF414141)),
-                        ),
-                        // Full Bank Name
-                        Text(
-                          widget.bank.bank_name,
-                          style: const TextStyle(
-                              color: Color(0xFF414141), fontSize: 16),
-                        ),
-                      ],
+                              color: Color(0xFF414141),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            widget.bank.bank_name,
+                            style: const TextStyle(
+                              color: Color(0xFF414141),
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 5),
-                // Use BankBalanceBox Widget
-                BankBalanceBox(
-                  title: 'ยอดเงินคงเหลือ',
-                  amount: widget.bank.amount,
-                  color: color,
+                const SizedBox(height: 12),
+// กล่องยอดเงินคงเหลือ
+                Align(
+                  alignment: Alignment.center, // จัดชิดซ้าย
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 0), // ระยะห่างจากซ้าย
+                    child: BankBalanceBox(
+                      title: 'ยอดเงินคงเหลือ',
+                      amount: widget.bank.amount,
+                      color: widget.bankColorMap[widget.bank.bank_name] ??
+                          Colors.grey,
+                    ),
+                  ),
                 ),
+
                 const SizedBox(height: 20),
                 // Bank Name Input
                 TextInput(

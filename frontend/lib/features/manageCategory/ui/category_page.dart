@@ -98,7 +98,7 @@ class _CategoryPageState extends State<CategoryPage>
                       Text(
                         "แก้ไข",
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 16,
                           color: Color(0xFFFF5C5C),
                           fontWeight: FontWeight.normal,
                         ),
