@@ -46,6 +46,7 @@ class _TransferFormState extends State<TransferForm> {
     showDialog(
       context: context,
       barrierDismissible: false,
+      
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
