@@ -41,6 +41,7 @@ class _CustomInputBoxState extends State<CustomInputBox> {
                 fontWeight: FontWeight.normal,
               ),
               prefixIcon: widget.prefixIcon,
+              contentPadding: const EdgeInsets.symmetric(vertical: 1),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
