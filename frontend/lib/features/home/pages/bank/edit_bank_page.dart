@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/widgets/home/bank_balance_box.dart';
+import 'package:intl/intl.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
-import 'package:fundflow/core/widgets/navBar/main_layout.dart';
+import 'package:fundflow/core/widgets/custom_text_ip.dart';
+import 'package:fundflow/core/widgets/custom_button.dart';
+import 'package:fundflow/features/home/models/bank.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
-import 'package:fundflow/features/home/models/bank.dart';
-import 'package:fundflow/core/widgets/custom_text_ip.dart';
-import 'package:fundflow/core/widgets/custom_button.dart';
-import 'package:fundflow/features/manageBankAccount/ui/bank_account_page.dart';
+import 'package:fundflow/features/home/pages/home_page.dart';
 
 class EditBankPage extends StatefulWidget {
   final Bank bank;
+  final Map<String, Color> bankColorMap;
 
-  const EditBankPage({super.key, required this.bank});
+  const EditBankPage({
+    super.key,
+    required this.bank,
+    required this.bankColorMap,
+  });
 
   @override
   _EditBankPageState createState() => _EditBankPageState();
@@ -22,66 +28,41 @@ class EditBankPage extends StatefulWidget {
 class _EditBankPageState extends State<EditBankPage> {
   late String bankName;
   late String selectedBank;
-  late Color selectedColor;
-  late double bankAmount = widget.bank.amount;
-
-  final List<Map<String, Color>> availableBank = [
-    {'กสิกรไทย': Colors.blue},
-    {'กรุงไทย': Colors.green},
-    {'ไทยพาณิชย์': Colors.red},
-    {'กรุงเทพ': Colors.orange},
-    {'ออมสิน': Colors.purple},
-  ];
-
-  final TextEditingController bankNameController = TextEditingController();
-  final TextEditingController bankAmountController = TextEditingController();
-
-  late Bank originalBank;
-  late Bank updatedBank;
+  late TextEditingController bankNameController;
+  late TextEditingController bankAmountController;
 
   @override
   void initState() {
     super.initState();
-
-    originalBank = widget.bank;
-
-    bankName = originalBank.name;
-    selectedBank = originalBank.bank_name.replaceFirst('ธนาคาร', '');
-    selectedColor = _getBankColor(selectedBank);
+    bankName = widget.bank.name;
+    selectedBank = widget.bank.bank_name;
+    bankNameController = TextEditingController(text: bankName);
+    bankAmountController = TextEditingController(
+      text: widget.bank.amount.toStringAsFixed(2),
+    );
   }
 
-  Color _getBankColor(String bankName) {
-    switch (bankName) {
-      case 'กสิกรไทย':
-        return Colors.blue;
-      case 'กรุงไทย':
-        return Colors.green;
-      case 'ไทยพาณิชย์':
-        return Colors.red;
-      case 'กรุงเทพ':
-        return Colors.orange;
-      case 'ออมสิน':
-        return Colors.purple;
-      default:
-        return Colors.grey;
-    }
+  @override
+  void dispose() {
+    bankNameController.dispose();
+    bankAmountController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final Color color =
+        widget.bankColorMap[widget.bank.bank_name] ?? Colors.grey;
+
     return GlobalPadding(
       child: Scaffold(
         appBar: AppBar(
-          leading: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
-                iconSize: 20,
-                onPressed: () {
-                  Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
-                },
-              ),
-            ],
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            iconSize: 20,
+            onPressed: () {
+              Navigator.pop(context); // Back to the previous page
+            },
           ),
           centerTitle: true,
           title: const Text(
@@ -97,25 +78,16 @@ class _EditBankPageState extends State<EditBankPage> {
           padding: const EdgeInsets.all(16.0),
           child: BlocListener<BankBloc, BankState>(
             listener: (context, state) {
-              if (state is BankUpdated) {
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   const SnackBar(content: Text('Bank updated successfully')),
-                // );
+              if (state is BankUpdated || state is BankDeleted) {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => BankAccountPage(bank: updatedBank)),
-                );
-                // Navigator.pop(context); // Go back to the previous screen
-              } else if (state is BankDeleted) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const BottomNavBar()),
+                  MaterialPageRoute(builder: (context) => const HomePage()),
                 );
               } else if (state is BankError) {
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   const SnackBar(content: Text('Failed to load banks')),
-                // );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text('Failed to update bank details')),
+                );
               }
             },
             child: Column(
@@ -123,91 +95,68 @@ class _EditBankPageState extends State<EditBankPage> {
               children: [
                 const Text(
                   'เลือกธนาคาร',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF414141)),
                 ),
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    // รูปธนาคาร
-                    const CircleAvatar(
-                      radius: 24,
-                      backgroundColor: const Color.fromARGB(255, 7, 39, 156),
-                      // backgroundImage: ,
+                    // Bank Logo
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey.shade200,
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          _getBankLogo(widget.bank.bank_name),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            debugPrint(
+                                'Error loading image for ${widget.bank.bank_name}');
+                            return const Icon(Icons.error, color: Colors.red);
+                          },
+                        ),
+                      ),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 5),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ชื่อธนาคาร
+                        // Bank Name
                         Text(
                           widget.bank.name,
                           style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF414141)),
                         ),
-                        // ชื่อเต็ม
+                        // Full Bank Name
                         Text(
                           widget.bank.bank_name,
-                          style: const TextStyle(color: Colors.grey),
+                          style: const TextStyle(
+                              color: Color(0xFF414141), fontSize: 16),
                         ),
                       ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                //---------- **กล่องเงิน
-                Container(
-                  padding: const EdgeInsets.fromLTRB(
-                      0, 8, 4, 0), // padding (left, top, right, bottom)
-                  width: 296,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 7, 39, 156),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Row(
-                        children: [
-                          SizedBox(width: 16),
-                          Text(
-                            'ยอดเงินคงเหลือ',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        ],
-                      ),
-                      const Divider(
-                        color: Colors.white,
-                        thickness: 2,
-                        height: 3,
-                        indent: 2,
-                      ),
-                      const SizedBox(height: 16),
-                      Center(
-                        child: Text(
-                          '฿ ${widget.bank.amount}',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          'ข้อมูล ณ เวลา 00:00 น.',
-                          style: TextStyle(color: Colors.white, fontSize: 11),
-                          textAlign: TextAlign.right,
-                        ),
-                      )
-                    ],
-                  ),
+                const SizedBox(height: 5),
+                // Use BankBalanceBox Widget
+                BankBalanceBox(
+                  title: 'ยอดเงินคงเหลือ',
+                  amount: widget.bank.amount,
+                  color: color,
                 ),
                 const SizedBox(height: 20),
                 // Bank Name Input
                 TextInput(
                   controller: bankNameController,
-                  hintText: 'กรอกชื่อกล่องธนาคาร(ไม่จำเป็น)',
+                  hintText: 'กรอกชื่อกล่องธนาคาร (ไม่จำเป็น)',
                   labelText: 'ชื่อกล่องธนาคาร',
                   icon: Icons.edit,
                   onChanged: (value) {
@@ -216,44 +165,40 @@ class _EditBankPageState extends State<EditBankPage> {
                     });
                   },
                 ),
-
                 const SizedBox(height: 20),
-                // Display the bank's amount (not editable)
+                // Bank Amount Input
                 TextInput(
                   controller: bankAmountController,
                   hintText: 'กรอกจำนวนเงิน',
                   labelText: 'ระบุจำนวนเงิน',
                   icon: Icons.wallet,
-                  onChanged: (value) {
-                    setState(() {
-                      bankAmount = double.parse(value);
-                    });
-                  },
+                  onChanged: (value) {},
                 ),
-
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
                 // Save Button
                 CustomButton(
                   text: 'ยืนยันการแก้ไข',
                   onPressed: () {
-                    if (bankName.isNotEmpty && selectedBank.isNotEmpty) {
-                      updatedBank = Bank(
-                        id: widget.bank.id, // Preserve the original bank ID
-                        name: bankName,
-                        bank_name: widget.bank.bank_name,
-                        amount: bankAmount, // Keep the original amount
-                      );
+                    final updatedBank = Bank(
+                      id: widget.bank.id,
+                      name: bankName,
+                      bank_name: selectedBank,
+                      amount: double.tryParse(bankAmountController.text) ?? 0.0,
+                    );
 
-                      BlocProvider.of<BankBloc>(context).add(EditBank(
-                          originalBank: originalBank, bank: updatedBank));
-                    }
+                    BlocProvider.of<BankBloc>(context).add(EditBank(
+                      originalBank: widget.bank,
+                      bank: updatedBank,
+                    ));
                   },
                 ),
+                const SizedBox(height: 0),
                 Center(
                   child: TextButton(
                     onPressed: () {
-                      BlocProvider.of<BankBloc>(context)
-                          .add(DeleteBank(bankId: widget.bank.id));
+                      BlocProvider.of<BankBloc>(context).add(DeleteBank(
+                        bankId: widget.bank.id,
+                      ));
                     },
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
@@ -279,5 +224,22 @@ class _EditBankPageState extends State<EditBankPage> {
         ),
       ),
     );
+  }
+
+  String _getBankLogo(String bankName) {
+    final logos = {
+      'ธนาคารกสิกรไทย': 'assets/LogoBank/Kplus.png',
+      'ธนาคารกรุงไทย': 'assets/LogoBank/Krungthai.png',
+      'ธนาคารไทยพาณิชย์': 'assets/LogoBank/SCB.png',
+      'ธนาคารกรุงเทพ': 'assets/LogoBank/Krungthep.png',
+      'ธนาคารกรุงศรีอยุธยา': 'assets/LogoBank/krungsri.png',
+      'ธนาคารออมสิน': 'assets/LogoBank/GSB.png',
+      'ธนาคารธนชาต': 'assets/LogoBank/ttb.png',
+      'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
+      'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
+      'ธนาคารเมกะ': 'assets/LogoBank/make.png',
+    };
+
+    return logos[bankName.trim()] ?? 'assets/CashBox.png';
   }
 }
