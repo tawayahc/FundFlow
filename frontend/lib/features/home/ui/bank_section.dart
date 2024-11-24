@@ -57,10 +57,10 @@ Map<String, Color> bankColorMap = {
   'ธนาคารกรุงไทย': Colors.blue, // Krung Thai Bank
   'ธนาคารไทยพาณิชย์': Colors.purple, // Siam Commercial Bank
   'ธนาคารกรุงเทพ': const Color.fromARGB(255, 10, 35, 145), // Bangkok Bank
-  'ธนาคารกรุงศรีอยุธยา': const Color(0xFFffe000), // Krungsri (Bank of Ayudhya)
+  'ธนาคารกรุงศรี': const Color(0xFFffe000), // Krungsri (Bank of Ayudhya)
   'ธนาคารออมสิน': Colors.pink, // Government Savings Bank
-  'ธนาคารธนชาต': const Color(0xFFF68B1F), // Thanachart Bank
+  'ธนาคารธนชาติ': const Color(0xFFF68B1F), // Thanachart Bank
   'ธนาคารเกียรตินาคิน': const Color(0xFF004B87), // Kiatnakin Bank
-  'ธนาคารซิตี้แบงก์': const Color(0xFF1E90FF), // Citibank
-  'ธนาคารเมกะ': const Color(0xFF3B5998), // Mega Bank
+  'ธนาคารCity': const Color(0xFF1E90FF), // Citibank
+  'ธนาคารMake': const Color.fromARGB(255, 104, 212, 50), // Make Bank
 };
