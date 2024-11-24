@@ -6,6 +6,7 @@ import 'package:fundflow/core/widgets/custom_input_box.dart';
 import 'package:fundflow/core/widgets/custom_input_inkwell.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_dropdown.dart';
+import 'package:fundflow/core/widgets/transaction/transfer_card.dart';
 import '../model/bank_model.dart';
 
 class TransferForm extends StatefulWidget {
@@ -52,7 +53,7 @@ class _TransferFormState extends State<TransferForm> {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Container(
-            height: 200,
+            height: 268,
             decoration: BoxDecoration(
               /*border: Border.all(
                 color: Color(0xFF41486D),
@@ -63,6 +64,25 @@ class _TransferFormState extends State<TransferForm> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                SizedBox(
+                  height: 22,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/home');
+                        },
+                        icon: const Icon(
+                          Icons.close,
+                          size: 22,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const Icon(
                   Icons.warning,
                   color: Colors.red,
@@ -81,7 +101,7 @@ class _TransferFormState extends State<TransferForm> {
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      Navigator.pushNamed(context, '/add-bank');
+                      Navigator.pushNamed(context, '/addBank');
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -218,11 +238,18 @@ class _TransferFormState extends State<TransferForm> {
       key: _formKey,
       child: Column(
         children: [
+          const SizedBox(height: 16,),
+          TransferCard(
+            fromBank: _fromBank, 
+            toBank: _toBank,
+            amount: _amountController, 
+            selectedTime: _selectedDate),
+          const SizedBox(height: 16,),
           // From Bank Dropdown
           const Align(
             alignment: Alignment.centerLeft,
             child: const Text(
-              'ระบุธนาคาร',
+              'ย้ายธนาคารจาก',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -273,7 +300,7 @@ class _TransferFormState extends State<TransferForm> {
           const Align(
             alignment: Alignment.centerLeft,
             child: const Text(
-              'ระบุธนาคาร',
+              'ไปยังธนาคาร',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
