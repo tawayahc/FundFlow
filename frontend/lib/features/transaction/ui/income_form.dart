@@ -72,25 +72,26 @@ class _IncomeFormState extends State<IncomeForm> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 22,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pushNamed(context, '/home');
-                        },
-                        icon: const Icon(
-                          Icons.close,
-                          size: 22,
-                          color: Colors.grey,
+                 Padding(
+                    padding: EdgeInsets.zero,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, '/home');
+                          },
+                          icon: const Icon(
+                            Icons.close,
+                            size: 22,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
 
                 const Icon(
                   Icons.warning,
@@ -106,10 +107,11 @@ class _IncomeFormState extends State<IncomeForm> {
                     color: Colors.red
                   ),
                 ),
-                const SizedBox(height: 16),
+                //const SizedBox(height: 16),
                 Container(
                   height: 40,
                   width: 200,
+                  margin: EdgeInsets.all(9),
                   child: ElevatedButton(
                     onPressed: () {
                       //Navigator.pop(context);
