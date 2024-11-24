@@ -18,6 +18,37 @@ import '../../home/models/category.dart';
 import '../../home/models/transaction.dart';
 import '../../home/repository/transaction_repository.dart';
 
+String _getBankLogo(String bankName) {
+    final logos = {
+      'ธนาคารกสิกรไทย': 'assets/LogoBank/Kplus.png',
+      'ธนาคารกรุงไทย': 'assets/LogoBank/Krungthai.png',
+      'ธนาคารไทยพาณิชย์': 'assets/LogoBank/SCB.png',
+      'ธนาคารกรุงเทพ': 'assets/LogoBank/Krungthep.png',
+      'ธนาคารกรุงศรีอยุธยา': 'assets/LogoBank/krungsri.png',
+      'ธนาคารออมสิน': 'assets/LogoBank/GSB.png',
+      'ธนาคารธนชาต': 'assets/LogoBank/ttb.png',
+      'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
+      'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
+      'ธนาคารเมกะ': 'assets/LogoBank/make.png',
+    };
+
+    final trimmedBankName = bankName.trim();
+
+    String? matchedKey = logos.keys.firstWhere(
+      (key) => key == trimmedBankName,
+      orElse: () => '',
+    );
+
+    if (matchedKey.isEmpty) {
+      debugPrint('No exact match for $trimmedBankName, using default image.');
+      return 'assets/CashBox.png'; // Default fallback image
+    }
+
+    final path = logos[matchedKey];
+    debugPrint('Matched bank name: $matchedKey, using path: $path');
+    return path!;
+  }
+
 class BankAccountPage extends StatefulWidget {
   final Bank bank;
   final Map<String, Color> bankColorMap;
@@ -75,24 +106,27 @@ class _BankAccountPageState extends State<BankAccountPage>
     return GlobalPadding(
       child: Scaffold(
         appBar: AppBar(
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () async {
-                // Navigate to the EditBankPage and get the updated bank
-                final updatedBank = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditBankPage(bank: widget.bank),
-                  ),
-                );
-
-                if (updatedBank != null) {
-                  // Handle updated category (e.g., update the state, show a message, etc.)
-                }
-              },
+           leading: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                color: Color(0xFF414141),
+                iconSize: 20,
+                onPressed: () {
+                  Navigator.pop(context); 
+                },
+              ),
+            ],
+          ),
+          centerTitle: true,
+          title: const Text(
+            'บัญชีธนาคาร',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF414141),
             ),
-          ],
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(AppSpacing.medium),
@@ -103,10 +137,24 @@ class _BankAccountPageState extends State<BankAccountPage>
               Row(
                 children: [
                   // รูปธนาคาร
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: color,
-                    // backgroundImage: ,
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey.shade200,
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        _getBankLogo(widget.bank.bank_name),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          debugPrint(
+                              'Error loading image for ${widget.bank.bank_name}');
+                          return Icon(Icons.error, color: Colors.red);
+                        },
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 10),
                   Column(
@@ -125,58 +173,116 @@ class _BankAccountPageState extends State<BankAccountPage>
                       ),
                     ],
                   ),
+                    const Spacer(),
+                   IconButton(
+                      icon: const Icon(Icons.edit),
+                      color: Color(0xFFFF5C5C),
+                      onPressed: () async {
+                        // Navigate to the EditBankPage and pass the bankColorMap
+                        final updatedBank = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditBankPage(
+                              bank: widget.bank,
+                              bankColorMap: widget.bankColorMap, // Pass the required argument here
+                            ),
+                          ),
+                        );
+
+                        if (updatedBank != null) {
+                          // Handle the updated bank (e.g., update the state, show a message, etc.)
+                        }
+                      },
+                    ),
+
                 ],
               ),
+              
               const SizedBox(height: 16),
               //---------- **กล่องเงิน
-              BankBalanceBox(color: color, bank: widget.bank, date: '00:00 น.'),
-
+              // Use BankBalanceBox Widget
+                BankBalanceBox(
+                  title: 'ยอดเงินคงเหลือ',
+                  amount: widget.bank.amount,
+                  color: color,
+                ),
               const SizedBox(height: 30),
               const Text(
                 'ประวัติการทำรายการ',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-              // Transaction ตรงนี้
+              // Transaction ตรงนี้     
               Center(
-                child: PreferredSize(
-                  preferredSize: const Size.fromHeight(40),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  child: PreferredSize(
+                    preferredSize: const Size.fromHeight(40),
                     child: Container(
-                      height: 40,
-                      width: 200,
+                      height: 43,
+                      width: 259,
                       margin: const EdgeInsets.symmetric(horizontal: 20),
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: AppColors.primary,
-                      ),
-                      child: TabBar(
-                        controller: _tabController,
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        dividerColor: Colors.transparent,
-                        indicator: const BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                        labelColor: Colors.white,
-                        unselectedLabelColor: Colors.white,
-                        tabs: const [
-                          Tab(
-                            icon: Icon(Icons.download),
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(Radius.circular(30)), 
+                        color: const Color(0xFFFFFFFF),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.15), 
+                            blurRadius: 10, 
+                            spreadRadius: 2, 
+                            offset: const Offset(0, 4), 
                           ),
-                          Tab(
-                            icon: Icon(Icons.upload),
-                          ),
-                          Tab(
-                            icon: Icon(Icons.compare_arrows),
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.10), 
+                            blurRadius: 10, 
+                            spreadRadius: 2, 
+                            offset: const Offset(0, -4), 
                           ),
                         ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.all(Radius.circular(30)), 
+                        child: TabBar(
+                          controller: _tabController,
+                          indicatorSize: TabBarIndicatorSize.tab,
+                          dividerColor: Colors.transparent,
+                          indicator: const BoxDecoration(
+                            color: Color(0xFF41486D), 
+                            borderRadius: BorderRadius.all(Radius.circular(20)), 
+                          ),
+                          labelColor: Colors.white,
+                          unselectedLabelColor: const Color(0xFF41486D), 
+                          tabs: const [
+                            Tab(
+                              child: Text(
+                                'รายรับ',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            Tab(
+                              child: Text(
+                                'รายจ่าย',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            Tab(
+                              child: Text(
+                                'ย้ายเงิน',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
+                
+
               const SizedBox(height: 12),
               Expanded(
                   child: BlocBuilder<TransactionBloc, TransactionState>(
