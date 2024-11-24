@@ -41,7 +41,9 @@ class DailySummaryView extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('ประเภทรายการ',),
+                  const Text(
+                    'ประเภทรายการ',
+                  ),
                   SizedBox(
                     width: 120,
                     height: 40,
@@ -85,7 +87,7 @@ class DailySummaryView extends StatelessWidget {
                     final summary = dailySummaries[date];
 
                     // Add logging
-                    logger.d('Date: $date, Summary: $summary');
+                    // logger.d('Date: $date, Summary: $summary');
 
                     if (summary == null) {
                       logger.e('Warning: summary is null for date $date');

@@ -1,8 +1,8 @@
 // features/overview/bloc/overview_state.dart
 import 'package:equatable/equatable.dart';
-import '../model/daily_summary.dart';
-import '../model/monthly_summary.dart';
-import '../model/summary.dart';
+import '../../model/daily_summary.dart';
+import '../../model/monthly_summary.dart';
+import '../../model/summary.dart';
 
 abstract class OverviewState extends Equatable {
   const OverviewState();

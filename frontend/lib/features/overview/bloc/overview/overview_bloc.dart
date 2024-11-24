@@ -5,9 +5,9 @@ import 'package:fundflow/features/overview/model/transaction_all_model.dart';
 import 'package:fundflow/features/transaction/repository/transaction_repository.dart';
 import 'overview_event.dart';
 import 'overview_state.dart';
-import '../model/daily_summary.dart';
-import '../model/monthly_summary.dart';
-import '../model/summary.dart';
+import '../../model/daily_summary.dart';
+import '../../model/monthly_summary.dart';
+import '../../model/summary.dart';
 
 class OverviewBloc extends Bloc<OverviewEvent, OverviewState> {
   final TransactionAddRepository repository;

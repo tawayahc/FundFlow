@@ -20,7 +20,9 @@ class CategorizedBloc extends Bloc<CategorizedEvent, CategorizedState> {
       Emitter<CategorizedState> emit) async {
     emit(CategorizedLoading());
     try {
-      final transactions = await repository.fetchCombinedTransactions();
+      // Note: If use fetchOnlyExpense it will note show income
+      // Note: If use fetchCombinedTransactions it will note show both
+      final transactions = await repository.fetchOnlyExpense();
       logger
           .d('Fetched ${transactions.length} transactions for categorization.');
 

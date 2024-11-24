@@ -79,10 +79,7 @@ class TransactionAddRepository {
   //     throw Exception('Failed to load transactions: $e');
   //   }
   // }
-
-  /// Fetches all transactions and combines them with category details,
-  /// skipping transactions with categoryId 0 (Uncategorized) or missing categories.
-  Future<List<TransactionAllModel>> fetchCombinedTransactions() async {
+  Future<List<TransactionAllModel>> fetchOnlyExpense() async {
     try {
       // Fetch transactions
       final transactionsResponse = await dio.get('/transactions/all');
@@ -105,6 +102,60 @@ class TransactionAddRepository {
               // If category not found, skip this transaction
               return null;
             }
+            return TransactionAllModel.fromJson(transactionJson, category);
+          })
+          .whereType<TransactionAllModel>() // Filters out nulls
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to load combined transactions: $e');
+    }
+  }
+
+  /// Fetches all transactions and combines them with category details,
+  /// skipping transactions with categoryId 0 (Uncategorized) or missing categories.
+  Future<List<TransactionAllModel>> fetchCombinedTransactions() async {
+    try {
+      // Fetch transactions
+      final transactionsResponse = await dio.get('/transactions/all');
+      final List<dynamic> transactionsData = transactionsResponse.data;
+
+      // Fetch categories
+      final categories = await fetchAllCategories();
+      final categoryMap = {for (var cat in categories) cat.id: cat};
+
+      // Define a default 'Income' category for income transactions without a valid categoryId
+      final CategoryModel incomeCategory = CategoryModel(
+        id: -1, // Assign a unique ID that doesn't conflict with existing categories
+        name: 'Income',
+        colorCode: '0xFF00FF00', // Green color for income
+        amount: 0.0,
+      );
+
+      // Combine transactions with category details
+      return transactionsData
+          .map<TransactionAllModel?>((transactionJson) {
+            final int? categoryId =
+                transactionJson['category_id']; // Keep categoryId as nullable
+            final String type =
+                (transactionJson['type'] ?? '').toString().toLowerCase();
+
+            if (type == 'income') {
+              // Include income transactions regardless of categoryId
+              return TransactionAllModel.fromJson(
+                  transactionJson, incomeCategory);
+            }
+
+            if (categoryId == null || categoryId == 0) {
+              // Skip non-income transactions with categoryId 0 or null
+              return null;
+            }
+
+            final CategoryModel? category = categoryMap[categoryId];
+            if (category == null) {
+              // If category not found, skip this transaction
+              return null;
+            }
+
             return TransactionAllModel.fromJson(transactionJson, category);
           })
           .whereType<TransactionAllModel>() // Filters out nulls

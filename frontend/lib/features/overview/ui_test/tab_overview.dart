@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:fundflow/core/widgets/overview/summary_card.dart';
-import 'package:fundflow/features/overview/bloc/overview_event.dart';
+import 'package:fundflow/features/overview/bloc/overview/overview_event.dart';
 import 'package:fundflow/features/overview/widget/bar_chart.dart';
 import 'package:fundflow/features/overview/ui_test/daily_summary_screen.dart';
 import 'package:fundflow/features/overview/ui_test/monthly_summary_screen.dart';
@@ -12,8 +12,8 @@ import 'package:fundflow/features/overview/widget/monthly_summary_view.dart';
 import 'package:logger/logger.dart';
 import 'package:fundflow/core/widgets/custom_tab.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
-import '../bloc/overview_bloc.dart';
-import '../bloc/overview_state.dart';
+import '../bloc/overview/overview_bloc.dart';
+import '../bloc/overview/overview_state.dart';
 
 class TabOverview extends StatefulWidget {
   const TabOverview({Key? key}) : super(key: key);
@@ -86,7 +86,7 @@ class TabOverviewState extends State<TabOverview>
   Widget build(BuildContext context) {
     return BlocBuilder<OverviewBloc, OverviewState>(
       builder: (context, state) {
-        logger.d('Current State in TabOverview: $state');
+        // logger.d('Current State in TabOverview: $state');
 
         if (state is OverviewLoading || state is OverviewInitial) {
           return const Center(child: CircularProgressIndicator());
@@ -94,7 +94,9 @@ class TabOverviewState extends State<TabOverview>
           return Column(
             children: [
               // FIX: Replace chart widget
-              ExpenseBarChart(monthlySummaries: state.monthlySummaries,),
+              ExpenseBarChart(
+                monthlySummaries: state.monthlySummaries,
+              ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

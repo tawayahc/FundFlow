@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
-import '../../overview/bloc/overview_bloc.dart';
-import '../../overview/bloc/overview_event.dart';
-import '../../overview/bloc/overview_state.dart';
+import '../bloc/overview/overview_bloc.dart';
+import '../bloc/overview/overview_event.dart';
+import '../bloc/overview/overview_state.dart';
 import 'package:logger/logger.dart';
 
 import '../widget/monthly_summary_view.dart';
