@@ -1,5 +1,4 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
-import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/pages/bank/add_bank_page.dart';
@@ -84,7 +83,7 @@ class _NavBarState extends State<BottomNavBar>
         ],
       ),
     );*/
-      AnimatedNotchBottomBar(
+          AnimatedNotchBottomBar(
         notchBottomBarController: _controller,
         bottomBarItems: const [
           BottomBarItem(
@@ -96,7 +95,7 @@ class _NavBarState extends State<BottomNavBar>
               Icons.home_filled,
               color: Colors.blueAccent,
             ),
-            itemLabel: 'Page 1',
+            itemLabel: 'Home',
           ),
           BottomBarItem(
             inActiveItem: Icon(
@@ -118,7 +117,7 @@ class _NavBarState extends State<BottomNavBar>
               Icons.insert_chart_outlined_rounded,
               color: Colors.blueAccent,
             ),
-            itemLabel: 'Page 3',
+            itemLabel: 'Overview',
           ),
         ],
         onTap: (index) {
