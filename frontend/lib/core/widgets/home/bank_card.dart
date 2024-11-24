@@ -12,7 +12,11 @@ class BankCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat.currency(locale: 'th_TH', symbol: '฿');
-    Color color = bankColorMap[bank.bank_name] ?? Colors.grey;
+    // Normalize bank name before lookup
+    final normalizedBankName = normalizeBankName(bank.bank_name);
+    Color color = bankColorMap[normalizedBankName] ?? Colors.grey;
+
+    debugPrint('Normalized Bank Name: "$normalizedBankName", Color: $color');
 
     return Material(
       child: Container(
@@ -50,11 +54,11 @@ class BankCard extends StatelessWidget {
                     ),
                     child: ClipOval(
                       child: Image.asset(
-                        _getBankLogo(bank.bank_name),
+                        _getBankLogo(normalizedBankName),
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           debugPrint(
-                              'Error loading image for ${bank.bank_name}');
+                              'Error loading image for $normalizedBankName');
                           return Icon(Icons.error, color: Colors.red);
                         },
                       ),
@@ -135,21 +139,28 @@ class BankCard extends StatelessWidget {
     );
   }
 
+  // Function to normalize bank name
+  String normalizeBankName(String bankName) {
+    // Remove all whitespaces and trim
+    return bankName.replaceAll(RegExp(r'\s+'), '').trim();
+  }
+
+  // Map bank name to logo
   String _getBankLogo(String bankName) {
     final logos = {
       'ธนาคารกสิกรไทย': 'assets/LogoBank/Kplus.png',
       'ธนาคารกรุงไทย': 'assets/LogoBank/Krungthai.png',
       'ธนาคารไทยพาณิชย์': 'assets/LogoBank/SCB.png',
       'ธนาคารกรุงเทพ': 'assets/LogoBank/Krungthep.png',
-      'ธนาคารกรุงศรีอยุธยา': 'assets/LogoBank/krungsri.png',
+      'ธนาคารกรุงศรี': 'assets/LogoBank/krungsri.png',
       'ธนาคารออมสิน': 'assets/LogoBank/GSB.png',
-      'ธนาคารธนชาต': 'assets/LogoBank/ttb.png',
+      'ธนาคารธนชาติ': 'assets/LogoBank/ttb.png',
       'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
-      'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
-      'ธนาคารเมกะ': 'assets/LogoBank/make.png',
+      'ธนาคารCity': 'assets/LogoBank/city.png',
+      'ธนาคารMake': 'assets/LogoBank/make.png',
     };
 
-    final trimmedBankName = bankName.trim();
+    final trimmedBankName = normalizeBankName(bankName);
 
     String? matchedKey = logos.keys.firstWhere(
       (key) => key == trimmedBankName,
