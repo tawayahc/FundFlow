@@ -46,9 +46,9 @@ class _CategoryPageState extends State<CategoryPage>
             title: const Text(
               "หมวดหมู่",
               style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF414141)),
             ),
             centerTitle: true,
             elevation: 0, // ลบเงาของ AppBar
@@ -124,7 +124,10 @@ class _CategoryPageState extends State<CategoryPage>
             padding: const EdgeInsets.symmetric(horizontal: 45.0),
             child: const Text(
               'ประวัติการทำรายการ',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF414141)),
             ),
           ),
           const SizedBox(height: 12),
@@ -151,9 +154,9 @@ class _CategoryPageState extends State<CategoryPage>
                     child: const Text(
                       'รายจ่าย',
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF414141)),
                     ),
                   ),
                   const SizedBox(height: 8),
