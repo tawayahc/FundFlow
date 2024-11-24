@@ -7,7 +7,7 @@ import '../model/form_model.dart';
 
 class ExpenseForm extends StatefulWidget {
   final void Function(CreateExpenseData) onSubmit;
-
+  final CreateExpenseData? initialData;
   // Remove final from banks and categories
   List<Bank> banks;
   List<Category> categories;
@@ -17,6 +17,7 @@ class ExpenseForm extends StatefulWidget {
     required this.banks,
     required this.categories,
     required this.onSubmit,
+    this.initialData,
   }) : super(key: key);
 
   @override
@@ -37,6 +38,34 @@ class _ExpenseFormState extends State<ExpenseForm> {
     _amountController.dispose();
     _noteController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Ensure _selectedBank matches an item in the banks list
+    _selectedBank = widget.banks.firstWhere(
+      (bank) => bank.id == widget.initialData?.bank.id,
+      orElse: () => widget.banks.first,
+    );
+
+    if (widget.initialData?.category.id == -1) {
+      _selectedCategory = null;
+    } else {
+      _selectedCategory = widget.categories.firstWhere(
+        (category) => category.id == widget.initialData?.category.id,
+        orElse: () => widget.categories.isNotEmpty
+            ? widget.categories.first
+            : Category(
+                id: -1,
+                name: 'Unknown'), // Fallback to a default category if not found
+      );
+    }
+    _amountController.text = widget.initialData?.amount.toString() ?? '';
+    _noteController.text = widget.initialData?.note ?? '';
+    _selectedDate = widget.initialData?.date ?? DateTime.now();
+    _selectedTime = widget.initialData?.time;
   }
 
   void _selectDate() {

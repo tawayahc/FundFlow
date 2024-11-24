@@ -101,30 +101,30 @@ class _HomePageState extends State<HomePage> {
                 // Check if the failure was due to no slips being detected
                 if (state.error.contains('No slip images detected')) {
                   // Prompt the user to manually upload slips
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('No Slips Detected'),
-                      content: const Text(
-                          'Would you like to create a slip manually?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(); // Close the dialog
-                          },
-                          child: const Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(); // Close the dialog
-                            Navigator.pushNamed(context,
-                                '/manual-slip'); // Navigate to manual upload page
-                          },
-                          child: const Text('Create Manually'),
-                        ),
-                      ],
-                    ),
-                  );
+                  // showDialog(
+                  //   context: context,
+                  //   builder: (context) => AlertDialog(
+                  //     title: const Text('No Slips Detected'),
+                  //     content: const Text(
+                  //         'Would you like to create a slip manually?'),
+                  //     actions: [
+                  //       TextButton(
+                  //         onPressed: () {
+                  //           Navigator.of(context).pop(); // Close the dialog
+                  //         },
+                  //         child: const Text('Cancel'),
+                  //       ),
+                  //       TextButton(
+                  //         onPressed: () {
+                  //           Navigator.of(context).pop(); // Close the dialog
+                  //           Navigator.pushNamed(context,
+                  //               '/manual-slip'); // Navigate to manual upload page
+                  //         },
+                  //         child: const Text('Create Manually'),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // );
                 }
               }
             },

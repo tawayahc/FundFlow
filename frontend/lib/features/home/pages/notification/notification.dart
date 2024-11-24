@@ -1,15 +1,14 @@
-import 'dart:convert'; // For JSON encoding
+import 'dart:convert';
+import 'package:crypto/crypto.dart'; // Add this import
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/features/transaction/ui/transaction_page.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // For local storage
+import 'package:fundflow/core/widgets/navBar/main_layout.dart';
+import 'package:fundflow/features/transaction/ui/edit_transaction_page.dart';
 import 'package:fundflow/core/widgets/notification/notification_card.dart';
-import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
-import 'package:fundflow/features/home/bloc/category/category_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fundflow/features/home/bloc/notification/notification_bloc.dart';
 import 'package:fundflow/features/home/bloc/notification/notification_event.dart';
 import 'package:fundflow/features/home/bloc/notification/notification_state.dart';
-import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/features/home/models/notification.dart' as model;
 
 class NotificationPage extends StatefulWidget {
@@ -20,63 +19,91 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  List<Map<String, dynamic>> localNotifications = [];
-  bool _hasSavedToLocalStorage = false; // Flag to prevent multiple saves
+  Set<String> oldNotificationHashes = {};
+  bool _hasSavedToLocalStorage = false;
 
   @override
   void initState() {
     super.initState();
-    _loadLocalNotifications(); // Load notifications from local storage
+    _loadLocalNotifications(); // Load old notification hashes
     context.read<NotificationBloc>().add(LoadNotifications());
   }
 
-  /// Load notifications from local storage
+  String getNotificationHash(model.Notification notification) {
+    final notificationJson = jsonEncode(notification.toJson());
+    final bytes = utf8.encode(notificationJson);
+    final digest = md5.convert(bytes);
+    return digest.toString();
+  }
+
   Future<void> _loadLocalNotifications() async {
     final prefs = await SharedPreferences.getInstance();
-    final storedData = prefs.getString('notifications');
-    if (storedData != null) {
-      final decodedData = jsonDecode(storedData) as List;
-      localNotifications = decodedData.cast<Map<String, dynamic>>();
-      print("Loaded Local Notifications: $localNotifications");
+    final storedHashes = prefs.getStringList('oldNotificationHashes');
+    if (storedHashes != null) {
+      setState(() {
+        oldNotificationHashes = storedHashes.toSet();
+      });
+      debugPrint("Loaded old notification hashes: $oldNotificationHashes");
     } else {
-      print("No Local Notifications Found");
+      debugPrint("No old notification hashes found");
     }
   }
 
-  /// Save notifications to local storage without duplicating
   Future<void> _saveNotificationsToLocalStorageOnce(
       List<model.Notification> notifications) async {
     if (_hasSavedToLocalStorage) return; // Prevent multiple saves
 
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final notificationHashes = notifications.map((notification) {
+      return getNotificationHash(notification);
+    }).toSet();
 
-    // Combine local and new notifications, avoiding duplicates
-    final combinedNotifications = [
-      ...localNotifications,
-      ...notifications.where((newNotification) {
-        return !localNotifications.any((localNotification) =>
-            localNotification['date'] == newNotification.date &&
-            localNotification['time'] == newNotification.time);
-      }).map((notification) => notification.toJson()) // Use toJson here
-    ];
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(
+        'oldNotificationHashes', notificationHashes.toList());
 
-    final notificationsJson = jsonEncode(combinedNotifications);
-    await prefs.setString('notifications', notificationsJson);
+    if (mounted) {
+      setState(() {
+        oldNotificationHashes = notificationHashes;
+        _hasSavedToLocalStorage = true; // Set flag to true after saving
+      });
+    }
 
+    debugPrint(
+        'Notifications hashes saved to local storage: $oldNotificationHashes');
+  }
+
+  void _removeTransaction(model.Notification notification) async {
+    final hash = getNotificationHash(notification);
     setState(() {
-      localNotifications = combinedNotifications.cast<Map<String, dynamic>>();
-      _hasSavedToLocalStorage = true; // Set flag to true after saving
+      oldNotificationHashes.remove(hash);
     });
 
-    debugPrint('Notifications saved to local storage: $localNotifications');
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(
+        'oldNotificationHashes', oldNotificationHashes.toList());
+
+    debugPrint(
+        'Updated old notification hashes after removal: $oldNotificationHashes');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const BottomNavBar()),
+            );
+          },
+        ),
         centerTitle: true,
+        title: const Text(
+          'Notifications',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: BlocBuilder<NotificationBloc, NotificationState>(
         builder: (context, notificationState) {
@@ -88,68 +115,47 @@ class _NotificationPageState extends State<NotificationPage> {
                   ..sort((a, b) => b.date.compareTo(a.date));
 
             final newNotifications = sortedNotifications.where((notification) {
-              return !localNotifications.any((localNotification) =>
-                  localNotification['date'] == notification.date &&
-                  localNotification['time'] == notification.time);
+              final hash = getNotificationHash(notification);
+              return !oldNotificationHashes.contains(hash);
             }).toList();
 
             final oldNotifications = sortedNotifications.where((notification) {
-              return localNotifications.any((localNotification) =>
-                  localNotification['date'] == notification.date &&
-                  localNotification['time'] == notification.time);
+              final hash = getNotificationHash(notification);
+              return oldNotificationHashes.contains(hash);
             }).toList();
 
             // Save notifications to local storage once
             _saveNotificationsToLocalStorageOnce(
                 notificationState.notifications);
 
-            return BlocBuilder<CategoryBloc, CategoryState>(
-              builder: (context, categoryState) {
-                return ListView(
-                  children: [
-                    if (newNotifications.isNotEmpty)
-                      const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text(
-                          "New Notifications",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ...newNotifications.map((notification) {
-                      return GestureDetector(
-                        onTap: () {
-                          //change to edit transaction page
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TransactionPage(),
-                            ),
-                          );
-                        },
-                        child:
-                            _buildNotificationCard(notification, categoryState),
-                      );
-                    }).toList(),
-                    if (oldNotifications.isNotEmpty)
-                      const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text(
-                          "Old Notifications",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ...oldNotifications.map((notification) {
-                      return _buildNotificationCard(
-                          notification, categoryState);
-                    }).toList(),
-                  ],
-                );
-              },
+            return ListView(
+              children: [
+                if (newNotifications.isNotEmpty)
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      "New Notifications",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ...newNotifications.map((notification) {
+                  return _buildNotificationCard(notification);
+                }).toList(),
+                if (oldNotifications.isNotEmpty)
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      "Old Notifications",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ...oldNotifications.map((notification) {
+                  return _buildNotificationCard(notification);
+                }).toList(),
+              ],
             );
-          } else if (notificationState is NotificationsLoadError) {
-            return Center(child: Text(notificationState.message));
           } else {
             return const Center(child: Text('Unknown error'));
           }
@@ -158,24 +164,20 @@ class _NotificationPageState extends State<NotificationPage> {
     );
   }
 
-  /// Helper method to build a notification card
-  Widget _buildNotificationCard(
-      model.Notification notification, CategoryState categoryState) {
-    // Retrieve the matching Category object based on the notification categoryId
-    Category category = Category(
-      id: 0,
-      name: 'undefined',
-      amount: 0.0,
-      color: Colors.grey,
+  Widget _buildNotificationCard(model.Notification notification) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditTransactionPage(
+              notification: notification,
+              onTransactionRemoved: () => _removeTransaction(notification),
+            ),
+          ),
+        );
+      },
+      child: NotificationCard(notification: notification),
     );
-
-    if (notification.categoryId != 0 && categoryState is CategoriesLoaded) {
-      category = categoryState.categories.firstWhere(
-        (cat) => cat.id == notification.categoryId,
-        orElse: () => category,
-      );
-    }
-
-    return NotificationCard(notification: notification);
   }
 }
