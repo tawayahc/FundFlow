@@ -4,6 +4,7 @@ import 'package:fundflow/core/widgets/overview/summary_card.dart';
 import 'package:fundflow/features/overview/model/categorized_summary.dart';
 import 'package:fundflow/features/overview/model/category_model.dart';
 import 'package:fundflow/features/overview/ui_test/categorize_summary_screen.dart';
+import 'package:fundflow/features/overview/widget/pie_chart.dart';
 import 'categorized_filter_view.dart';
 import 'package:fl_chart/fl_chart.dart'; // Assuming you use fl_chart for charts
 
@@ -12,10 +13,10 @@ class CategorizedSummaryView extends StatelessWidget {
   final Map<String, CategorizedSummary> categorizedSummaries;
 
   const CategorizedSummaryView({
-    Key? key,
+    super.key,
     required this.categories,
     required this.categorizedSummaries,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,39 +31,7 @@ class CategorizedSummaryView extends StatelessWidget {
     return Column(
       children: [
         // Chart Section
-        Container(
-          height: 200,
-          padding: const EdgeInsets.all(16.0),
-          child: PieChart(
-            PieChartData(
-              sections: [
-                PieChartSectionData(
-                  color: Colors.green,
-                  value: totalIncome,
-                  title: 'Income\n${totalIncome.toStringAsFixed(2)}',
-                  radius: 50,
-                  titleStyle: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-                PieChartSectionData(
-                  color: Colors.red,
-                  value: totalExpense,
-                  title: 'Expense\n${totalExpense.toStringAsFixed(2)}',
-                  radius: 50,
-                  titleStyle: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-              ],
-              sectionsSpace: 2,
-              centerSpaceRadius: 40,
-              borderData: FlBorderData(show: false),
-            ),
-          ),
-        ),
+        CategorizedPieChart(categorizedSummaries: categorizedSummaries, categories: categories),
         const SizedBox(height: 10),
         // Summary Cards
         Padding(

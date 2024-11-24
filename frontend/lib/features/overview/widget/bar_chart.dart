@@ -24,7 +24,6 @@ class ExpenseBarChartState extends State<ExpenseBarChart> {
 
   @override
   void initState() {
-    // List<Bar>
     super.initState();
 
     // Sort the dailySummaries by date (ascending order)
