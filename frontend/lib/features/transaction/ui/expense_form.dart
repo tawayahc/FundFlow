@@ -60,7 +60,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
   void _showNoBanksDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      //barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -78,12 +78,13 @@ class _ExpenseFormState extends State<ExpenseForm> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 22,
+                Padding(
+                  padding: EdgeInsets.zero,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(
+                        padding: EdgeInsets.zero,
                         onPressed: () {
                           Navigator.pop(context);
                           Navigator.pushNamed(context, '/home');
@@ -97,6 +98,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                     ],
                   ),
                 ),
+
                 const Icon(
                   Icons.warning,
                   color: Colors.red,
@@ -106,12 +108,13 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 const Text(
                   'คุณยังไม่มีบัญชีธนาคาร\nกรุณากดเพิ่มธนาคาร',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.red),
+                  style: TextStyle(fontSize: 24, color: Colors.red),
                 ),
-                const SizedBox(height: 16),
+                //const SizedBox(height: 16),
                 Container(
                   height: 40,
                   width: 200,
+                  margin: EdgeInsets.all(9),
                   child: ElevatedButton(
                     onPressed: () {
                       //Navigator.pop(context);
@@ -122,7 +125,8 @@ class _ExpenseFormState extends State<ExpenseForm> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
                       ),
-                      backgroundColor: const Color(0xFF41486D),
+                      backgroundColor:
+                          const Color(0xFF41486D), // ปุ่มสีน้ำเงินเข้ม
                     ),
                     child: const Text(
                       'เพิ่มธนาคาร',
@@ -141,14 +145,14 @@ class _ExpenseFormState extends State<ExpenseForm> {
   void _showNoCategoriesDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      //barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
           child: Container(
-            height: 200,
+            height: 268,
             decoration: BoxDecoration(
               /*border: Border.all(
                 color: Color(0xFF41486D),
@@ -159,6 +163,27 @@ class _ExpenseFormState extends State<ExpenseForm> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Padding(
+                  padding: EdgeInsets.zero,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/home');
+                        },
+                        icon: const Icon(
+                          Icons.close,
+                          size: 22,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
                 const Icon(
                   Icons.warning,
                   color: Colors.red,
@@ -166,14 +191,15 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'คุณยังไม่มีหมวดหมู่\nกรุณากดเพิ่มหมวดหมู่',
+                  'คุณยังไม่มีบัญชีหมมวดหมู่\nกรุณากดเพิ่มหมวดหมู่',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.red),
+                  style: TextStyle(fontSize: 24, color: Colors.red),
                 ),
-                const SizedBox(height: 16),
+                //const SizedBox(height: 16),
                 Container(
                   height: 40,
                   width: 200,
+                  margin: EdgeInsets.all(9),
                   child: ElevatedButton(
                     onPressed: () {
                       //Navigator.pop(context);
@@ -188,7 +214,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                           const Color(0xFF41486D), // ปุ่มสีน้ำเงินเข้ม
                     ),
                     child: const Text(
-                      'เพิ่มหมวดหมู่',
+                      'เพิ่มธนาคาร',
                       style: TextStyle(fontSize: 16, color: Color(0xffffffff)),
                     ),
                   ),

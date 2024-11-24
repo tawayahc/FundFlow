@@ -72,12 +72,13 @@ class _IncomeFormState extends State<IncomeForm> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 22,
+                Padding(
+                  padding: EdgeInsets.zero,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(
+                        padding: EdgeInsets.zero,
                         onPressed: () {
                           Navigator.pop(context);
                           Navigator.pushNamed(context, '/home');
@@ -91,6 +92,7 @@ class _IncomeFormState extends State<IncomeForm> {
                     ],
                   ),
                 ),
+
                 const Icon(
                   Icons.warning,
                   color: Colors.red,
@@ -102,10 +104,11 @@ class _IncomeFormState extends State<IncomeForm> {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 24, color: Colors.red),
                 ),
-                const SizedBox(height: 16),
+                //const SizedBox(height: 16),
                 Container(
                   height: 40,
                   width: 200,
+                  margin: EdgeInsets.all(9),
                   child: ElevatedButton(
                     onPressed: () {
                       //Navigator.pop(context);
