@@ -1,60 +1,69 @@
 import 'package:flutter/material.dart';
-
-import '../../../features/home/models/bank.dart';
+import 'package:intl/intl.dart';
 
 class BankBalanceBox extends StatelessWidget {
+  final String title;
+  final double amount;
   final Color color;
-  final Bank bank;
-  final String date;
-  const BankBalanceBox({super.key, required this.color, required this.bank, required this.date});
+
+  const BankBalanceBox({
+    Key? key,
+    required this.title,
+    required this.amount,
+    required this.color,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat.currency(locale: 'th_TH', symbol: '฿');
+
     return Container(
-      padding: const EdgeInsets.fromLTRB(
-          0, 8, 4, 0), // padding (left, top, right, bottom)
-      width: double.infinity, // สุดขอบ
+      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 8),
+      padding: const EdgeInsets.only(
+          top: 10, bottom: 16), // padding (left, top, right, bottom)
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: color,
         borderRadius: BorderRadius.circular(12),
+        gradient: LinearGradient(
+          colors: [
+            color.withOpacity(0.6),
+            color,
+          ],
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
-            children: [
-              SizedBox(width: 16),
-              Text(
-                'ยอดเงินคงเหลือ',
-                style: TextStyle(color: Colors.white, fontSize: 16),
+          Padding(
+            padding: const EdgeInsets.only(top: 5.0, left: 16.0),
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.white,
               ),
-            ],
+            ),
           ),
           const Divider(
             color: Colors.white,
-            thickness: 2,
-            height: 3,
-            indent: 2,
+            thickness: 1,
+            height: 2,
           ),
-          const SizedBox(height: 16),
-          Center(
-            child: Text(
-              '฿ ${bank.amount}',
-              style: const TextStyle(
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Center(
+              child: Text(
+                formatter.format(amount),
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
                   color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
           ),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              'ข้อมูล ณ $date',
-              style: const TextStyle(color: Colors.white, fontSize: 11),
-              textAlign: TextAlign.right,
-            ),
-          )
         ],
       ),
     );
