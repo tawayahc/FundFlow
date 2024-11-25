@@ -1,5 +1,3 @@
-Here's a comprehensive README.md for your backend project:
-
 # FundFlow Backend
 
 A robust Go-based backend service for managing personal finances, featuring user authentication, bank account management, transaction tracking, and category-based expense management.
