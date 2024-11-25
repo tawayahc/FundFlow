@@ -17,8 +17,9 @@ class TransactionCard extends StatelessWidget {
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
         String categoryName = 'undefined';
+        Color categoryColor = Colors.grey;
 
-        // Find category name if state is loaded and it's an expense
+        // Fetch category details for expenses
         if (state is CategoriesLoaded &&
             isExpense &&
             transaction.categoryId != 0) {
@@ -32,63 +33,79 @@ class TransactionCard extends StatelessWidget {
             ),
           );
           categoryName = category.name;
+          categoryColor = category.color;
         }
 
         return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                offset: const Offset(0, 0),
-                blurRadius: 4,
-                spreadRadius: 1,
-              ),
-            ],
+            border: Border.all(color: const Color(0xFFE0E0E0)), // Light border
           ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Memo and Amount in the same row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      transaction.memo.isNotEmpty
-                          ? transaction.memo // Display memo if available
-                          : categoryName, // Display categoryName if memo is empty
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF414141),
-                      ),
+                // Category Color Box (only for expenses)
+                if (isExpense)
+                  Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: categoryColor,
+                      borderRadius: BorderRadius.circular(8),
                     ),
+                  ),
+                if (isExpense) const SizedBox(width: 12),
+                // Memo and Category Name
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        transaction.memo.isNotEmpty
+                            ? transaction.memo // Use Memo if available
+                            : categoryName, // Otherwise, fallback to category name
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF414141),
+                        ),
+                      ),
+                      if (isExpense)
+                        const SizedBox(
+                            height: 4), // Space between memo and category
+                      if (isExpense)
+                        Text(
+                          categoryName,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF757575),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                // Amount and Date
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
                     Text(
                       '฿ ${transaction.amount.toString()}',
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF414141),
                       ),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 8), // Space between rows
-
-                // Timeline/Date aligned to the right
-                Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.end, // Align to the right
-                  children: [
+                    const SizedBox(height: 4),
                     Text(
                       transaction.createdAt,
                       style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF5A5A5A),
+                        fontSize: 14,
+                        color: Color(0xFF757575),
                       ),
                     ),
                   ],
