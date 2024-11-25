@@ -335,14 +335,15 @@ class _BankAccountPageState extends State<BankAccountPage>
 }
 
 Map<String, Color> bankColorMap = {
-  'ธนาคารกสิกรไทย': Colors.green,
-  'ธนาคารกรุงไทย': Colors.blue,
-  'ธนาคารไทยพาณิชย์': Colors.purple,
-  'ธนาคารกรุงเทพ': const Color.fromARGB(255, 10, 35, 145),
-  'ธนาคารกรุงศรีอยุธยา': const Color(0xFFffe000),
-  'ธนาคารออมสิน': Colors.pink,
-  'ธนาคารธนชาต': const Color(0xFFF68B1F),
-  'ธนาคารเกียรตินาคิน': const Color(0xFF004B87),
-  'ธนาคารซิตี้แบงก์': const Color(0xFF1E90FF),
-  'ธนาคารเมกะ': const Color(0xFF3B5998),
+  'ธนาคารกสิกรไทย': Colors.green, // Kasikorn Bank
+  'ธนาคารกรุงไทย': Colors.blue, // Krung Thai Bank
+  'ธนาคารไทยพาณิชย์': Colors.purple, // Siam Commercial Bank
+  'ธนาคารกรุงเทพ': const Color.fromARGB(255, 10, 35, 145), // Bangkok Bank
+  'ธนาคารกรุงศรี':
+      const Color.fromARGB(255, 243, 201, 11), // Krungsri (Bank of Ayudhya)
+  'ธนาคารออมสิน': Colors.pink, // Government Savings Bank
+  'ธนาคารธนชาติ': const Color(0xFFF68B1F), // Thanachart Bank
+  'ธนาคารเกียรตินาคิน': const Color(0xFF004B87), // Kiatnakin Bank
+  'ธนาคารCity': const Color(0xFF1E90FF), // Citibank
+  'ธนาคารMake': const Color.fromARGB(255, 104, 212, 50), // Make Bank
 };
