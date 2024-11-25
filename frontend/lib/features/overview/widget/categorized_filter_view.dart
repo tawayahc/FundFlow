@@ -91,9 +91,10 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
             dropDownList: [
               const DropDownValueModel(name: 'All', value: "all"),
               ...widget.categories
+                  // Brute force method to exclude 'income' category from showing
+                  .where((category) => category.name.toLowerCase() != 'income')
                   .map((category) => DropDownValueModel(
-                      name: category.name, value: category.name))
-                  .toList(),
+                  name: category.name, value: category.name)),
             ],
             onChanged: (val) {
               logger.d('Category Selected: ${val?.value}');
