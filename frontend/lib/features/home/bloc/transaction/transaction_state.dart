@@ -10,6 +10,8 @@ class TransactionsLoaded extends TransactionState {
   TransactionsLoaded({required this.transactions});
 }
 
+class TransactionDeleted extends TransactionState {}
+
 class TransactionsLoadError extends TransactionState {
   final String message;
 

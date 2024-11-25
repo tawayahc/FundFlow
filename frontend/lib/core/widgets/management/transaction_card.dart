@@ -6,6 +6,7 @@ import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/features/home/models/transaction.dart';
+import 'package:intl/intl.dart';
 
 class TransactionCard extends StatelessWidget {
   final Transaction transaction;
@@ -15,6 +16,10 @@ class TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isExpense = transaction.type == 'expense';
+
+    final dateFormatter = DateFormat('dd/MM/yyyy');
+    final formattedDate =
+        dateFormatter.format(DateTime.parse(transaction.createdAt));
 
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
@@ -84,7 +89,7 @@ class TransactionCard extends StatelessWidget {
                       style: TextStyle(fontSize: 14, color: categoryColor),
                     ),
                     Text(
-                      transaction.createdAt,
+                      formattedDate,
                       style: TextStyle(fontSize: 14, color: categoryColor),
                     ),
                   ],

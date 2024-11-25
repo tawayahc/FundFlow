@@ -27,11 +27,10 @@ class BankSection extends StatelessWidget {
                 final bank = sortedBanks[index];
                 return GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => BankAccountPage(bank: bank),
-                      ),
+                          builder: (context) => BankAccountPage(bank: bank)),
                     );
                   },
                   child: BankCard(

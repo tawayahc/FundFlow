@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/pages/notification/notification.dart';
 import 'package:fundflow/features/transaction/bloc/transaction_state.dart';
@@ -103,13 +104,15 @@ class _EditTransactionPageState extends State<EditTransactionPage> {
               date: DateFormat('dd/MM/yy').parse(widget.notification.date),
             );
 
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ExpenseForm(
-                banks: _banks,
-                categories: _categories,
-                onSubmit: _onExpenseSubmit,
-                initialData: initialData,
+            return GlobalPadding(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ExpenseForm(
+                  banks: _banks,
+                  categories: _categories,
+                  onSubmit: _onExpenseSubmit,
+                  initialData: initialData,
+                ),
               ),
             );
           } else if (state is TransactionFailure) {
