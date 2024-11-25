@@ -12,6 +12,42 @@ class TransferTransactionCard extends StatelessWidget {
     required this.currentBankId,
   }) : super(key: key);
 
+  // Function to fetch bank logo path based on bank name
+  String _getBankLogo(String bankName) {
+    final logos = {
+      'ธนาคารกสิกรไทย': 'assets/LogoBank/Kplus.png',
+      'ธนาคารกรุงไทย': 'assets/LogoBank/Krungthai.png',
+      'ธนาคารไทยพาณิชย์': 'assets/LogoBank/SCB.png',
+      'ธนาคารกรุงเทพ': 'assets/LogoBank/Krungthep.png',
+      'ธนาคารกรุงศรี': 'assets/LogoBank/krungsri.png',
+      'ธนาคารออมสิน': 'assets/LogoBank/GSB.png',
+      'ธนาคารธนชาต': 'assets/LogoBank/ttb.png',
+      'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
+      'ธนาคารCity': 'assets/LogoBank/city.png',
+      'ธนาคารMake': 'assets/LogoBank/make.png',
+    };
+    return logos[bankName.trim()] ??
+        'assets/LogoBank/default.png'; // Default logo
+  }
+
+  // Function to map bankId to bank_name
+  String _mapBankIdToName(int bankId) {
+    final bankData = {
+      1: 'ธนาคารกสิกรไทย',
+      2: 'ธนาคารกรุงไทย',
+      3: 'ธนาคารไทยพาณิชย์',
+      4: 'ธนาคารกรุงเทพ',
+      5: 'ธนาคารกรุงศรี',
+      6: 'ธนาคารออมสิน',
+      7: 'ธนาคารธนชาต',
+      8: 'ธนาคารเกียรตินาคิน',
+      9: 'ธนาคารCity',
+      10: 'ธนาคารMake',
+    };
+    return bankData[bankId] ??
+        'Unknown Bank'; // Default to 'Unknown Bank' if not found
+  }
+
   @override
   Widget build(BuildContext context) {
     final isIncoming = transfer.toBankId == currentBankId;
@@ -19,56 +55,104 @@ class TransferTransactionCard extends StatelessWidget {
     final formattedDate =
         dateFormatter.format(DateTime.parse(transfer.createdAt));
 
-    return Card(
+    // Determine bank name dynamically using _mapBankIdToName
+    final bankId = isIncoming ? transfer.fromBankId : transfer.toBankId;
+    final bankName = _mapBankIdToName(bankId);
+
+    // Get bank logo
+    final bankLogo = _getBankLogo(bankName);
+
+    // Dynamic color based on transfer type
+    final textColor =
+        isIncoming ? const Color(0xFF80D084) : const Color(0xFFFF5C5C);
+
+    return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE0E0E0)), // Light border
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.all(12.0), // Reduced padding
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // First Row: Direction and Amount
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  isIncoming ? 'ย้ายเงินเข้า' : 'ย้ายเงินออก',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+            // Bank Logo
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color:
+                    Colors.grey.shade200, // Background color for missing logos
+              ),
+              child: ClipOval(
+                child: Image.asset(
+                  bankLogo,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.account_balance,
+                      color: Colors.grey,
+                    );
+                  },
                 ),
-                Text(
-                  '${transfer.amount}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                ),
-              ],
+              ),
             ),
-            const SizedBox(height: 8),
-            // Second Row: From/To Bank Name and Date
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  isIncoming
-                      ? 'จาก ${transfer.fromBankName}'
-                      : 'ไปยัง ${transfer.toBankName}',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
+            const SizedBox(width: 12), // Space between logo and text
+
+            // Transfer Details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Direction and Amount
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        isIncoming ? 'ย้ายเงินเข้า' : 'ย้ายเงินออก',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: textColor, // Dynamic color
+                        ),
+                      ),
+                      Text(
+                        '฿ ${transfer.amount}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: textColor, // Amount color matches direction
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Text(
-                  formattedDate,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
+                  const SizedBox(height: 4), // Reduced space
+
+                  // Bank Name and Date
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        bankName,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF757575),
+                        ),
+                      ),
+                      Text(
+                        formattedDate,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF757575),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
