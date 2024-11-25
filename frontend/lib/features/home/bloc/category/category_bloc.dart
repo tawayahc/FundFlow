@@ -42,6 +42,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         await categoryRepository.editCategory(
             event.originalCategory, event.category);
         // If successful, reload categories or navigate to the previous screen
+        add(LoadCategories());
         emit(CategoryUpdated());
       } catch (error) {
         print("Error editing category: $error");
@@ -80,6 +81,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         await categoryRepository.updateCategoryAmount(
             event.categoryId, event.newAmount);
         // If successful, reload categories or navigate to the previous screen
+        add(LoadCategories());
         emit(CategoryAmountUpdated());
       } catch (error) {
         print("Error updated category: $error");
