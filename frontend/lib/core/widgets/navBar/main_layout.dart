@@ -47,7 +47,10 @@ class _NavBarState extends State<BottomNavBar>
         pageController: _pageController,
       ),
       TransactionPage(),
-      const OverviewPage()
+      const OverviewPage(),
+
+      // Sub-page from home
+      SettingsPage(pageController: _pageController),
     ];
 
     return Scaffold(
