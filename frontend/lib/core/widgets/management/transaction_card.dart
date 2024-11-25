@@ -21,7 +21,7 @@ class TransactionCard extends StatelessWidget {
 
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
-        String categoryName = 'undefined';
+        String categoryName = 'No Memo';
         Color categoryColor = Colors.grey;
 
         // Fetch category details for expenses
