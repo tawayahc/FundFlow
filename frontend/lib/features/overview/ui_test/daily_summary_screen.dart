@@ -70,7 +70,7 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
             return DailySummaryView(
               dailySummaries: dailySummaries,
               dropDownController: _dropDownController,
-              onFilterChanged: _onFilterChanged,
+              onExpenseFilterChanged: _onFilterChanged,
               onDateRangeSelected: _onDateRangeSelected,
             );
           } else if (state is OverviewError) {

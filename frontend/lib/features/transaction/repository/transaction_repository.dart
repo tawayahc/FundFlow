@@ -220,13 +220,51 @@ class TransactionAddRepository {
       if (startDate != null && endDate != null) {
         filtered = filtered
             .where((tx) =>
-                tx.createdAt
-                    .isAfter(startDate.subtract(const Duration(seconds: 1))) &&
-                tx.createdAt.isBefore(endDate.add(const Duration(seconds: 1))))
+        tx.createdAt
+            .isAfter(startDate.subtract(const Duration(seconds: 1))) &&
+                tx.createdAt.isBefore(endDate.add(const Duration(days: 1))))
             .toList();
       }
 
       return filtered;
+    } catch (e) {
+      throw Exception('Failed to load filtered transactions: $e');
+    }
+  }
+
+  Future<List<TransactionAllModel>> fetchExpenseFilteredTransactions({
+    required String? expenseType,
+    required DateTime? startDate,
+    required DateTime? endDate,
+  }) async {
+    try {
+      // Fetch all combined transactions
+      final allTransactions = await fetchCombinedTransactions();
+
+      // Apply category filter if selected
+      List<TransactionAllModel> expenseFiltered = allTransactions;
+      if (expenseType != null && expenseType == "income") {
+        expenseFiltered = expenseFiltered
+            .where((tx) =>
+        tx.type.toLowerCase() == expenseType.toLowerCase())
+            .toList();
+      } else if (expenseType != null && expenseType == "expense") {
+        expenseFiltered = expenseFiltered
+            .where((tx) =>
+        tx.type.toLowerCase() == expenseType.toLowerCase())
+            .toList();
+      }
+
+      if (startDate != null && endDate != null) {
+        expenseFiltered = expenseFiltered
+            .where((tx) =>
+        tx.createdAt
+            .isAfter(startDate.subtract(const Duration(seconds: 1))) &&
+                tx.createdAt.isBefore(endDate.add(const Duration(days: 1))))
+            .toList();
+      }
+
+      return expenseFiltered;
     } catch (e) {
       throw Exception('Failed to load filtered transactions: $e');
     }

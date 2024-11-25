@@ -10,7 +10,7 @@ import 'package:logger/logger.dart';
 import '../widget/monthly_summary_view.dart';
 
 class MonthlySummaryScreen extends StatefulWidget {
-  const MonthlySummaryScreen({Key? key}) : super(key: key);
+  const MonthlySummaryScreen({super.key});
 
   @override
   State<MonthlySummaryScreen> createState() => _MonthlySummaryScreenState();

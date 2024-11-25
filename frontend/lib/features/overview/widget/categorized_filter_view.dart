@@ -11,9 +11,9 @@ class CategorizedFilterView extends StatefulWidget {
   final List<CategoryModel> categories;
 
   const CategorizedFilterView({
-    Key? key,
+    super.key,
     required this.categories,
-  }) : super(key: key);
+  });
 
   @override
   State<CategorizedFilterView> createState() => _CategorizedFilterViewState();
@@ -67,6 +67,7 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
           endDate: endDate,
         ));
 
+
     logger.d(
         'Applying Filters - Category: $selectedCategory, Start: $startDate, End: $endDate');
   }
@@ -87,7 +88,7 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
             ),
             controller: _categoryDropDownController,
             clearOption: true,
-            dropDownItemCount: 10,
+            dropDownItemCount: widget.categories.length + 1,
             dropDownList: [
               const DropDownValueModel(name: 'All', value: "all"),
               ...widget.categories

@@ -14,6 +14,7 @@ class OverviewBloc extends Bloc<OverviewEvent, OverviewState> {
 
   OverviewBloc({required this.repository}) : super(OverviewInitial()) {
     on<FetchTransactionsEvent>(_onFetchTransactions);
+    on<ApplyExpenseFiltersEvent>(_onApplyExpenseFilters);
   }
 
   Future<void> _onFetchTransactions(
@@ -160,6 +161,33 @@ class OverviewBloc extends Bloc<OverviewEvent, OverviewState> {
     }
 
     return monthlySummaryMap;
+  }
+
+  Future<void> _onApplyExpenseFilters(
+      ApplyExpenseFiltersEvent event, Emitter<OverviewState> emit) async {
+    emit(OverviewLoading());
+    try {
+      final filteredTransactions = await repository.fetchExpenseFilteredTransactions(
+        expenseType: event.expenseType,
+        startDate: event.startDate,
+        endDate: event.endDate,
+      );
+
+      final summary = _calculateSummary(filteredTransactions);
+      final dailySummary = _calculateDailySummaries(filteredTransactions);
+      final monthlySummary = _calculateMonthlySummaries(filteredTransactions);
+
+      logger.d('Fetched ${filteredTransactions.length} filtered transactions.');
+
+      emit(OverviewLoaded(
+          summary: summary,
+          dailySummaries: dailySummary,
+          monthlySummaries: monthlySummary
+      ));
+    } catch (e, stackTrace) {
+      logger.e('Error applying filters: $e , $stackTrace');
+      emit(OverviewError(message: e.toString()));
+    }
   }
 
   @override
