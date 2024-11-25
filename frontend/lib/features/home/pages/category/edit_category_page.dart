@@ -97,7 +97,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
           centerTitle: true,
           title: const Text(
             'แก้ไขหมวดหมู่',
-            style: TextStyle(color: Color(0xFF414141)),
+            style: TextStyle(color: Color(0xFF414141), fontSize: 24),
           ),
         ),
         body: SingleChildScrollView(
@@ -125,7 +125,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 // Category Card Preview
                 Center(
                   child: CategoryCard(
