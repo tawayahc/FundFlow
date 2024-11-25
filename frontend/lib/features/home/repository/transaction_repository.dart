@@ -40,4 +40,22 @@ class TransactionRepository {
       throw Exception('Error fetching Transactions: $error');
     }
   }
+
+  Future<void> deleteTransaction(int transactionId) async {
+    try {
+      final response = await dio.delete("/transactions/$transactionId");
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        logger.e('Failed to delete transaction, Response: ${response.data}');
+        throw Exception('Failed to delete transaction');
+      }
+    } catch (error) {
+      if (error is DioException) {
+        logger.e('Dio Error: ${error.response?.data ?? error.message}');
+      } else {
+        logger.e('Error deleting transaction: $error');
+      }
+      throw Exception('Error deleting transaction: $error');
+    }
+  }
 }

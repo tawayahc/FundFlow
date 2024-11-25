@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/home/category_balance_box.dart';
+import 'package:fundflow/core/widgets/management/delete_transaction_page.dart';
+import 'package:fundflow/core/widgets/management/transaction_card_for_category.dart';
 import 'package:fundflow/features/home/models/category.dart' as categories;
 
 import '../../../core/themes/app_styles.dart';
 import '../../../core/widgets/navBar/main_layout.dart';
-import '../../../core/widgets/notification/transaction_card.dart';
 import '../../home/bloc/category/category_bloc.dart';
 import '../../home/bloc/category/category_state.dart';
 import '../../home/bloc/transaction/transaction_bloc.dart';
 import '../../home/bloc/transaction/transaction_state.dart';
-import '../../home/models/transaction.dart';
 import '../../home/pages/category/edit_category_page.dart';
-import '../../home/repository/transaction_repository.dart';
 
 class CategoryPage extends StatefulWidget {
   final categories.Category category;
@@ -111,12 +110,20 @@ class _CategoryPageState extends State<CategoryPage>
                               itemCount: sortedTransactions.length,
                               itemBuilder: (context, index) {
                                 final transaction = sortedTransactions[index];
-                                final isExpense = transaction.type == 'expense';
 
                                 return GestureDetector(
-                                  onTap: () {},
-                                  child:
-                                      TransactionCard(transaction: transaction),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            DeleteTransactionPage(
+                                                transaction: transaction),
+                                      ),
+                                    );
+                                  },
+                                  child: TransactionCardForCategory(
+                                      transaction: transaction),
                                 );
                               },
                             );

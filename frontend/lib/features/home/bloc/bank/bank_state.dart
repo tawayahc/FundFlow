@@ -1,5 +1,6 @@
 // bank_state.dart
 import 'package:fundflow/features/home/models/bank.dart';
+import 'package:fundflow/features/home/models/transfer.dart';
 
 abstract class BankState {}
 
@@ -9,6 +10,14 @@ class BanksLoaded extends BankState {
   final List<Bank> banks;
 
   BanksLoaded({required this.banks});
+}
+
+class TransfersLoading extends BankState {}
+
+class TransfersLoaded extends BankState {
+  final List<Transfer> transfers;
+
+  TransfersLoaded({required this.transfers});
 }
 
 class BankAdded extends BankState {}

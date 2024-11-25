@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/home/bank_balance_box.dart';
+import 'package:fundflow/core/widgets/management/delete_transaction_page.dart';
+import 'package:fundflow/core/widgets/management/transfer_transaction_card.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
+import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
+import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
+import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
 import 'package:fundflow/features/home/pages/bank/edit_bank_page.dart';
 import 'package:fundflow/features/home/ui/bank_section.dart';
 
 import '../../../core/themes/app_styles.dart';
-import '../../../core/widgets/notification/transaction_card.dart';
+import '../../../core/widgets/management/transaction_card.dart';
 import '../../home/bloc/category/category_bloc.dart';
 import '../../home/bloc/category/category_state.dart';
 import '../../home/bloc/transaction/transaction_bloc.dart';
@@ -41,6 +46,9 @@ class _BankAccountPageState extends State<BankAccountPage>
     _tabController.addListener(() {
       setState(() {
         _type = ['income', 'expense', 'transfer'][_tabController.index];
+        if (_type == 'transfer') {
+          context.read<BankBloc>().add(LoadTransfers());
+        }
       });
     });
   }
@@ -178,81 +186,113 @@ class _BankAccountPageState extends State<BankAccountPage>
               ),
               const SizedBox(height: 12),
               Expanded(
-                child: BlocBuilder<TransactionBloc, TransactionState>(
-                  builder: (context, transactionState) {
-                    if (transactionState is TransactionsLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (transactionState is TransactionsLoaded) {
-                      final bankTransactions = transactionState.transactions
-                          .where((transaction) =>
-                              transaction.bankId == widget.bank.id)
-                          .toList();
+                child: _type == 'transfer'
+                    ? BlocBuilder<BankBloc, BankState>(
+                        builder: (context, bankState) {
+                          if (bankState is TransfersLoading) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (bankState is TransfersLoaded) {
+                            final transfers =
+                                bankState.transfers.where((transfer) {
+                              return transfer.fromBankId == widget.bank.id ||
+                                  transfer.toBankId == widget.bank.id;
+                            }).toList();
 
-                      final sortedTransactions = List.from(bankTransactions)
-                        ..sort((a, b) => DateTime.parse(b.createdAt)
-                            .compareTo(DateTime.parse(a.createdAt)));
+                            if (transfers.isEmpty) {
+                              return const Center(
+                                  child: Text('No transfer transactions'));
+                            }
 
-                      final filteredTransactions = sortedTransactions
-                          .where((transaction) => transaction.type == _type)
-                          .toList();
-
-                      return BlocBuilder<CategoryBloc, CategoryState>(
-                        builder: (context, categoryState) {
-                          return ListView.builder(
-                            itemCount: filteredTransactions.length,
-                            itemBuilder: (context, index) {
-                              final transaction = filteredTransactions[index];
-                              final isExpense = transaction.type == 'expense';
-
-                              // Retrieve the matching Category object based on the transaction categoryId
-                              Category category = Category(
-                                id: 0,
-                                name: 'undefined',
-                                amount: 0.0,
-                                color: Colors.grey,
-                              );
-
-                              if (transaction.categoryId != 0 &&
-                                  categoryState is CategoriesLoaded) {
-                                category = categoryState.categories.firstWhere(
-                                  (cat) => cat.id == transaction.categoryId,
-                                  orElse: () => category,
+                            return ListView.builder(
+                              itemCount: transfers.length,
+                              itemBuilder: (context, index) {
+                                final transfer = transfers[index];
+                                return TransferTransactionCard(
+                                  transfer: transfer,
+                                  currentBankId: widget.bank.id,
                                 );
-                              }
-
-                              final categoryName = category.name;
-                              final isClickable =
-                                  isExpense && categoryName == 'undefined';
-
-                              return GestureDetector(
-                                onTap: () {
-                                  if (isClickable) {
-                                    // Change this to edit transaction page
-
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => EditCategoryPage(
-                                    //       category: category,
-                                    //     ),
-                                    //   ),
-                                    // );
-                                  }
-                                },
-                                child:
-                                    TransactionCard(transaction: transaction),
-                              );
-                            },
-                          );
+                              },
+                            );
+                          } else {
+                            return const Center(
+                                child: Text('Failed to load transfers'));
+                          }
                         },
-                      );
-                    } else if (transactionState is TransactionsLoadError) {
-                      return Center(child: Text(transactionState.message));
-                    } else {
-                      return const Center(child: Text('Unknown error'));
-                    }
-                  },
-                ),
+                      )
+                    : BlocBuilder<TransactionBloc, TransactionState>(
+                        builder: (context, transactionState) {
+                          if (transactionState is TransactionsLoading) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (transactionState is TransactionsLoaded) {
+                            final bankTransactions = transactionState
+                                .transactions
+                                .where((transaction) =>
+                                    transaction.bankId == widget.bank.id)
+                                .toList();
+
+                            final sortedTransactions =
+                                List.from(bankTransactions)
+                                  ..sort((a, b) => DateTime.parse(b.createdAt)
+                                      .compareTo(DateTime.parse(a.createdAt)));
+
+                            final filteredTransactions = sortedTransactions
+                                .where(
+                                    (transaction) => transaction.type == _type)
+                                .toList();
+
+                            return BlocBuilder<CategoryBloc, CategoryState>(
+                              builder: (context, categoryState) {
+                                return ListView.builder(
+                                  itemCount: filteredTransactions.length,
+                                  itemBuilder: (context, index) {
+                                    final transaction =
+                                        filteredTransactions[index];
+                                    Category category = Category(
+                                      id: 0,
+                                      name: 'undefined',
+                                      amount: 0.0,
+                                      color: Colors.grey,
+                                    );
+
+                                    if (transaction.categoryId != 0 &&
+                                        categoryState is CategoriesLoaded) {
+                                      category =
+                                          categoryState.categories.firstWhere(
+                                        (cat) =>
+                                            cat.id == transaction.categoryId,
+                                        orElse: () => category,
+                                      );
+                                    }
+
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                DeleteTransactionPage(
+                                                    transaction: transaction),
+                                          ),
+                                        );
+                                      },
+                                      child: TransactionCard(
+                                          transaction: transaction),
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          } else if (transactionState
+                              is TransactionsLoadError) {
+                            return Center(
+                                child: Text(transactionState.message));
+                          } else {
+                            return const Center(child: Text('Unknown error'));
+                          }
+                        },
+                      ),
               ),
             ],
           ),
