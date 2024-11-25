@@ -18,35 +18,17 @@ class SlipBloc extends Bloc<SlipEvent, SlipState> {
       DetectAndUploadSlips event, Emitter<SlipState> emit) async {
     emit(SlipLoading());
     try {
-      // Fetch all categories
-      List<Category> allCategories = await slipRepository.getCategories();
-
       // Fetch slip images
-      List<XFile> slipImages = await slipRepository.filterSlipImages();
+      List<XFile> slipImages = await slipRepository.getSlipImages();
 
       if (slipImages.isEmpty) {
         logger.w('No slip images detected.');
         throw Exception('No slip images detected.');
       }
-
-      // Determine categories to send based on identifiers
-      // Assuming category name matches the identifiers
-      // Collect categories whose name matches any of the identifiers
-
-      List<Category> selectedCategories = allCategories.where((category) {
-        return slipRepository.slipIdentifiers.any(
-            (id) => category.name.toUpperCase().contains(id.toUpperCase()));
-      }).toList();
-
-      if (selectedCategories.isEmpty) {
-        // If no specific categories match, optionally use a default category
-        // For now, throw an exception
-        throw Exception('No matching categories found for detected slips.');
-      }
-
-      await slipRepository.uploadDetectedSlips(selectedCategories);
+      await slipRepository.uploadDetectedSlips();
       emit(SlipSuccess());
     } catch (e) {
+      logger.e('Error detecting and uploading slips: $e');
       emit(SlipFailure(e.toString()));
     }
   }

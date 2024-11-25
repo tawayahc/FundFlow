@@ -1,4 +1,7 @@
 // pages/home_page.dart
+import 'dart:io';
+
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/features/auth/bloc/auth_bloc.dart';
@@ -17,6 +20,7 @@ import 'package:fundflow/features/home/ui/home_ui.dart';
 import 'package:fundflow/features/image_upload/bloc/slip/slip_bloc.dart';
 import 'package:fundflow/features/image_upload/bloc/slip/slip_event.dart';
 import 'package:fundflow/features/image_upload/bloc/slip/slip_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   final PageController pageController;
@@ -38,6 +42,17 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _slipBloc.add(DetectAndUploadSlips());
     });
+  }
+
+  Future<void> _openGallery() async {
+    if (Platform.isAndroid) {
+      // Use AndroidIntent to open the Gallery app
+      const intent = AndroidIntent(
+        action: 'android.intent.action.VIEW',
+        type: 'image/*',
+      );
+      await intent.launch();
+    }
   }
 
   @override
@@ -118,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             Navigator.of(context).pop(); // Close the dialog
                             Navigator.pushNamed(context,
-                                '/manual-slip'); // Navigate to manual upload page
+                                '/transaction'); // Navigate to manual upload page
                           },
                           child: const Text('Create Manually'),
                         ),

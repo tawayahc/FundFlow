@@ -1,51 +1,21 @@
 // image_repository.dart
 import 'package:archive/archive_io.dart';
-import 'package:fundflow/features/transaction/model/category_model.dart';
+import 'package:fundflow/app.dart';
 import 'package:fundflow/features/transaction/model/transaction.dart';
+import 'package:fundflow/utils/api_helper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:logger/logger.dart';
 import 'package:http_parser/http_parser.dart';
-import 'dart:convert';
 
 class ImageRepository {
   final ImagePicker _picker;
-  final Dio _dio;
-  final Logger _logger;
+  final ApiHelper _apiHelper;
 
-  ImageRepository({
-    ImagePicker? picker,
-    Dio? dio,
-    Logger? logger,
-  })  : _picker = picker ?? ImagePicker(),
-        _dio = dio ?? Dio(),
-        _logger = logger ?? Logger() {
-    // Configure Dio interceptors if needed
-    _dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) {
-          _logger.d("REQUEST[${options.method}] => PATH: ${options.path}");
-          _logger.d("Headers: ${options.headers}");
-          _logger.d("Data: ${options.data}");
-          return handler.next(options); // continue
-        },
-        onResponse: (response, handler) {
-          _logger
-              .d("RESPONSE[${response.statusCode}] => DATA: ${response.data}");
-          return handler.next(response); // continue
-        },
-        onError: (DioException e, handler) {
-          _logger
-              .e("ERROR[${e.response?.statusCode}] => MESSAGE: ${e.message}");
-          if (e.response != null) {
-            _logger.e("Response data: ${e.response?.data}");
-          }
-          return handler.next(e); //continue
-        },
-      ),
-    );
-  }
+  // Dependency Injection of ApiHelper
+  ImageRepository({required ApiHelper apiHelper})
+      : _picker = ImagePicker(),
+        _apiHelper = apiHelper;
 
   Future<List<XFile>?> pickImages() async {
     try {
@@ -58,14 +28,9 @@ class ImageRepository {
 
   Future<List<TransactionResponse>> uploadImages({
     required List<XFile> images,
-    required List<Category> categories,
   }) async {
     if (images.isEmpty) {
       throw Exception('No images selected to send.');
-    }
-
-    if (categories.isEmpty) {
-      throw Exception('No categories selected.');
     }
 
     // Create an Archive object
@@ -95,30 +60,17 @@ class ImageRepository {
       contentType: MediaType('application', 'zip'),
     );
 
-    // Serialize categories to JSON
-    String categoriesJson = jsonEncode(
-      categories.map((c) => {'id': c.id, 'name': c.name}).toList(),
-    );
-
     // Create FormData and add the ZIP file and categories
     FormData formData = FormData.fromMap({
-      'zip_file':
+      'file':
           zipMultipartFile, // Adjust the field name as per your server requirements
-      'categories': categoriesJson, // Send categories as JSON string
     });
 
     try {
       // FIXME: Update with your server's URL
-      final response = await _dio.post(
-        'http://10.0.2.2:3000/upload', // Update to your server's endpoint
+      final response = await _apiHelper.dio.post(
+        '/upload', // Update to your server's endpoint
         data: formData,
-        options: Options(
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          validateStatus: (status) =>
-              status! < 500, // Accept all status codes below 500
-        ),
       );
 
       if (response.statusCode == 200) {
@@ -134,13 +86,13 @@ class ImageRepository {
         throw Exception('Failed to send images: $errorMsg');
       }
     } on DioException catch (e) {
-      _logger.e('DioException: ${e.message}');
+      logger.e('DioException: ${e.message}');
       if (e.response != null) {
-        _logger.e('Response data: ${e.response?.data}');
+        logger.e('Response data: ${e.response?.data}');
       }
       throw Exception('DioException: ${e.message}');
     } catch (e) {
-      _logger.e('Unexpected error: $e');
+      logger.e('Unexpected error: $e');
       throw Exception('Unexpected error: $e');
     } finally {
       // Clean up the temporary ZIP file
