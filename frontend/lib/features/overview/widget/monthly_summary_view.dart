@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:fundflow/features/overview/widget/routine_summary_item.dart';
 import 'package:fundflow/features/overview/widget/expense_type_dropdown.dart';
-
+import 'package:fundflow/features/overview/widget/date_range.dart';
 import '../model/monthly_summary.dart';
 
 class MonthlySummaryView extends StatelessWidget {
@@ -32,13 +32,15 @@ class MonthlySummaryView extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('ประเภทรายการ'),
+                  const Text('ประเภทรายการ',),
                   SizedBox(
-                    width: 150,
+                    width: 143,
+                    height: 30,
                     child: ExpenseTypeDropDown(
                       controller: dropDownController,
                       onChanged: onFilterChanged!,
@@ -47,10 +49,14 @@ class MonthlySummaryView extends StatelessWidget {
                 ],
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text('ช่วงเวลา'),
+                  DateRangeDropdown(
+                    onDateRangeSelected: onDateRangeSelected),
+                  
                   // Implement Date Picker here
-                  TextButton(
+                  /*TextButton(
                     onPressed: () async {
                       final picked = await showDateRangePicker(
                         context: context,
@@ -62,13 +68,14 @@ class MonthlySummaryView extends StatelessWidget {
                       }
                     },
                     child: const Text('เลือกช่วงเวลา'),
-                  ),
+                  ),*/
+                  
                 ],
               ),
             ],
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 10),
         Expanded(
           child: sortedMonths.isNotEmpty
               ? ListView.builder(
@@ -77,8 +84,23 @@ class MonthlySummaryView extends StatelessWidget {
                     final month = sortedMonths[index];
                     final summary = monthlySummaries[month]!;
 
+                    const monthNames = {
+                      1: 'ม.ค.',
+                      2: 'ก.พ.',
+                      3: 'มี.ค.',
+                      4: 'เม.ย.',
+                      5: 'พ.ค.',
+                      6: 'มิ.ย.',
+                      7: 'ก.ค.',
+                      8: 'ส.ค.',
+                      9: 'ก.ย.',
+                      10: 'ต.ค.',
+                      11: 'พ.ย.',
+                      12: 'ธ.ค.',
+                    };
+
                     return RoutineSummaryItem(
-                      dateString: '${month.month}/${month.year}',
+                      dateString: '${monthNames[month.month]} ${(month.year+543) % 100}',
                       totalIn: summary.totalIncome,
                       totalOut: summary.totalExpense,
                       balance: summary.netTotal,

@@ -83,100 +83,122 @@ class TabOverviewState extends State<TabOverview>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<OverviewBloc, OverviewState>(
-      builder: (context, state) {
-        logger.d('Current State in TabOverview: $state');
+Widget build(BuildContext context) {
+  return BlocBuilder<OverviewBloc, OverviewState>(
+    builder: (context, state) {
+      logger.d('Current State in TabOverview: $state');
 
-        if (state is OverviewLoading || state is OverviewInitial) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is OverviewLoaded) {
-          return Column(
+      if (state is OverviewLoading || state is OverviewInitial) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (state is OverviewLoaded) {
+        return SingleChildScrollView(
+          child: Column(
             children: [
               // FIX: Replace chart widget
               ExpenseBarChart(monthlySummaries: state.monthlySummaries,),
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SummaryCard(
-                    type: true,
-                    title: 'ยอดรวมเงินเข้า (บาท)',
-                    amount: state.summary.totalIncome,
-                    items: state.summary.incomeItems,
-                    avgPerMonth: state.summary.avgIncomePerMonth,
-                  ),
-                  SummaryCard(
-                    type: false,
-                    title: 'ยอดรวมเงินออก (บาท)',
-                    amount: state.summary.totalExpense,
-                    items: state.summary.expenseItems,
-                    avgPerMonth: state.summary.avgExpensePerMonth,
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SummaryCard(
+                      type: true,
+                      title: 'ยอดรวมเงินเข้า (บาท)',
+                      amount: state.summary.totalIncome,
+                      items: state.summary.incomeItems,
+                      avgPerMonth: state.summary.avgIncomePerMonth,
+                    ),
+                    SummaryCard(
+                      type: false,
+                      title: 'ยอดรวมเงินออก (บาท)',
+                      amount: state.summary.totalExpense,
+                      items: state.summary.expenseItems,
+                      avgPerMonth: state.summary.avgExpensePerMonth,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 10),
-              Row(
-                children: [
-                  CustomTab(
-                    tabController: _tabController,
-                    tabs: const [
-                      Tab(text: 'รายวัน'),
-                      Tab(text: 'รายเดือน'),
-                    ],
-                    shadowOpacity: 0.5,
-                    blurRadius: 5,
-                    indicatorDecoration: const BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: Offset(0, 5),
                     ),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                  ),
-                  IconButton(
-                    onPressed: _navigateToSummary,
-                    icon: const Icon(Icons.call_made),
-                    tooltip: 'Open Summary',
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
+                  ],
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // FIX: implement filtering and date range selection
-                    DailySummaryView(
-                      dailySummaries: state.dailySummaries,
-                      dropDownController: _cnt,
-                      onFilterChanged: (value) {
-                        // Implement filtering logic if needed
-                      },
-                      onDateRangeSelected: (range) {
-                        // Implement date range filtering if needed
-                      },
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: CustomTab(
+                        tabController: _tabController,
+                        tabs: const [
+                          Tab(text: 'รายวัน'),
+                          Tab(text: 'รายเดือน'),
+                        ],
+                        shadowOpacity: 0.5,
+                        blurRadius: 5,
+                        indicatorDecoration: const BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        indicatorSize: TabBarIndicatorSize.tab,
+                      ),
                     ),
-                    MonthlySummaryView(
-                      monthlySummaries: state.monthlySummaries,
-                      dropDownController: _cnt,
-                      onFilterChanged: (value) {
-                        // Implement filtering logic if needed
-                      },
-                      onDateRangeSelected: (range) {
-                        // Implement date range filtering if needed
-                      },
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          DailySummaryView(
+                            dailySummaries: state.dailySummaries,
+                            dropDownController: _cnt,
+                            onFilterChanged: (value) {
+                              // Implement filtering logic if needed
+                            },
+                            onDateRangeSelected: (range) {
+                              // Implement date range filtering if needed
+                            },
+                          ),
+                          MonthlySummaryView(
+                            monthlySummaries: state.monthlySummaries,
+                            dropDownController: _cnt,
+                            onFilterChanged: (value) {
+                              // Implement filtering logic if needed
+                            },
+                            onDateRangeSelected: (range) {
+                              // Implement date range filtering if needed
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
             ],
-          );
-        } else if (state is OverviewError) {
-          return Center(child: Text('Error: ${state.message}'));
-        } else {
-          logger.w('Unhandled State in TabOverview: $state');
-          return const Center(child: Text('No data available.'));
-        }
-      },
-    );
-  }
+          ),
+        );
+      } else if (state is OverviewError) {
+        return Center(child: Text('Error: ${state.message}'));
+      } else {
+        logger.w('Unhandled State in TabOverview: $state');
+        return const Center(child: Text('No data available.'));
+      }
+    },
+  );
+}
+
 }

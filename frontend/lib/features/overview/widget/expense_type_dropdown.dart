@@ -21,7 +21,13 @@ class ExpenseTypeDropDown extends StatelessWidget {
           color: Colors.grey,
           fontSize: 11,
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 3),
+        suffixIcon: Padding(
+          padding: EdgeInsets.only(bottom: 4.0), 
+          child: Icon(Icons.arrow_drop_down),
+        ),
+        suffixIconColor: Colors.grey,
+        contentPadding: EdgeInsets.only(left: 2, right: 2, top: 10, bottom: 4), 
+        isDense: true,
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(
             color: Colors.grey,
@@ -42,8 +48,8 @@ class ExpenseTypeDropDown extends StatelessWidget {
         ),
       ),
       controller: controller,
-      clearOption: true,
-      clearIconProperty: IconProperty(color: Colors.green),
+      clearOption: false,
+      //clearIconProperty: IconProperty(color: Colors.green),
       validator: (value) {
         if (value == null) {
           return "Required field";

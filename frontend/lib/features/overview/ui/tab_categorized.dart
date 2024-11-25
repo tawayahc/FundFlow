@@ -11,56 +11,58 @@ class TabCategorized extends StatefulWidget {
 class TabCategorizedState extends State<TabCategorized> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-            color: Colors.lightBlueAccent,
-          ),
-          // child: ExpenseBarChart(),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            SummaryCard(true, 'ยอดรวมเงินเข้า (บาท)', 10000.00, 5, 200.5),
-            SummaryCard(false, 'ยอดรวมเงินออก (บาท)', 10000.00, 7, 150.56)
-          ],
-        ),
-        const SizedBox(height: 10),
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [Text('ประเภทรายการ'), Text('Dropdown here')],
-                ),
-                Column(
-                  children: [Text('ช่วงเวลา'), Text('Date picker here')],
-                ),
-              ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.lightBlueAccent,
             ),
-          ],
-        ),
-        SizedBox(
-          height: 710,
-          child: Expanded(
-            child: CustomScrollView(
-              slivers: [
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    RoutineSummaryItem('พ.ย. 67', 9780.94, 8076.00, 1704.94),
-                    RoutineSummaryItem('พ.ย. 67', 9780.94, 8076.00, 1704.94),
-                    RoutineSummaryItem('พ.ย. 67', 9780.94, 8076.00, 1704.94),
-                    RoutineSummaryItem('พ.ย. 67', 9780.94, 8076.00, 1704.94),
-                  ]),
-                ),
-              ],
+            // child: ExpenseBarChart(),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              SummaryCard(true, 'ยอดรวมเงินเข้า (บาท)', 10000.00, 5, 200.5),
+              SummaryCard(false, 'ยอดรวมเงินออก (บาท)', 10000.00, 7, 150.56)
+            ],
+          ),
+          const SizedBox(height: 10),
+          const Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [Text('ประเภทรายการ'), Text('Dropdown here')],
+                  ),
+                  Column(
+                    children: [Text('ช่วงเวลา'), Text('Date picker here')],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 710,
+            child: Expanded(
+              child: CustomScrollView(
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildListDelegate([
+                      RoutineSummaryItem('พ.ย. 67', 9780.94, 8076.00, 1704.94),
+                      RoutineSummaryItem('พ.ย. 67', 9780.94, 8076.00, 1704.94),
+                      RoutineSummaryItem('พ.ย. 67', 9780.94, 8076.00, 1704.94),
+                      RoutineSummaryItem('พ.ย. 67', 9780.94, 8076.00, 1704.94),
+                    ]),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
