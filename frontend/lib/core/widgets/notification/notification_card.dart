@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/core/themes/app_styles.dart';
-import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
@@ -19,6 +17,8 @@ class NotificationCard extends StatelessWidget {
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
         String categoryName = 'undefined';
+        Color categoryColor = Colors.grey;
+
         if (notification.categoryId != -1 && state is CategoriesLoaded) {
           final category = state.categories.firstWhere(
             (cat) => cat.id == notification.categoryId,
@@ -30,56 +30,82 @@ class NotificationCard extends StatelessWidget {
             ),
           );
           categoryName = category.name;
+          categoryColor = category.color;
         }
 
-        final categoryColor = (isExpense && categoryName == 'undefined')
-            ? const Color(0xFFFF5C5C)
-            : Colors.grey;
-
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                offset: const Offset(0, 0),
+                blurRadius: 4,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      notification.memo.isNotEmpty ? notification.memo : '',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: (isExpense && categoryName == 'undefined')
-                              ? const Color(0xFFFF5C5C)
-                              : AppColors.darkGrey),
-                    ),
-                    Text(
-                      formatter.format(notification.amount),
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: (isExpense && categoryName == 'undefined')
-                            ? categoryColor
-                            : isExpense
-                                ? Colors.red
-                                : Colors.green,
-                      ),
-                    ),
-                  ],
+                // Icon box
+                Container(
+                  width: 30, // ปรับขนาดให้เล็กลง
+                  height: 30, // ปรับขนาดให้เล็กลง
+                  decoration: BoxDecoration(
+                    color: categoryColor,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                const SizedBox(width: 12), // ลดระยะห่างระหว่าง Icon กับข้อความ
+
+                // Text and details
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        notification.memo.isNotEmpty
+                            ? notification.memo
+                            : categoryName,
+                        style: const TextStyle(
+                          fontSize: 14, // ลดขนาดตัวอักษร
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF414141),
+                        ),
+                      ),
+                      Text(
+                        categoryName,
+                        style: const TextStyle(
+                          fontSize: 12, // ลดขนาดตัวอักษร
+                          color: Color(0xFF414141),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Amount and date
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      categoryName,
-                      style: TextStyle(fontSize: 14, color: categoryColor),
+                      '฿ ${notification.amount.toString()}',
+                      style: const TextStyle(
+                        fontSize: 14, // ลดขนาดตัวอักษร
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF414141),
+                      ),
                     ),
                     Text(
                       notification.date,
-                      style: TextStyle(fontSize: 14, color: categoryColor),
+                      style: const TextStyle(
+                        fontSize: 12, // ลดขนาดตัวอักษร
+                        color: Color(0xFF5A5A5A),
+                      ),
                     ),
                   ],
                 ),

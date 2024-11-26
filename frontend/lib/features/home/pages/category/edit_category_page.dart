@@ -7,7 +7,6 @@ import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
-import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_text_ip.dart';
 import 'package:fundflow/features/manageCategory/ui/category_page.dart';
@@ -28,19 +27,19 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
   late String selectedTag;
 
   final List<Color> availableColors = [
-    Color(0xFFB39DDB), // Purple
-    Color(0xFF64B5F6), // Light Blue
-    Color(0xFF4DD0E1), // Cyan
-    Color(0xFF81C784), // Green
-    Color(0xFFAED581), // Light Green
-    Color(0xFFFFF176), // Yellow
-    Color(0xFFFFA726), // Orange
-    Color(0xFFE57373), // Red
-    Color(0xFFF06292), // Pink
-    Color(0xFFF8BBD0), // Light Pink
-    Color(0xFFE0E0E0), // Light Gray
-    Color(0xFF757575), // Dark Gray
-    Color(0xFF000000), // Black
+    const Color(0xFFB39DDB), // Purple
+    const Color(0xFF64B5F6), // Light Blue
+    const Color(0xFF4DD0E1), // Cyan
+    const Color(0xFF81C784), // Green
+    const Color(0xFFAED581), // Light Green
+    const Color(0xFFFFF176), // Yellow
+    const Color(0xFFFFA726), // Orange
+    const Color(0xFFE57373), // Red
+    const Color(0xFFF06292), // Pink
+    const Color(0xFFF8BBD0), // Light Pink
+    const Color(0xFFE0E0E0), // Light Gray
+    const Color(0xFF757575), // Dark Gray
+    const Color(0xFF000000), // Black
   ];
 
   final List<String> categoryTags = [
@@ -67,14 +66,6 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
         ? originalCategory.name
         : '';
 
-    updatedCategory = Category(
-      id: originalCategory.id,
-      name: categoryController.text,
-      amount: categoryAmount,
-      color: selectedColor,
-    );
-
-
     // Add listener to update UI when text changes
     categoryController.addListener(() {
       setState(() {});
@@ -86,7 +77,6 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
     categoryController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +97,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
           centerTitle: true,
           title: const Text(
             'แก้ไขหมวดหมู่',
-            style: TextStyle(color: Color(0xFF414141)),
+            style: TextStyle(color: Color(0xFF414141), fontSize: 24),
           ),
         ),
         body: SingleChildScrollView(
@@ -135,7 +125,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 // Category Card Preview
                 Center(
                   child: CategoryCard(
@@ -266,8 +256,8 @@ class CustomTextInput extends StatefulWidget {
 }
 
 class _CustomTextInputState extends State<CustomTextInput> {
-  Color iconColor = Color(0xFFD0D0D0);
-  Color textColor = Color(0xFFD0D0D0);
+  Color iconColor = const Color(0xFFD0D0D0);
+  Color textColor = const Color(0xFFD0D0D0);
 
   @override
   Widget build(BuildContext context) {
@@ -276,7 +266,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
       children: [
         Text(
           widget.labelText,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Color(0xFF414141),
@@ -286,8 +276,10 @@ class _CustomTextInputState extends State<CustomTextInput> {
         Focus(
           onFocusChange: (hasFocus) {
             setState(() {
-              iconColor = hasFocus ? Color(0xFF41486D) : Color(0xFFD0D0D0);
-              textColor = hasFocus ? Color(0xFF414141) : Color(0xFFD0D0D0);
+              iconColor =
+                  hasFocus ? const Color(0xFF41486D) : const Color(0xFFD0D0D0);
+              textColor =
+                  hasFocus ? const Color(0xFF414141) : const Color(0xFFD0D0D0);
             });
           },
           child: TextField(
@@ -295,14 +287,14 @@ class _CustomTextInputState extends State<CustomTextInput> {
             style: TextStyle(color: textColor),
             decoration: InputDecoration(
               hintText: widget.hintText,
-              hintStyle: TextStyle(color: Color(0xFFD0D0D0)),
+              hintStyle: const TextStyle(color: Color(0xFFD0D0D0)),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide(color: Color(0xFFD0D0D0)),
+                borderSide: const BorderSide(color: Color(0xFFD0D0D0)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide(color: Color(0xFF41486D)),
+                borderSide: const BorderSide(color: Color(0xFF41486D)),
               ),
               prefixIcon: Icon(
                 Icons.category,
@@ -355,7 +347,7 @@ class CategoryTagSelection extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: selectedTag == tag
-                          ? Color(0xFF41486D)
+                          ? const Color(0xFF41486D)
                           : Colors.grey.shade300,
                       width: 1.5,
                     ),
@@ -372,8 +364,8 @@ class CategoryTagSelection extends StatelessWidget {
                       tag,
                       style: TextStyle(
                         color: selectedTag == tag
-                            ? Color(0xFF41486D)
-                            : Color(0xFF414141),
+                            ? const Color(0xFF41486D)
+                            : const Color(0xFF414141),
                         fontSize: 14,
                       ),
                     ),
@@ -395,19 +387,19 @@ class ColorSelector extends StatelessWidget {
 
   // Define the colors list
   final List<Color> colors = [
-    Color(0xFFB39DDB), // Purple
-    Color(0xFF64B5F6), // Light Blue
-    Color(0xFF4DD0E1), // Cyan
-    Color(0xFF81C784), // Green
-    Color(0xFFAED581), // Light Green
-    Color(0xFFFFF176), // Yellow
-    Color(0xFFFFA726), // Orange
-    Color(0xFFE57373), // Red
-    Color(0xFFF06292), // Pink
-    Color(0xFFF8BBD0), // Light Pink
-    Color(0xFFE0E0E0), // Light Gray
-    Color(0xFF757575), // Dark Gray
-    Color(0xFF000000), // Black
+    const Color(0xFFB39DDB), // Purple
+    const Color(0xFF64B5F6), // Light Blue
+    const Color(0xFF4DD0E1), // Cyan
+    const Color(0xFF81C784), // Green
+    const Color(0xFFAED581), // Light Green
+    const Color(0xFFFFF176), // Yellow
+    const Color(0xFFFFA726), // Orange
+    const Color(0xFFE57373), // Red
+    const Color(0xFFF06292), // Pink
+    const Color(0xFFF8BBD0), // Light Pink
+    const Color(0xFFE0E0E0), // Light Gray
+    const Color(0xFF757575), // Dark Gray
+    const Color(0xFF000000), // Black
   ];
 
   ColorSelector({
@@ -431,7 +423,7 @@ class ColorSelector extends StatelessWidget {
         const SizedBox(height: 10),
         GridView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 6, // 6 colors per row
             crossAxisSpacing: 30,

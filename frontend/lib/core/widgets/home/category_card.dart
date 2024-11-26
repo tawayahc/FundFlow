@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/models/category.dart';
 
 class CategoryCard extends StatelessWidget {
@@ -39,7 +40,7 @@ class CategoryCard extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(top: 15),
-            height: 10,
+            height: 15,
             decoration: BoxDecoration(
               color: category.color,
             ),
@@ -64,7 +65,7 @@ class CategoryCard extends StatelessWidget {
                       color: const Color(0xFF414141)),
                 ),
                 Text(
-                  '฿ ${category.amount.toStringAsFixed(2)}', // No formatter needed
+                  '฿ ${formatter.format(category.amount)}', // No formatter needed
                   style: TextStyle(
                     fontSize: amountFontSize,
                     fontWeight: FontWeight.w600,
