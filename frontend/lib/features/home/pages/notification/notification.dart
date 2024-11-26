@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/global_padding.dart'; // Added GlobalPadding
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
-import 'package:fundflow/features/transaction/ui/edit_transaction_page.dart';
 import 'package:fundflow/core/widgets/notification/notification_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fundflow/features/home/bloc/notification/notification_bloc.dart';
@@ -244,15 +243,15 @@ class _NotificationPageState extends State<NotificationPage> {
   Widget _buildNotificationCard(model.Notification notification) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EditTransactionPage(
-              notification: notification,
-              onTransactionRemoved: () => _removeTransaction(notification),
-            ),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => EditTransactionPage(
+        //       notification: notification,
+        //       onTransactionRemoved: () => _removeTransaction(notification),
+        //     ),
+        //   ),
+        // );
       },
       child: NotificationCard(notification: notification),
     );
