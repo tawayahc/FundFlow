@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/home/models/bank.dart';
+import 'package:fundflow/features/home/models/transfer.dart';
 import 'package:fundflow/utils/api_helper.dart';
 
 class BankRepository {
@@ -29,6 +30,21 @@ class BankRepository {
     } catch (error) {
       logger.e('Error fetching banks: $error');
       throw Exception('Error fetching banks: $error');
+    }
+  }
+
+  Future<List<Transfer>> getTransfers() async {
+    try {
+      final response = await dio.get("/banks/transfer");
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        final transfers = data.map((item) => Transfer.fromJson(item)).toList();
+        return transfers;
+      } else {
+        throw Exception('Failed to load transfers: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error fetching transfers: $error');
     }
   }
 
@@ -95,6 +111,20 @@ class BankRepository {
         logger.e('Error editing bank: $error');
       }
       throw Exception('Error editing bank: $error');
+    }
+  }
+
+  Future<void> deleteBank(int bankId) async {
+    try {
+      final response = await dio.delete("/banks/$bankId");
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        logger.e('Failed to delete bank, Response: ${response.data}');
+        throw Exception('Failed to delete bank');
+      }
+    } catch (error) {
+      logger.e('Error deleting bank: $error');
+      throw Exception('Error deleting bank: $error');
     }
   }
 }

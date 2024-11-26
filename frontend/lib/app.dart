@@ -10,6 +10,8 @@ import 'package:fundflow/features/auth/ui/auth_wrapper.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
+import 'package:fundflow/features/home/bloc/notification/notification_bloc.dart';
+import 'package:fundflow/features/home/bloc/notification/notification_event.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_bloc.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_event.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_bloc.dart';
@@ -17,7 +19,12 @@ import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
 import 'package:fundflow/features/home/pages/bank/add_bank_page.dart';
 import 'package:fundflow/features/home/pages/notification/notification.dart';
 import 'package:fundflow/features/home/pages/notification/test.dart';
+import 'package:fundflow/features/home/repository/notification_repository.dart';
 import 'package:fundflow/features/home/repository/transaction_repository.dart';
+import 'package:fundflow/features/image_upload/bloc/slip/slip_bloc.dart';
+import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_bloc.dart';
+import 'package:fundflow/features/image_upload/repository/image_repository.dart';
+import 'package:fundflow/features/image_upload/repository/slip_repository.dart';
 import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
 import 'package:fundflow/features/setting/ui/change_password.dart';
@@ -32,7 +39,6 @@ import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 import 'package:fundflow/features/home/pages/category/add_category_page.dart';
 import 'package:fundflow/utils/api_helper.dart';
 import 'package:logger/logger.dart';
-import 'package:fundflow/features/transaction/ui/gallery_page.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/auth/bloc/auth_event.dart';
@@ -68,10 +74,10 @@ class MyApp extends StatelessWidget {
       Logger.level = Level.debug;
     }
     // NOTE: API Helper is use for store the base url and token
-    // NOTE: base url is use when we don't have the token
-    final apiHelper =
-        ApiHelper(baseUrl: dotenv.env['BASE_URL'] ?? 'http://10.0.2.2:8080/');
+    // NOTE: AI_API is use for store the base url of AI API
     final String baseUrl = dotenv.env['BASE_URL'] ?? 'http://10.0.2.2:8080/';
+
+    final apiHelper = ApiHelper(baseUrl: baseUrl);
     final authenticationRepository = AuthenticationRepository(baseUrl: baseUrl);
     final settingsRepository = SettingsRepository(apiHelper: apiHelper);
     final repasswordRepository = RepasswordRepository(baseUrl: baseUrl);
@@ -79,8 +85,11 @@ class MyApp extends StatelessWidget {
     final profileRepository = ProfileRepository(apiHelper: apiHelper);
     final bankRepository = BankRepository(apiHelper: apiHelper);
     final transactionRepository = TransactionRepository(apiHelper: apiHelper);
+    final notificationRepository = NotificationRepository(apiHelper: apiHelper);
     final transactionAddRepository =
         TransactionAddRepository(apiHelper: apiHelper);
+    final imageRepository = ImageRepository();
+    final slipRepository = SlipRepository();
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authenticationRepository),
@@ -94,6 +103,10 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(
             create: (context) => ProfileRepository(apiHelper: apiHelper)),
         RepositoryProvider.value(value: transactionRepository),
+        RepositoryProvider.value(value: notificationRepository),
+        RepositoryProvider.value(value: transactionAddRepository),
+        RepositoryProvider.value(value: imageRepository),
+        RepositoryProvider.value(value: slipRepository),
       ],
       child: MultiBlocProvider(
         // Wrap with MultiBlocProvider
@@ -128,6 +141,11 @@ class MyApp extends StatelessWidget {
               transactionRepository: transactionRepository,
             )..add(LoadTransactions()),
           ),
+          BlocProvider<NotificationBloc>(
+            create: (context) => NotificationBloc(
+              notificationRepository: notificationRepository,
+            )..add(LoadNotifications()),
+          ),
           BlocProvider<ProfileBloc>(
             create: (context) => ProfileBloc(
               profileRepository: profileRepository,
@@ -139,19 +157,30 @@ class MyApp extends StatelessWidget {
               repository: transactionAddRepository,
             ),
           ),
+          BlocProvider<ImageBloc>(
+            create: (context) => ImageBloc(
+              imageRepository: imageRepository,
+              transactionAddRepository: transactionAddRepository,
+            ),
+          ),
+          BlocProvider<SlipBloc>(
+            create: (context) => SlipBloc(
+              slipRepository,
+            ),
+          ),
         ],
         child: MaterialApp(
           title: 'FundFlow',
           theme: AppTheme.lightTheme, // Apply the Poppins light theme
           darkTheme: AppTheme.darkTheme, // Apply the Poppins dark theme
           themeMode: ThemeMode.system,
-          home:
+          home: //ResetPasswordPage(email: 'p.ploy547@gmail.com'),
+              //VerificationPage(email: 'p.ploy547@gmail.com'),
               const AuthenticationWrapper(), // Decide whether to show login or HomePage
           routes: {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegistrationPage(),
             '/forget1': (context) => const ForgetPage(),
-            '/setting_page': (context) => const SettingsPage(),
             // '/pocket_management': (context) => CategoryPage(),
             '/setting_page/edit_email': (context) =>
                 EditEmailPage(repository: settingsRepository),

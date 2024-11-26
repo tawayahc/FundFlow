@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
-import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/features/home/models/category.dart';
 
 class CategoryCard extends StatelessWidget {
   final Category category;
   final double width;
+  final double height;
+  final double fontSize;
+  final double amountFontSize;
 
-  const CategoryCard({
-    super.key,
-    required this.category,
-    this.width = double.infinity,
-  });
+  const CategoryCard(
+      {super.key,
+      required this.category,
+      this.width = double.infinity,
+      this.height = 102.0, // Default height, adjust as needed
+      this.fontSize = 12,
+      this.amountFontSize = 16});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: width,
+      height: height, // Set height to make the card taller
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
@@ -34,7 +40,7 @@ class CategoryCard extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(top: 15),
-            height: 10,
+            height: 15,
             decoration: BoxDecoration(
               color: category.color,
             ),
@@ -53,16 +59,15 @@ class CategoryCard extends StatelessWidget {
               children: [
                 Text(
                   category.name,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black,
-                  ),
+                  style: TextStyle(
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.normal,
+                      color: const Color(0xFF414141)),
                 ),
                 Text(
-                  '฿ ${formatter.format(category.amount)}',
+                  '฿ ${formatter.format(category.amount)}', // No formatter needed
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: amountFontSize,
                     fontWeight: FontWeight.w600,
                     color: category.color,
                   ),
@@ -83,7 +88,7 @@ class CategoryWhenDragging extends StatelessWidget {
   const CategoryWhenDragging({
     super.key,
     this.width = double.infinity,
-    this.height = 90.0, // Set default height to match CategoryCard if needed
+    this.height = 90.0, // Default height, adjust as needed
   });
 
   @override

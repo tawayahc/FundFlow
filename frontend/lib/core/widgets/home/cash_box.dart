@@ -33,9 +33,21 @@ class CashBox extends StatelessWidget {
           Container(
             width: 60,
             height: 60,
-            decoration: const BoxDecoration(
-              color: Colors.grey, // Placeholder for a profile or image
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
+              color: Colors.grey, // สำรองในกรณีไม่มีภาพ
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25), // สีเงา
+                  spreadRadius: 1, // ขยายเงา
+                  blurRadius: 2, // ความเบลอ
+                  offset: const Offset(0, 0), // การเลื่อนเงา (x, y)
+                ),
+              ],
+              image: const DecorationImage(
+                image: AssetImage('assets/CashBox.png'),
+                fit: BoxFit.cover, // ทำให้ภาพเต็มวงกลม
+              ),
             ),
           ),
           const SizedBox(width: 10),

@@ -17,5 +17,15 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         emit(TransactionsLoadError("Failed to load transaction history"));
       }
     });
+
+    on<DeleteTransaction>((event, emit) async {
+      try {
+        await transactionRepository.deleteTransaction(event.transactionId);
+        add(LoadTransactions());
+        emit(TransactionDeleted());
+      } catch (error) {
+        emit(TransactionsLoading());
+      }
+    });
   }
 }
