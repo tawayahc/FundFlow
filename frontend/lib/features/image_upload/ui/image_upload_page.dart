@@ -2,7 +2,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_bloc.dart';
 import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_event.dart';
@@ -156,7 +155,9 @@ class ImageUploadPage extends StatelessWidget {
                         },
                   child: const Text(
                     'ยืนยัน',
-                    style: const TextStyle(fontSize: 16, color: Color(0xffffffff)),),
+                    style:
+                        const TextStyle(fontSize: 16, color: Color(0xffffffff)),
+                  ),
                 ),
               ),
             ),

@@ -172,6 +172,17 @@ class _ExpenseFormState extends State<ExpenseForm> {
             const SizedBox(
               height: 16,
             ),
+                    const Align(
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'เพิ่มรายการด้วยแบบฟอร์ม',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+            SizedBox(height: 5,),
             ExpenseCard(
               selectedCategory: _selectedCategory,
               amount: _amountController,
