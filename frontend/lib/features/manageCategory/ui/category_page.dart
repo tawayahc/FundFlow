@@ -138,15 +138,38 @@ class _CategoryPageState extends State<CategoryPage>
           // Header for "ประวัติการทำรายการ"
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 45.0),
-            child: Text(
-              'ประวัติการทำรายการ',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF414141),
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+              children: [
+                Text(
+                  'ประวัติการทำรายการ',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF414141),
+                  ),
+                ),
+                Row( 
+                  children: [
+                    Icon(
+                      Icons.info_outline, 
+                      size: 16,
+                      color: Color(0xFFB2B2B2),
+                    ),
+                    SizedBox(width: 4), 
+                    Text(
+                      'แตะที่รายการเพื่อลบ',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFFB2B2B2),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
+
           const SizedBox(height: 12),
           // Container for transaction list
           Expanded(
@@ -165,36 +188,50 @@ class _CategoryPageState extends State<CategoryPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: BlocBuilder<TransactionBloc, TransactionState>(
-                      builder: (context, transactionState) {
-                        if (transactionState is TransactionsLoading) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else if (transactionState is TransactionsLoaded) {
-                          final categoryTransactions = transactionState
-                              .transactions
-                              .where((transaction) =>
-                                  transaction.categoryId ==
-                                      widget.category.id &&
-                                  transaction.type == 'expense')
-                              .toList();
+            Expanded(
+              child: BlocBuilder<TransactionBloc, TransactionState>(
+                builder: (context, transactionState) {
+                  if (transactionState is TransactionsLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (transactionState is TransactionsLoaded) {
+                    final categoryTransactions = transactionState
+                        .transactions
+                        .where((transaction) =>
+                            transaction.categoryId == widget.category.id &&
+                            transaction.type == 'expense')
+                        .toList();
 
-                          if (categoryTransactions.isEmpty) {
-                            return const Center(
-                              child: Text('ไม่มีรายการสำหรับหมวดหมู่นี้'),
-                            );
-                          }
+                    if (categoryTransactions.isEmpty) {
+                      return const Center(
+                        child: Text('ไม่มีรายการสำหรับหมวดหมู่นี้'),
+                      );
+                    }
 
-                          final sortedTransactions =
-                              List.from(categoryTransactions)
-                                ..sort((a, b) => DateTime.parse(b.createdAt)
-                                    .compareTo(DateTime.parse(a.createdAt)));
+                    final sortedTransactions = List.from(categoryTransactions)
+                      ..sort((a, b) => DateTime.parse(b.createdAt)
+                          .compareTo(DateTime.parse(a.createdAt)));
 
-                          return ListView.builder(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 25.0),
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 12),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 45.0),
+                          child: Text(
+                            'รายจ่าย',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF414141),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8.0), 
+                        Expanded(
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 25.0),
                             itemCount: sortedTransactions.length,
                             itemBuilder: (context, index) {
                               final transaction = sortedTransactions[index];
@@ -202,8 +239,7 @@ class _CategoryPageState extends State<CategoryPage>
                                 padding: const EdgeInsets.only(bottom: 8.0),
                                 child: GestureDetector(
                                   onTap: () {
-                                    _showDeleteTransactionModal(
-                                        context, transaction);
+                                    _showDeleteTransactionModal(context, transaction);
                                   },
                                   child: TransactionCardForCategory(
                                     transaction: transaction,
@@ -211,17 +247,21 @@ class _CategoryPageState extends State<CategoryPage>
                                 ),
                               );
                             },
-                          );
-                        } else if (transactionState is TransactionsLoadError) {
-                          return Center(
-                            child: Text(transactionState.message),
-                          );
-                        } else {
-                          return const Center(child: Text('Unknown error'));
-                        }
-                      },
+                          ),
                     ),
-                  ),
+              ],
+            );
+          } else if (transactionState is TransactionsLoadError) {
+            return Center(
+              child: Text(transactionState.message),
+            );
+          } else {
+            return const Center(child: Text('Unknown error'));
+          }
+        },
+      ),
+    ),
+
                 ],
               ),
             ),
