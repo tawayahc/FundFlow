@@ -309,28 +309,6 @@ class _TransactionPageState extends State<TransactionPage>
                         ],
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.medium),
-                    Row(
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ImageUploadPage()));
-                            },
-                            child: Text('image')),
-                        //FIX: Remove the gallery button
-                        // ElevatedButton(
-                        //     onPressed: () {
-                        //       Navigator.push(
-                        //           context,
-                        //           MaterialPageRoute(
-                        //               builder: (context) => GalleryPage()));
-                        //     },
-                        //     child: Text('gallery')),
-                      ],
-                    ),
 
                     const SizedBox(height: AppSpacing.medium),
                     // Form Section
@@ -341,6 +319,29 @@ class _TransactionPageState extends State<TransactionPage>
                         onSubmit: _onIncomeSubmit,
                       ),
                     ] else if (_type == 'expense') ...[
+                      const SizedBox(height: AppSpacing.medium),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ImageUploadPage()));
+                              },
+                              child: Text('image')),
+                          //FIX: Remove the gallery button
+                          // ElevatedButton(
+                          //     onPressed: () {
+                          //       Navigator.push(
+                          //           context,
+                          //           MaterialPageRoute(
+                          //               builder: (context) => GalleryPage()));
+                          //     },
+                          //     child: Text('gallery')),
+                        ],
+                      ),
                       ExpenseForm(
                         key: ValueKey(_banks.toString() +
                             _categories.toString()), // Unique Key
