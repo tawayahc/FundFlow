@@ -201,15 +201,37 @@ class _BankAccountPageState extends State<BankAccountPage>
           ),
           const SizedBox(height: 30),
           // Transaction History Header
-          const Padding(
+           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 45.0),
-            child: Text(
-              'ประวัติการทำรายการ',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF414141),
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+              children: [
+                Text(
+                  'ประวัติการทำรายการ',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF414141),
+                  ),
+                ),
+                Row( 
+                  children: [
+                    Icon(
+                      Icons.info_outline, 
+                      size: 16,
+                      color: Color(0xFFB2B2B2),
+                    ),
+                    SizedBox(width: 4), 
+                    Text(
+                      'แตะที่รายการเพื่อลบ',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFFB2B2B2),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 12),
