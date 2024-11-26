@@ -1,8 +1,8 @@
 import 'package:bottom_picker/bottom_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/custom_input_transaction_box.dart';
 import 'package:fundflow/features/transaction/model/form_model.dart';
-import 'package:fundflow/core/widgets/custom_input_box.dart';
 import 'package:fundflow/core/widgets/custom_input_inkwell.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_dropdown.dart';
@@ -47,7 +47,6 @@ class _TransferFormState extends State<TransferForm> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -239,13 +238,17 @@ class _TransferFormState extends State<TransferForm> {
       key: _formKey,
       child: Column(
         children: [
-          const SizedBox(height: 16,),
+          const SizedBox(
+            height: 16,
+          ),
           TransferCard(
-            fromBank: _fromBank, 
-            toBank: _toBank,
-            amount: _amountController, 
-            selectedTime: _selectedDate),
-          const SizedBox(height: 16,),
+              fromBank: _fromBank,
+              toBank: _toBank,
+              amount: _amountController,
+              selectedTime: _selectedDate),
+          const SizedBox(
+            height: 16,
+          ),
           // From Bank Dropdown
           const Align(
             alignment: Alignment.centerLeft,
@@ -360,7 +363,7 @@ class _TransferFormState extends State<TransferForm> {
               ),
             ),
           ),
-          CustomInputBox(
+          CustomInputTransactionBox(
             labelText: 'ระบุจำนวนเงิน',
             prefixIcon: const Icon(
               Icons.account_balance_wallet,
