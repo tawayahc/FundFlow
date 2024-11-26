@@ -8,23 +8,20 @@ import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
+import 'package:fundflow/features/home/bloc/transaction/transaction_bloc.dart';
+import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
+import 'package:fundflow/features/home/bloc/transaction/transaction_state.dart';
 import 'package:fundflow/features/home/pages/bank/edit_bank_page.dart';
-import 'package:fundflow/features/home/ui/bank_section.dart';
-
+import '../../home/models/transaction.dart';
 import '../../../core/themes/app_styles.dart';
 import '../../../core/widgets/management/transaction_card.dart';
-import '../../home/bloc/category/category_bloc.dart';
-import '../../home/bloc/category/category_state.dart';
-import '../../home/bloc/transaction/transaction_bloc.dart';
-import '../../home/bloc/transaction/transaction_event.dart';
-import '../../home/bloc/transaction/transaction_state.dart';
-import '../../home/models/bank.dart';
 import '../../home/models/category.dart';
-import '../../home/models/transaction.dart';
-import '../../home/repository/transaction_repository.dart';
+import '../../home/models/bank.dart';
+
 
 class BankAccountPage extends StatefulWidget {
   final Bank bank;
+
   const BankAccountPage({super.key, required this.bank});
 
   @override
@@ -34,7 +31,6 @@ class BankAccountPage extends StatefulWidget {
 class _BankAccountPageState extends State<BankAccountPage>
     with SingleTickerProviderStateMixin {
   String _type = 'income';
-  List<Transaction> transactions = [];
   late TabController _tabController;
 
   @override
@@ -67,26 +63,22 @@ class _BankAccountPageState extends State<BankAccountPage>
     return GlobalPadding(
       child: Scaffold(
         appBar: AppBar(
-          leading: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
-                iconSize: 20,
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const BottomNavBar()));
-                },
-              ),
-            ],
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const BottomNavBar(),
+                ),
+              );
+            },
           ),
           centerTitle: true,
           actions: [
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () async {
-                // Navigate to the EditBankPage and get the updated bank
                 final updatedBank = await Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -95,7 +87,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                 );
 
                 if (updatedBank != null) {
-                  // Handle updated category (e.g., update the state, show a message, etc.)
+                  // Handle updated bank
                 }
               },
             ),
@@ -106,26 +98,21 @@ class _BankAccountPageState extends State<BankAccountPage>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //---------- **รูปธนาคาร
               Row(
                 children: [
-                  // รูปธนาคาร
                   CircleAvatar(
                     radius: 24,
                     backgroundColor: color,
-                    // backgroundImage: ,
                   ),
                   const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ชื่อธนาคาร
                       Text(
                         widget.bank.name,
                         style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      // ชื่อเต็ม
                       Text(
                         widget.bank.bank_name,
                         style: const TextStyle(color: Colors.grey),
@@ -135,164 +122,53 @@ class _BankAccountPageState extends State<BankAccountPage>
                 ],
               ),
               const SizedBox(height: 16),
-              //---------- **กล่องเงิน
               BankBalanceBox(color: color, bank: widget.bank, date: '00:00 น.'),
-
               const SizedBox(height: 30),
               const Text(
                 'ประวัติการทำรายการ',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-              // Transaction ตรงนี้
-              Center(
-                child: PreferredSize(
-                  preferredSize: const Size.fromHeight(40),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Container(
-                      height: 40,
-                      width: 200,
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: AppColors.primary,
-                      ),
-                      child: TabBar(
-                        controller: _tabController,
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        dividerColor: Colors.transparent,
-                        indicator: const BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                        labelColor: Colors.white,
-                        unselectedLabelColor: Colors.white,
-                        tabs: const [
-                          Tab(
-                            icon: Icon(Icons.download),
-                          ),
-                          Tab(
-                            icon: Icon(Icons.upload),
-                          ),
-                          Tab(
-                            icon: Icon(Icons.compare_arrows),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
               Expanded(
-                child: _type == 'transfer'
-                    ? BlocBuilder<BankBloc, BankState>(
-                        builder: (context, bankState) {
-                          if (bankState is TransfersLoading) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          } else if (bankState is TransfersLoaded) {
-                            final transfers =
-                                bankState.transfers.where((transfer) {
-                              return transfer.fromBankId == widget.bank.id ||
-                                  transfer.toBankId == widget.bank.id;
-                            }).toList();
+                child: BlocBuilder<TransactionBloc, TransactionState>(
+                  builder: (context, transactionState) {
+                    if (transactionState is TransactionsLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (transactionState is TransactionsLoaded) {
+                      final bankTransactions = transactionState.transactions
+                          .where((transaction) =>
+                              transaction.bankId == widget.bank.id)
+                          .toList();
 
-                            if (transfers.isEmpty) {
-                              return const Center(
-                                  child: Text('No transfer transactions'));
-                            }
+                      final sortedTransactions = List.from(bankTransactions)
+                        ..sort((a, b) => DateTime.parse(b.createdAt)
+                            .compareTo(DateTime.parse(a.createdAt)));
 
-                            return ListView.builder(
-                              itemCount: transfers.length,
-                              itemBuilder: (context, index) {
-                                final transfer = transfers[index];
-                                return TransferTransactionCard(
-                                  transfer: transfer,
-                                  currentBankId: widget.bank.id,
-                                );
-                              },
-                            );
-                          } else {
-                            return const Center(
-                                child: Text('Failed to load transfers'));
-                          }
+                      final filteredTransactions = sortedTransactions
+                          .where((transaction) => transaction.type == _type)
+                          .toList();
+
+                      return ListView.builder(
+                        itemCount: filteredTransactions.length,
+                        itemBuilder: (context, index) {
+                          final transaction = filteredTransactions[index];
+
+                          return GestureDetector(
+                            onTap: () {
+                              _showDeleteTransactionModal(
+                                  context, transaction);
+                            },
+                            child: TransactionCard(transaction: transaction),
+                          );
                         },
-                      )
-                    : BlocBuilder<TransactionBloc, TransactionState>(
-                        builder: (context, transactionState) {
-                          if (transactionState is TransactionsLoading) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          } else if (transactionState is TransactionsLoaded) {
-                            final bankTransactions = transactionState
-                                .transactions
-                                .where((transaction) =>
-                                    transaction.bankId == widget.bank.id)
-                                .toList();
-
-                            final sortedTransactions =
-                                List.from(bankTransactions)
-                                  ..sort((a, b) => DateTime.parse(b.createdAt)
-                                      .compareTo(DateTime.parse(a.createdAt)));
-
-                            final filteredTransactions = sortedTransactions
-                                .where(
-                                    (transaction) => transaction.type == _type)
-                                .toList();
-
-                            return BlocBuilder<CategoryBloc, CategoryState>(
-                              builder: (context, categoryState) {
-                                return ListView.builder(
-                                  itemCount: filteredTransactions.length,
-                                  itemBuilder: (context, index) {
-                                    final transaction =
-                                        filteredTransactions[index];
-                                    Category category = Category(
-                                      id: 0,
-                                      name: 'undefined',
-                                      amount: 0.0,
-                                      color: Colors.grey,
-                                    );
-
-                                    if (transaction.categoryId != 0 &&
-                                        categoryState is CategoriesLoaded) {
-                                      category =
-                                          categoryState.categories.firstWhere(
-                                        (cat) =>
-                                            cat.id == transaction.categoryId,
-                                        orElse: () => category,
-                                      );
-                                    }
-
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                DeleteTransactionPage(
-                                                    transaction: transaction),
-                                          ),
-                                        );
-                                      },
-                                      child: TransactionCard(
-                                          transaction: transaction),
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          } else if (transactionState
-                              is TransactionsLoadError) {
-                            return Center(
-                                child: Text(transactionState.message));
-                          } else {
-                            return const Center(child: Text('Unknown error'));
-                          }
-                        },
-                      ),
+                      );
+                    } else if (transactionState is TransactionsLoadError) {
+                      return Center(child: Text(transactionState.message));
+                    } else {
+                      return const Center(child: Text('Unknown error'));
+                    }
+                  },
+                ),
               ),
             ],
           ),
@@ -300,17 +176,28 @@ class _BankAccountPageState extends State<BankAccountPage>
       ),
     );
   }
+
+  void _showDeleteTransactionModal(BuildContext context, Transaction transaction) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black54, // โปร่งแสง
+      builder: (BuildContext context) {
+        return DeleteTransactionPage(transaction: transaction);
+      },
+    );
+  }
 }
 
 Map<String, Color> bankColorMap = {
-  'ธนาคารกสิกรไทย': Colors.green, // Kasikorn Bank
-  'ธนาคารกรุงไทย': Colors.blue, // Krung Thai Bank
-  'ธนาคารไทยพาณิชย์': Colors.purple, // Siam Commercial Bank
-  'ธนาคารกรุงเทพ': const Color.fromARGB(255, 10, 35, 145), // Bangkok Bank
-  'ธนาคารกรุงศรีอยุธยา': const Color(0xFFffe000), // Krungsri (Bank of Ayudhya)
-  'ธนาคารออมสิน': Colors.pink, // Government Savings Bank
-  'ธนาคารธนชาต': const Color(0xFFF68B1F), // Thanachart Bank
-  'ธนาคารเกียรตินาคิน': const Color(0xFF004B87), // Kiatnakin Bank
-  'ธนาคารซิตี้แบงก์': const Color(0xFF1E90FF), // Citibank
-  'ธนาคารเมกะ': const Color(0xFF3B5998), // Mega Bank
+  'ธนาคารกสิกรไทย': Colors.green,
+  'ธนาคารกรุงไทย': Colors.blue,
+  'ธนาคารไทยพาณิชย์': Colors.purple,
+  'ธนาคารกรุงเทพ': const Color.fromARGB(255, 10, 35, 145),
+  'ธนาคารกรุงศรีอยุธยา': const Color(0xFFffe000),
+  'ธนาคารออมสิน': Colors.pink,
+  'ธนาคารธนชาต': const Color(0xFFF68B1F),
+  'ธนาคารเกียรตินาคิน': const Color(0xFF004B87),
+  'ธนาคารซิตี้แบงก์': const Color(0xFF1E90FF),
+  'ธนาคารเมกะ': const Color(0xFF3B5998),
 };

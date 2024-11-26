@@ -306,7 +306,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: isFormEnabled ? _submit : null,
-            child: const Text('Submit'),
+            child: const Text('ยันยัน'),
           ),
         ],
       ),
