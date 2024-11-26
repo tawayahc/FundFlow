@@ -17,10 +17,11 @@ import 'package:fundflow/features/home/repository/bank_repository.dart';
 import 'package:fundflow/features/home/repository/category_repository.dart';
 import 'package:fundflow/features/home/repository/profile_repository.dart';
 import 'package:fundflow/features/home/ui/home_ui.dart';
+import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_bloc.dart';
+import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_event.dart';
 import 'package:fundflow/features/image_upload/bloc/slip/slip_bloc.dart';
 import 'package:fundflow/features/image_upload/bloc/slip/slip_event.dart';
 import 'package:fundflow/features/image_upload/bloc/slip/slip_state.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   final PageController pageController;
@@ -44,9 +45,9 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // Note: Open the gallery app on Android
   Future<void> _openGallery() async {
     if (Platform.isAndroid) {
-      // Use AndroidIntent to open the Gallery app
       const intent = AndroidIntent(
         action: 'android.intent.action.VIEW',
         type: 'image/*',
@@ -107,6 +108,8 @@ class _HomePageState extends State<HomePage> {
                   const SnackBar(
                       content: Text('Slip images uploaded successfully.')),
                 );
+                final images = state.images;
+                context.read<ImageBloc>().add(SendImages(images: images));
               } else if (state is SlipFailure) {
                 // Show error message when slip upload fails
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -114,6 +117,7 @@ class _HomePageState extends State<HomePage> {
                       content: Text('Failed to upload slips: ${state.error}')),
                 );
                 // Check if the failure was due to no slips being detected
+                // FIX: Should It have?
                 if (state.error.contains('No slip images detected')) {
                   // Prompt the user to manually upload slips
                   showDialog(

@@ -26,7 +26,7 @@ class SlipBloc extends Bloc<SlipEvent, SlipState> {
         throw Exception('No slip images detected.');
       }
       await slipRepository.uploadDetectedSlips();
-      emit(SlipSuccess());
+      emit(SlipSuccess(images: slipImages));
     } catch (e) {
       logger.e('Error detecting and uploading slips: $e');
       emit(SlipFailure(e.toString()));

@@ -1,5 +1,4 @@
 import 'package:fundflow/app.dart';
-import 'package:fundflow/utils/api_helper.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'image_repository.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,9 +8,7 @@ class SlipRepository {
 
   final List<String> slipIdentifiers = ["K PLUS", "MAKE by KBank"];
 
-  SlipRepository({
-    required ApiHelper apiHelper,
-  }) : _imageRepository = ImageRepository(apiHelper: apiHelper);
+  SlipRepository() : _imageRepository = ImageRepository();
 
   // Fetch all images from the specified albums
   Future<List<AssetEntity>> fetchAllImages(

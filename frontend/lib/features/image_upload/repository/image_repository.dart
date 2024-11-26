@@ -12,10 +12,10 @@ class ImageRepository {
   final ImagePicker _picker;
   final ApiHelper _apiHelper;
 
-  // Dependency Injection of ApiHelper
-  ImageRepository({required ApiHelper apiHelper})
+  // Note: URL for the AI server
+  ImageRepository()
       : _picker = ImagePicker(),
-        _apiHelper = apiHelper;
+        _apiHelper = ApiHelper(baseUrl: 'http://10.0.2.2:3000');
 
   Future<List<XFile>?> pickImages() async {
     try {

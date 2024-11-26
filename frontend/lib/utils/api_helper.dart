@@ -21,7 +21,7 @@ class ApiHelper {
             'Content-Type': 'application/json',
           },
         )) {
-    logger.d('ApiHelper initialized with baseUrl: $baseUrl');
+    // logger.d('ApiHelper initialized with baseUrl: $baseUrl');
     _initializeInterceptors();
   }
 
@@ -35,7 +35,7 @@ class ApiHelper {
             String? token = await storage.read(key: 'token');
             if (token != null) {
               options.headers['Authorization'] = 'Bearer $token';
-              logger.d('Authorization header set with token.');
+              // logger.d('Authorization header set with token.');
             } else {
               logger.w('No token found in secure storage.');
             }

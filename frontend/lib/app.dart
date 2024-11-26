@@ -76,10 +76,8 @@ class MyApp extends StatelessWidget {
     // NOTE: API Helper is use for store the base url and token
     // NOTE: AI_API is use for store the base url of AI API
     final String baseUrl = dotenv.env['BASE_URL'] ?? 'http://10.0.2.2:8080/';
-    final String aiBaseUrl = dotenv.env['AI_API'] ?? 'http://10.0.2.2:3000';
 
     final apiHelper = ApiHelper(baseUrl: baseUrl);
-    final aiApiHelper = ApiHelper(baseUrl: aiBaseUrl);
     final authenticationRepository = AuthenticationRepository(baseUrl: baseUrl);
     final settingsRepository = SettingsRepository(apiHelper: apiHelper);
     final repasswordRepository = RepasswordRepository(baseUrl: baseUrl);
@@ -90,10 +88,8 @@ class MyApp extends StatelessWidget {
     final notificationRepository = NotificationRepository(apiHelper: apiHelper);
     final transactionAddRepository =
         TransactionAddRepository(apiHelper: apiHelper);
-    final imageRepository = ImageRepository(apiHelper: aiApiHelper);
-    final slipRepository = SlipRepository(
-      apiHelper: aiApiHelper,
-    );
+    final imageRepository = ImageRepository();
+    final slipRepository = SlipRepository();
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authenticationRepository),

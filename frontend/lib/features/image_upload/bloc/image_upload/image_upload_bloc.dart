@@ -7,6 +7,7 @@ import 'package:fundflow/features/image_upload/repository/image_repository.dart'
 import 'package:fundflow/features/image_upload/repository/slip_repository.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
 import 'package:fundflow/features/transaction/model/create_transaction_request_model.dart';
+import 'package:fundflow/features/transaction/model/transaction.dart';
 import 'package:fundflow/features/transaction/repository/transaction_repository.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -72,7 +73,8 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
 
       // Fetch user banks once to optimize performance
       final userBanks = await _transactionAddRepository.fetchBanks();
-
+      // Note: model
+      List<TransactionResponse> transactionsWithMultipleBanks = [];
       // Process each transaction
       for (var transaction in transactions) {
         final matchingBanks = userBanks
@@ -81,20 +83,18 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
             .toList();
 
         if (matchingBanks.length >= 2) {
-          // FIX: handle fluke's function
-          // User has two or more accounts with the same bank_name
-          // Send to notification system
-          // await _notificationRepository.sendNotification(transaction.toJson());
-          logger.w('Multiple banks found for ${transaction.bank}');
-          // log json
-          final ts = transactions.map((t) => t.toJson()).toList();
-          logger.d("$ts");
+          // TODO: Handle multiple banks for a single transaction
+          transactionsWithMultipleBanks.add(transaction);
+
+          // Log the transaction
+          logger.d('Transaction with multiple banks: ${transaction.toJson()}');
+          logger.d(
+              "List of transactions with multiple banks: $transactionsWithMultipleBanks");
         } else if (matchingBanks.isEmpty) {
-          // FIX: handle fluke's function
           // User does not have an account with the bank
-          // Send to notification system
-          // await _notificationRepository.sendNotification(transaction.toJson());
+          // Handle accordingly or log
           logger.w('No bank found for ${transaction.bank}');
+          // Optionally, collect these transactions as well
         } else {
           // Send to create transaction API
           final createTransactionRequest = CreateTransactionRequest(
