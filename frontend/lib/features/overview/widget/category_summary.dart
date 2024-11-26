@@ -1,15 +1,17 @@
 // features/overview/ui/routine_summary_item.dart
 import 'package:flutter/material.dart';
 
-class RoutineSummaryItem extends StatelessWidget {
-  final String dateString;
+class CategorySummaryItem extends StatelessWidget {
+  final String categoryName;
+  final Color categoryColor;
   final double totalIn;
   final double totalOut;
   final double balance;
 
-  const RoutineSummaryItem({
+  const CategorySummaryItem({
     Key? key,
-    required this.dateString,
+    required this.categoryName,
+    required this.categoryColor,
     required this.totalIn,
     required this.totalOut,
     required this.balance,
@@ -24,16 +26,16 @@ class RoutineSummaryItem extends StatelessWidget {
         color: Colors.white,
         border: const Border(
           top: BorderSide(
-          color: Colors.white, // Color of the top border
-          width: 1.0, // Width of the top border
+          color: Colors.white, 
+          width: 1.0, 
           ),
         ),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 0,
-            blurRadius: 3,
-            offset: Offset(0, 0),
+            spreadRadius: 0,  
+            blurRadius: 3,    
+            offset: Offset(0, 0),  
           )
         ]
       ),
@@ -44,24 +46,27 @@ class RoutineSummaryItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              dateString,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey[800]),
-            ),
-            SizedBox(height: 4,),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text("เงินเข้าทั้งหมด",
-                    style: TextStyle(color: Colors.grey[600])),
-                Text(totalIn.toStringAsFixed(2),
-                    style: const TextStyle(
-                        color: Colors.green, fontWeight: FontWeight.bold)),
+                ClipOval(
+                  child: Container(
+                    color: categoryColor, 
+                    width: 23,                 
+                    height: 23,                
+                  ),
+                ),
+                SizedBox(width: 3.5,),
+                Text(
+                  categoryName,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[800]),
+                ),
               ],
             ),
+            SizedBox(height: 15,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -72,7 +77,7 @@ class RoutineSummaryItem extends StatelessWidget {
                         color: Colors.red, fontWeight: FontWeight.bold)),
               ],
             ),
-            const Divider(
+            /*const Divider(
               color: Colors.grey,
             ),
             Row(
@@ -83,7 +88,7 @@ class RoutineSummaryItem extends StatelessWidget {
                     style: TextStyle(
                         color: balanceColor, fontWeight: FontWeight.bold)),
               ],
-            ),
+            ),*/
           ],
         ),
       ),

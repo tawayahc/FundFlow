@@ -43,10 +43,12 @@ class _NavBarState extends State<BottomNavBar>
   @override
   Widget build(BuildContext context) {
     final List<Widget> onNavBarPages = [
-      HomePage(
-        pageController: _pageController,
+      GlobalPadding(
+        child: HomePage(
+          pageController: _pageController,
+        ),
       ),
-      TransactionPage(),
+      GlobalPadding(child: TransactionPage()),
       const OverviewPage(),
 
       // Sub-page from home
@@ -54,13 +56,11 @@ class _NavBarState extends State<BottomNavBar>
     ];
 
     return Scaffold(
-      body: GlobalPadding(
-        child: PageView(
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: List.generate(
-              onNavBarPages.length, (index) => onNavBarPages[index]),
-        ),
+      body: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: List.generate(
+            onNavBarPages.length, (index) => onNavBarPages[index]),
       ),
       extendBody: true,
       bottomNavigationBar: AnimatedNotchBottomBar(

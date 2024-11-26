@@ -4,6 +4,8 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/overview/widget/routine_summary_item.dart';
+import 'package:fundflow/features/overview/widget/expense_type_dropdown.dart';
+import 'package:fundflow/features/overview/widget/date_range.dart';
 
 import '../bloc/overview/overview_bloc.dart';
 import '../bloc/overview/overview_event.dart';
@@ -86,7 +88,7 @@ class _DailySummaryViewState extends State<DailySummaryView>{
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,55 +100,61 @@ class _DailySummaryViewState extends State<DailySummaryView>{
                     width: 120,
                     height: 40,
                     child: DropDownTextField(
-                        textFieldDecoration: const InputDecoration(
-                          hintText: 'เงินเข้า-เงินออก',
-                          hintStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 11,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 3),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
-                          ),
-                          border: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
-                          ),
-                        ),
-                        controller: widget.dropDownController,
-                        clearOption: true,
-                        clearIconProperty: IconProperty(color: Colors.green),
-                        validator: (value) {
-                          if (value == null) {
-                            return "Required field";
-                          } else {
-                            return null;
-                          }
-                        },
-                        dropDownItemCount: 3,
-                        dropDownList: const [
-                          DropDownValueModel(name: 'เงินเข้า-เงินออก', value: "all"),
-                          DropDownValueModel(name: 'เงินเข้า', value: "income"),
-                          DropDownValueModel(name: 'เงินออก', value: "expense"),
-                        ],
-                        textStyle: const TextStyle(
-                          color: Colors.black,
+                      textFieldDecoration: const InputDecoration(
+                        hintText: 'เงินเข้า-เงินออก',
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
                           fontSize: 11,
                         ),
-                        onChanged: (val) {
-                          _applyFiltered();
+                        suffixIcon: Padding(
+                          padding: EdgeInsets.only(bottom: 4.0), 
+                          child: Icon(Icons.arrow_drop_down),
+                        ),
+                        suffixIconColor: Colors.grey,
+                        contentPadding: EdgeInsets.only(left: 2, right: 2, top: 10, bottom: 4), 
+                        isDense: true,
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
+                      controller: widget.dropDownController,
+                      clearOption: false,
+                      //clearIconProperty: IconProperty(color: Colors.green),
+                      validator: (value) {
+                        if (value == null) {
+                          return "Required field";
+                        } else {
+                          return null;
                         }
+                      },
+                      dropDownItemCount: 3,
+                      dropDownList: const [
+                        DropDownValueModel(name: 'เงินเข้า-เงินออก', value: "all"),
+                        DropDownValueModel(name: 'เงินเข้า', value: "income"),
+                        DropDownValueModel(name: 'เงินออก', value: "expense"),
+                      ],
+                      textStyle: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 11,
+                      ),
+                      onChanged: (val) {
+                        _applyFiltered();
+                      },
                     ),
                   ),
                 ],
@@ -155,6 +163,9 @@ class _DailySummaryViewState extends State<DailySummaryView>{
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text('ช่วงเวลา'),
+                  DateRangeDropdown(
+                    onDateRangeSelected: widget.onDateRangeSelected),
+                  
                   // Implement Date Picker here
                   ElevatedButton.icon(
                     onPressed: () => _selectDateRange(context),
@@ -168,7 +179,7 @@ class _DailySummaryViewState extends State<DailySummaryView>{
             ],
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 10),
         Expanded(
           child: sortedDates.isNotEmpty
               ? ListView.builder(
@@ -185,14 +196,29 @@ class _DailySummaryViewState extends State<DailySummaryView>{
                 return Container(); // or some placeholder widget
               }
 
-              return RoutineSummaryItem(
-                dateString: '${date.day}/${date.month}/${date.year}',
-                totalIn: summary.totalIncome,
-                totalOut: summary.totalExpense,
-                balance: summary.netTotal,
-              );
-            },
-          )
+                    const monthNames = {
+                      1: 'ม.ค.',
+                      2: 'ก.พ.',
+                      3: 'มี.ค.',
+                      4: 'เม.ย.',
+                      5: 'พ.ค.',
+                      6: 'มิ.ย.',
+                      7: 'ก.ค.',
+                      8: 'ส.ค.',
+                      9: 'ก.ย.',
+                      10: 'ต.ค.',
+                      11: 'พ.ย.',
+                      12: 'ธ.ค.',
+                    };
+
+                    return RoutineSummaryItem(
+                      dateString: '${date.day} ${monthNames[date.month]} ${(date.year+543) % 100}',
+                      totalIn: summary.totalIncome,
+                      totalOut: summary.totalExpense,
+                      balance: summary.netTotal,
+                    );
+                  },
+                )
               : const Center(
               child:
               Text('No transactions found for the selected criteria.')),

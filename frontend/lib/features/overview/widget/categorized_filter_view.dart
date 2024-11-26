@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/overview/bloc/categorized/categorized_bloc.dart';
 import 'package:fundflow/features/overview/bloc/categorized/categorized_event.dart';
+import 'package:fundflow/features/overview/widget/expense_type_dropdown.dart';
+import 'package:fundflow/features/overview/widget/date_range.dart';
 import 'package:fundflow/features/overview/model/category_model.dart';
 
 class CategorizedFilterView extends StatefulWidget {
@@ -30,37 +32,19 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
     super.dispose();
   }
 
-  Future<void> _selectDateRange(BuildContext context) async {
-    final DateTime now = DateTime.now();
-    final DateTime firstDate = DateTime(now.year - 5);
-    final DateTime lastDate = DateTime(now.year + 1);
-
-    final DateTimeRange? picked = await showDateRangePicker(
-      context: context,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      initialDateRange: selectedDateRange ??
-          DateTimeRange(
-            start: DateTime(now.year, now.month, 1),
-            end: now,
-          ),
-    );
-
-    if (picked != null && picked != selectedDateRange) {
-      setState(() {
-        selectedDateRange = picked;
-      });
-      logger.d('Selected Date Range: ${picked.start} - ${picked.end}');
-    }
-  }
-
   void _applyFilters() {
     final String? selectedCategory =
         _categoryDropDownController.dropDownValue?.value as String?;
     final DateTime? startDate = selectedDateRange?.start;
     final DateTime? endDate = selectedDateRange?.end;
 
-    // Dispatch ApplyFiltersEvent to BLoC
+    if (startDate == null || endDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a valid date range')),
+      );
+      return;
+    }
+
     context.read<CategorizedBloc>().add(ApplyFiltersEvent(
           categoryName: selectedCategory,
           startDate: startDate,
@@ -72,56 +56,192 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
         'Applying Filters - Category: $selectedCategory, Start: $startDate, End: $endDate');
   }
 
+  void _clearFilters() {
+    setState(() {
+      _categoryDropDownController.clearDropDown();
+      selectedDateRange = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Category Dropdown
+        // Dropdown and Date Picker Row
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: DropDownTextField(
-            textFieldDecoration: const InputDecoration(
-              hintText: 'Select Category',
-              prefixIcon: Icon(Icons.category),
-              border: OutlineInputBorder(),
-            ),
-            controller: _categoryDropDownController,
-            clearOption: true,
-            dropDownItemCount: widget.categories.length + 1,
-            dropDownList: [
-              const DropDownValueModel(name: 'All', value: "all"),
-              ...widget.categories
-                  // Brute force method to exclude 'income' category from showing
-                  .where((category) => category.name.toLowerCase() != 'income')
-                  .map((category) => DropDownValueModel(
-                  name: category.name, value: category.name)),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // Category Dropdown
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('ประเภทรายการ'),
+                  SizedBox(
+                    width: 143,
+                    height: 30,
+                    child: DropDownTextField(
+                      textFieldDecoration: const InputDecoration(
+                        hintText: 'เลือกหมวดหมู่',
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 11,
+                        ),
+                        suffixIcon: Padding(
+                          padding: EdgeInsets.only(bottom: 4.0), 
+                          child: Icon(Icons.arrow_drop_down),
+                        ),
+                        suffixIconColor: Colors.grey,
+                        contentPadding: EdgeInsets.only(left: 2, right: 2, top: 10, bottom: 10), 
+                        isDense: true,
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
+                      controller: _categoryDropDownController,
+                      clearOption: true,
+                      dropDownItemCount: widget.categories.length + 1,
+                      dropDownList: [
+                        const DropDownValueModel(name: 'All', value: "all"),
+                        ...widget.categories
+                            // Brute force method to exclude 'income' category from showing
+                            .where((category) => category.name.toLowerCase() != 'income')
+                            .map((category) => DropDownValueModel(
+                            name: category.name, value: category.name))
+                            .toList(),
+                      ],
+                      onChanged: (val) {
+                        logger.d('Category Selected: ${val?.value}');
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 12,),
+                  Container(
+                    width: 143,
+                    height: 30,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF41486d),
+                      ),
+                      onPressed: _applyFilters,
+                      child: const Text(
+                        'เพิ่มตัวกรอง',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  )
+
+                ],
+              ),
+
+              // Date Range Picker
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('ช่วงเวลา'),
+                  DateRangeDropdown(
+                    onDateRangeSelected: (picked) {
+                      setState(() {
+                        selectedDateRange = picked;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 12,),
+                  Container(
+                    width: 143,
+                    height: 30,
+                    child: OutlinedButton(
+                      onPressed:  _clearFilters,
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Color(0xFF41486d), 
+                          width: 1.0, 
+                        ),
+                      ),
+                      child: const Text(
+                        'ลบตัวกรอง',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
-            onChanged: (val) {
-              logger.d('Category Selected: ${val?.value}');
-            },
           ),
         ),
-        // Date Range Picker
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: ElevatedButton.icon(
-            onPressed: () => _selectDateRange(context),
-            icon: const Icon(Icons.date_range),
-            label: Text(selectedDateRange == null
-                ? 'Select Date Range'
-                : '${selectedDateRange!.start.toLocal().toString().split(' ')[0]} - ${selectedDateRange!.end.toLocal().toString().split(' ')[0]}'),
-          ),
-        ),
-        const SizedBox(height: 10),
-        // Apply Filters Button
-        Center(
-          child: ElevatedButton(
-            onPressed: _applyFilters,
-            child: const Text('Apply Filters'),
-          ),
-        ),
+        // Buttons Row
+        /*Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              width: 143,
+              height: 30,
+              child: OutlinedButton(
+                onPressed: _applyFilters,
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(
+                    color: Color(0xFF41486d), 
+                    width: 1.0, 
+                  ),
+                ),
+                child: const Text(
+                  'Apply Filters',
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: 143,
+              height: 30,
+              child: OutlinedButton(
+                onPressed: _clearFilters,
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(
+                    color: Color(0xFF41486d), 
+                    width: 1.0, 
+                  ),
+                ),
+                child: const Text(
+                  'Clear Filters',
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            )
+          ],
+          
+        ),*/
       ],
     );
   }
 }
+

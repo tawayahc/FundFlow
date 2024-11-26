@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/features/overview/widget/routine_summary_item.dart';
-
+import 'package:fundflow/features/overview/widget/expense_type_dropdown.dart';
 import '../../../app.dart';
 import '../bloc/overview/overview_bloc.dart';
 import '../bloc/overview/overview_event.dart';
@@ -83,70 +83,26 @@ class _MonthlySummaryViewState extends State<MonthlySummaryView> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('ประเภทรายการ'),
+                  const Text('ประเภทรายการ',),
                   SizedBox(
                     width: 150,
-                    child: DropDownTextField(
-                      textFieldDecoration: const InputDecoration(
-                        hintText: 'เงินเข้า-เงินออก',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 11,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 3),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                            width: 1.0,
-                          ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                            width: 1.0,
-                          ),
-                        ),
-                        border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                            width: 1.0,
-                          ),
-                        ),
-                      ),
-                      controller:  widget.dropDownController,
-                      clearOption: true,
-                      clearIconProperty: IconProperty(color: Colors.green),
-                      validator: (value) {
-                        if (value == null) {
-                          return "Required field";
-                        } else {
-                          return null;
-                        }
-                      },
-                      dropDownItemCount: 3,
-                      dropDownList: const [
-                        DropDownValueModel(name: 'เงินเข้า-เงินออก', value: "all"),
-                        DropDownValueModel(name: 'เงินเข้า', value: "income"),
-                        DropDownValueModel(name: 'เงินออก', value: "expense"),
-                      ],
-                      textStyle: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 11,
-                      ),
-                      onChanged: (val) {
-                        _applyFiltered();
-                      },
+                    child: ExpenseTypeDropDown(
+                      controller: widget.dropDownController,
+                      onChanged: widget.onFilterChanged!,
                     ),
                   ),
                 ],
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text('ช่วงเวลา'),
+                  
                   // Implement Date Picker here
                   ElevatedButton.icon(
                     onPressed: () => _selectDateRange(context),
@@ -160,23 +116,38 @@ class _MonthlySummaryViewState extends State<MonthlySummaryView> {
             ],
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 10),
         Expanded(
           child: sortedMonths.isNotEmpty
               ? ListView.builder(
-            itemCount: sortedMonths.length,
-            itemBuilder: (context, index) {
-              final month = sortedMonths[index];
-              final summary = widget.monthlySummaries[month]!;
+                  itemCount: sortedMonths.length,
+                  itemBuilder: (context, index) {
+                    final month = sortedMonths[index];
+                    final summary = widget.monthlySummaries[month]!;
 
-              return RoutineSummaryItem(
-                dateString: '${month.month}/${month.year}',
-                totalIn: summary.totalIncome,
-                totalOut: summary.totalExpense,
-                balance: summary.netTotal,
-              );
-            },
-          )
+                    const monthNames = {
+                      1: 'ม.ค.',
+                      2: 'ก.พ.',
+                      3: 'มี.ค.',
+                      4: 'เม.ย.',
+                      5: 'พ.ค.',
+                      6: 'มิ.ย.',
+                      7: 'ก.ค.',
+                      8: 'ส.ค.',
+                      9: 'ก.ย.',
+                      10: 'ต.ค.',
+                      11: 'พ.ย.',
+                      12: 'ธ.ค.',
+                    };
+
+                    return RoutineSummaryItem(
+                      dateString: '${monthNames[month.month]} ${(month.year+543) % 100}',
+                      totalIn: summary.totalIncome,
+                      totalOut: summary.totalExpense,
+                      balance: summary.netTotal,
+                    );
+                  },
+                )
               : const Center(
               child:
               Text('No transactions found for the selected criteria.')),

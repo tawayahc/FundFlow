@@ -54,7 +54,11 @@ class ExpenseBarChartState extends State<ExpenseBarChart> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('เงินเข้า-เงินออกรายเดือน'),
+            const Text(
+              'เงินเข้า-เงินออกรายเดือน', 
+              style: TextStyle(
+                fontWeight: FontWeight.bold
+              ),),
             const SizedBox(
               height: 30,
             ),

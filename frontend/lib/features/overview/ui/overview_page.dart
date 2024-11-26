@@ -1,4 +1,3 @@
-// features/overview/ui/overview_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
@@ -8,11 +7,7 @@ import 'package:fundflow/features/home/models/transaction.dart';
 import 'package:fundflow/features/overview/bloc/overview/overview_bloc.dart';
 import 'package:fundflow/features/overview/bloc/overview/overview_event.dart';
 import 'package:fundflow/features/overview/ui_test/tab_categorized.dart';
-// import 'package:fundflow/features/overview/ui/tab_categorized.dart';
 import 'package:fundflow/features/overview/ui_test/tab_overview.dart';
-// import 'package:fundflow/features/overview/ui/tab_overview.dart';
-
-import '../../../core/widgets/custom_tab.dart';
 
 class OverviewPage extends StatefulWidget {
   const OverviewPage({super.key});
@@ -54,43 +49,48 @@ class OverviewPageState extends State<OverviewPage>
 
   @override
   Widget build(BuildContext context) {
-    return GlobalPadding(
-      child: Scaffold(
-        body: Column(
-          children: [
-            const SizedBox(height: 40),
-            CustomTab(
-              tabController: _tabController,
-              tabs: const [
-                Tab(text: 'ภาพรวม'),
-                Tab(text: 'หมวดหมู่'),
-              ],
-              shadowOpacity: 0.5,
-              blurRadius: 5,
-              indicatorDecoration: const BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-              ),
-              indicatorSize: TabBarIndicatorSize.tab,
-            ),
-            const SizedBox(height: 12),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: const [
-                  // Content for the 'Overview' tab
-                  // SingleChildScrollView(
-                  //   child: TabOverview(),
-                  // ),
-                  TabOverview(),
-                  // Content for the 'Categorized' tab
-                  // SingleChildScrollView(
-                  //   child: TabCategorized(),
-                  // ),
-                  TabCategorized(),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'สรุปรายรับรายจ่าย',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold
+          ),),
+        centerTitle: true,
+      ),
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  const SizedBox(height: 16),
+                  CustomTab(
+                    tabController: _tabController,
+                    tabs: const [
+                      Tab(text: 'ภาพรวม'),
+                      Tab(text: 'หมวดหมู่'),
+                    ],
+                    shadowOpacity: 0.5,
+                    blurRadius: 5,
+                    indicatorDecoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                  ),
+                  const SizedBox(height: 12),
                 ],
               ),
             ),
+          ];
+        },
+        body: TabBarView(
+          controller: _tabController,
+          children: const [
+            TabOverview(), // Scrollable content for "ภาพรวม"
+            TabCategorized(), // Scrollable content for "หมวดหมู่"
           ],
         ),
       ),
