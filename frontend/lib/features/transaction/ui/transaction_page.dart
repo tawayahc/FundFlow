@@ -211,7 +211,6 @@ class _TransactionPageState extends State<TransactionPage>
                     if (_type == 'income') ...[
                       IncomeForm(
                         key: ValueKey(_banks), // Use ValueKey with banks list
-                        banks: _banks,
                         onSubmit: _onIncomeSubmit,
                       ),
                     ] else if (_type == 'expense') ...[

@@ -1,10 +1,10 @@
 import 'package:bottom_picker/bottom_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
-import 'package:fundflow/core/widgets/custom_input_box.dart';
 import 'package:fundflow/core/widgets/custom_input_inkwell.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_dropdown.dart';
+import 'package:fundflow/core/widgets/custom_input_transaction_box.dart';
 import 'package:fundflow/core/widgets/transaction/expense_card.dart';
 import '../model/bank_model.dart';
 import '../model/category_model.dart';
@@ -473,7 +473,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 ),
               ),
             ),
-            CustomInputBox(
+            CustomInputTransactionBox(
               labelText: 'ระบุจำนวนเงิน',
               prefixIcon: const Icon(
                 Icons.account_balance_wallet,
@@ -594,7 +594,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 ),
               ),
             ),
-            CustomInputBox(
+            CustomInputTransactionBox(
                 labelText: 'โน้ต',
                 prefixIcon: const Icon(
                   Icons.note,

@@ -46,10 +46,8 @@ class CustomInputInkwell extends StatelessWidget {
               ),
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
+          child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Text(
               labelText,
               style: const TextStyle(
                 color: Color(0xFFD0D0D0),
@@ -57,8 +55,7 @@ class CustomInputInkwell extends StatelessWidget {
                 fontWeight: FontWeight.normal,
               ),
             ),
-            ]
-          ),
+          ]),
         ),
       ),
     );
