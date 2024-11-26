@@ -83,22 +83,6 @@ class _DailySummaryViewState extends State<DailySummaryView> {
     logger.d('Applying Filters: $selectedExpenseType');
   }
 
-  void _applyFiltered() {
-    String? selectedExpenseType =
-        widget.dropDownController.dropDownValue?.value as String?;
-    final DateTime? startDate = selectedDateRange?.start;
-    final DateTime? endDate = selectedDateRange?.end;
-
-    // Dispatch ApplyFiltersEvent to BLoC
-    context.read<OverviewBloc>().add(ApplyExpenseFiltersEvent(
-          expenseType: selectedExpenseType,
-          startDate: startDate,
-          endDate: endDate,
-        ));
-
-    logger.d('Applying Filters: $selectedExpenseType');
-  }
-
   void _clearFilters() {
     setState(() {
       widget.dropDownController.clearDropDown();

@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/overview/bloc/categorized/categorized_bloc.dart';
 import 'package:fundflow/features/overview/bloc/categorized/categorized_event.dart';
-//import 'package:fundflow/features/overview/widget/expense_type_dropdown.dart';
 import 'package:fundflow/features/overview/widget/date_range.dart';
 import 'package:fundflow/features/overview/model/category_model.dart';
 
@@ -25,11 +24,40 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
   final SingleValueDropDownController _categoryDropDownController =
       SingleValueDropDownController();
   DateTimeRange? selectedDateRange;
+  String? _selectedDateRange;
+  String? selectedExpenseType;
 
   @override
   void dispose() {
     _categoryDropDownController.dispose();
     super.dispose();
+  }
+
+  Future<void> _selectDateRange(BuildContext context) async {
+    final DateTime now = DateTime.now();
+    final DateTime firstDate = DateTime(now.year - 5);
+    final DateTime lastDate = DateTime(now.year + 1);
+
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      initialDateRange: selectedDateRange ??
+          DateTimeRange(
+            start: DateTime(now.year, now.month, 1),
+            end: now,
+          ),
+    );
+
+    if (picked != null && picked != selectedDateRange) {
+        setState(() {
+            selectedDateRange = picked;
+            _selectedDateRange =
+                '${picked.start.toLocal().toShortDateString()} - ${picked.end.toLocal().toShortDateString()}';
+          });
+      logger.d('Selected Date Range: ${picked.start} - ${picked.end}');
+    }
+
   }
 
   void _applyFilters() {
@@ -59,9 +87,41 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
   void _clearFilters() {
     setState(() {
       _categoryDropDownController.clearDropDown();
+      _selectedDateRange = null;
       selectedDateRange = null;
     });
   }
+
+  /*void _applyFilters() {
+    final String? selectedCategory =
+        _categoryDropDownController.dropDownValue?.value as String?;
+    final DateTime? startDate = selectedDateRange?.start;
+    final DateTime? endDate = selectedDateRange?.end;
+
+    if (startDate == null || endDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a valid date range')),
+      );
+      return;
+    }
+
+    context.read<CategorizedBloc>().add(ApplyFiltersEvent(
+          categoryName: selectedCategory,
+          startDate: startDate,
+          endDate: endDate,
+        ));
+
+
+    logger.d(
+        'Applying Filters - Category: $selectedCategory, Start: $startDate, End: $endDate');
+  }
+
+  void _clearFilters() {
+    setState(() {
+      _categoryDropDownController.clearDropDown();
+      selectedDateRange = null;
+    });
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -160,12 +220,37 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text('ช่วงเวลา'),
-                  DateRangeDropdown(
-                    onDateRangeSelected: (picked) {
-                      setState(() {
-                        selectedDateRange = picked;
-                      });
-                    },
+                  GestureDetector(
+                    onTap: ()=>_selectDateRange(context),
+                    child: Container(
+                      width: 143,
+                      height: 30,
+                      //padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      padding: EdgeInsets.only(
+                          left: 2, right: 2, top: 10, bottom: 4),
+                      decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(width: 1, color: Colors.grey)),
+                        //borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _selectedDateRange ?? 'เลือกช่วงเวลา',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: _selectedDateRange == null
+                                  ? Colors.grey
+                                  : Colors.black,
+                            ),
+                          ),
+                          const Icon(Icons.calendar_today,
+                              color: Colors.grey, size: 15),
+                        ],
+                      ),
+                    ),
                   ),
                   SizedBox(height: 12,),
                   Container(
