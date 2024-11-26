@@ -31,97 +31,12 @@ class _TransferFormState extends State<TransferForm> {
   @override
   void initState() {
     super.initState();
-    if (widget.banks.length < 2) {
-      WidgetsBinding.instance
-          .addPostFrameCallback((_) => _showNotEnoughBanksDialog());
-    }
   }
 
   @override
   void dispose() {
     _amountController.dispose();
     super.dispose();
-  }
-
-  void _showNotEnoughBanksDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Container(
-            height: 268,
-            decoration: BoxDecoration(
-              /*border: Border.all(
-                color: Color(0xFF41486D),
-                width: 2,
-              ),*/
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 22,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pushNamed(context, '/home');
-                        },
-                        icon: const Icon(
-                          Icons.close,
-                          size: 22,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Icon(
-                  Icons.warning,
-                  color: Colors.red,
-                  size: 50,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'คุณมีบัญชีธนาคารไม่พอ\nกรุณากดเพิ่มธนาคาร',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.red),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  height: 40,
-                  width: 200,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/addBank');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      backgroundColor: const Color(0xFF41486D),
-                    ),
-                    child: const Text(
-                      'เพิ่มธนาคาร',
-                      style: TextStyle(fontSize: 16, color: Color(0xffffffff)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 
   void _selectDate() {
@@ -201,27 +116,6 @@ class _TransferFormState extends State<TransferForm> {
 
   @override
   Widget build(BuildContext context) {
-    /*if (widget.banks.length < 2) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child:
-                  Text('At least two banks are required to make a transfer .'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/addBank');
-              },
-              child: const Text('Add Bank'),
-            ),
-          ],
-        ),
-      );
-    }*/
     List<Bank> toBankOptions = widget.banks;
     if (_fromBank != null) {
       toBankOptions =
@@ -274,31 +168,7 @@ class _TransferFormState extends State<TransferForm> {
             displayItem: (Bank bank) => bank.name,
             validator: (value) => value == null ? 'Please select a bank' : null,
           ),
-          /*DropdownButtonFormField<Bank>(
-            value: _fromBank,
-            hint: const Text('Select From Bank'),
-            items: fromBankOptions.map((Bank bank) {
-              return DropdownMenuItem<Bank>(
-                value: bank,
-                child: Text(bank.name),
-              );
-            }).toList(),
-            onChanged: (Bank? newValue) {
-              setState(() {
-                _fromBank = newValue;
-                // Reset toBank if it's the same as fromBank
-                if (_toBank != null && _toBank!.id == _fromBank!.id) {
-                  _toBank = null;
-                }
-              });
-            },
-            validator: (value) =>
-                value == null ? 'Please select a from bank' : null,
-            decoration: const InputDecoration(
-              labelText: 'From Bank',
-              border: OutlineInputBorder(),
-            ),
-          ),*/
+
           const SizedBox(height: 16),
           // To Bank Dropdown
           const Align(
@@ -326,31 +196,7 @@ class _TransferFormState extends State<TransferForm> {
             validator: (value) =>
                 value == null ? 'Please select a to bank' : null,
           ),
-          /*DropdownButtonFormField<Bank>(
-            value: _toBank,
-            hint: const Text('Select To Bank'),
-            items: toBankOptions.map((Bank bank) {
-              return DropdownMenuItem<Bank>(
-                value: bank,
-                child: Text(bank.name),
-              );
-            }).toList(),
-            onChanged: (Bank? newValue) {
-              setState(() {
-                _toBank = newValue;
-                // Reset fromBank if it's the same as toBank
-                if (_fromBank != null && _fromBank!.id == _toBank!.id) {
-                  _fromBank = null;
-                }
-              });
-            },
-            validator: (value) =>
-                value == null ? 'Please select a to bank' : null,
-            decoration: const InputDecoration(
-              labelText: 'To Bank',
-              border: OutlineInputBorder(),
-            ),
-          ),*/
+
           const SizedBox(height: 16),
           // Amount Field
           const Align(
@@ -381,23 +227,7 @@ class _TransferFormState extends State<TransferForm> {
               return null;
             },
           ),
-          /*TextFormField(
-            controller: _amountController,
-            decoration: const InputDecoration(
-              labelText: 'Amount',
-              border: OutlineInputBorder(),
-            ),
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter an amount';
-              }
-              if (double.tryParse(value) == null) {
-                return 'Please enter a valid number';
-              }
-              return null;
-            },
-          ),*/
+
           const SizedBox(height: 16),
           // Date Picker
           const Align(
@@ -414,24 +244,7 @@ class _TransferFormState extends State<TransferForm> {
               prefixIcon: Icons.calendar_today,
               labelText: "${_selectedDate.toLocal()}".split(' ')[0],
               onTap: _selectDate),
-          /*InkWell(
-            onTap: _selectDate,
-            child: InputDecorator(
-              decoration: const InputDecoration(
-                labelText: 'Date',
-                border: OutlineInputBorder(),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "${_selectedDate.toLocal()}".split(' ')[0],
-                  ),
-                  const Icon(Icons.calendar_today),
-                ],
-              ),
-            ),
-          ),*/
+
           const SizedBox(height: 16),
           // Time Picker
           const Align(
@@ -451,38 +264,11 @@ class _TransferFormState extends State<TransferForm> {
                   ? _selectedTime!.format(context)
                   : 'กรอกเวลา(ไม่จำเป็น)',
               onTap: _selectTime),
-          /*InkWell(
-            onTap: _selectTime,
-            child: InputDecorator(
-              decoration: const InputDecoration(
-                labelText: 'Time',
-                border: OutlineInputBorder(),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    _selectedTime != null
-                        ? _selectedTime!.format(context)
-                        : 'Select Time',
-                  ),
-                  const Icon(Icons.access_time),
-                ],
-              ),
-            ),
-          ),*/
+
           const SizedBox(height: 16),
-          // Note Field
           CustomButton(text: 'ยืนยัน', onPressed: _submit),
-          /*ElevatedButton(
-            onPressed: _submit,
-            child: const Text('Submit'),
-          ),*/
         ],
       ),
     );
   }
 }
-
-// Model class for Transfer Data
-
