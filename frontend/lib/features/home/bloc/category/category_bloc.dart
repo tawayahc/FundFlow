@@ -42,10 +42,23 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         await categoryRepository.editCategory(
             event.originalCategory, event.category);
         // If successful, reload categories or navigate to the previous screen
+        add(LoadCategories());
         emit(CategoryUpdated());
       } catch (error) {
         print("Error editing category: $error");
         emit(CategoryError()); // New error state
+      }
+    });
+
+    on<DeleteCategory>((event, emit) async {
+      try {
+        // Add the new category to the repository
+        await categoryRepository.deleteCategory(event.categoryId);
+        // Reload categories after addition
+        add(LoadCategories());
+        emit(CategoryDeleted());
+      } catch (error) {
+        emit(CategoriesLoading()); // Handle error as needed
       }
     });
 
@@ -68,6 +81,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         await categoryRepository.updateCategoryAmount(
             event.categoryId, event.newAmount);
         // If successful, reload categories or navigate to the previous screen
+        add(LoadCategories());
         emit(CategoryAmountUpdated());
       } catch (error) {
         print("Error updated category: $error");

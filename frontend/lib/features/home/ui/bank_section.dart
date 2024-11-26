@@ -27,12 +27,10 @@ class BankSection extends StatelessWidget {
                 final bank = sortedBanks[index];
                 return GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => BankAccountPage(
-                            bank: bank, bankColorMap: bankColorMap),
-                      ),
+                          builder: (context) => BankAccountPage(bank: bank)),
                     );
                   },
                   child: BankCard(
@@ -54,9 +52,14 @@ class BankSection extends StatelessWidget {
 }
 
 Map<String, Color> bankColorMap = {
-  'ธนาคารกสิกรไทย': Colors.green,
-  'ธนาคารกรุงไทย': Colors.blue,
-  'ธนาคารไทยพาณิชย์': Colors.purple,
-  'ธนาคารกรุงเทพ': Colors.lightBlue,
-  'ธนาคารกรุงศรี': const Color(0xFFffe000),
+  'ธนาคารกสิกรไทย': Colors.green, // Kasikorn Bank
+  'ธนาคารกรุงไทย': Colors.blue, // Krung Thai Bank
+  'ธนาคารไทยพาณิชย์': Colors.purple, // Siam Commercial Bank
+  'ธนาคารกรุงเทพ': const Color.fromARGB(255, 10, 35, 145), // Bangkok Bank
+  'ธนาคารกรุงศรี': const Color(0xFFffe000), // Krungsri (Bank of Ayudhya)
+  'ธนาคารออมสิน': Colors.pink, // Government Savings Bank
+  'ธนาคารธนชาติ': const Color(0xFFF68B1F), // Thanachart Bank
+  'ธนาคารเกียรตินาคิน': const Color(0xFF004B87), // Kiatnakin Bank
+  'ธนาคารCity': const Color(0xFF1E90FF), // Citibank
+  'ธนาคารMake': const Color.fromARGB(255, 104, 212, 50), // Make Bank
 };

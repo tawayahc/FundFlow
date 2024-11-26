@@ -7,6 +7,9 @@ import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/features/home/pages/home_page.dart';
+import 'package:fundflow/core/widgets/custom_button.dart';
+import 'package:fundflow/core/widgets/custom_text_ip.dart';
+import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 
 class AddCategoryPage extends StatefulWidget {
   const AddCategoryPage({super.key});
@@ -16,135 +19,340 @@ class AddCategoryPage extends StatefulWidget {
 }
 
 class _AddCategoryPageState extends State<AddCategoryPage> {
-  String categoryName = '';
-  Color selectedColor = Colors.blue;
-  double categoryAmount = 0.0;
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController amountController =
+      TextEditingController(); // Controller for amount input
+  Color selectedColor =
+      const Color(0xFFFFA726); // Default color to match provided colors
+  double categoryAmount = 0.00;
 
+  // Updated color palette to match provided colors in the image
   final List<Color> availableColors = [
-    Colors.blue,
-    Colors.red,
-    Colors.green,
-    Colors.orange,
-    Colors.purple,
+    const Color(0xFFB39DDB), // Purple
+    const Color(0xFF64B5F6), // Light Blue
+    const Color(0xFF4DD0E1), // Cyan
+    const Color(0xFF81C784), // Green
+    const Color(0xFFAED581), // Light Green
+    const Color(0xFFFFF176), // Yellow
+    const Color(0xFFFFA726), // Orange
+    const Color(0xFFE57373), // Red
+    const Color(0xFFF06292), // Pink
+    const Color(0xFFF8BBD0), // Light Pink
+    const Color(0xFFE0E0E0), // Light Gray
+    const Color(0xFF757575), // Dark Gray
+    const Color(0xFF000000), // Black
   ];
+
+  final List<String> categoryTags = [
+    'อาหาร',
+    'ช็อปปิ้ง',
+    'สัตว์เลี้ยง',
+    'ที่อยู่',
+    'รางวัลตัวเอง',
+    'ลูก',
+  ];
+
+  String selectedTag = 'อาหาร';
 
   @override
   Widget build(BuildContext context) {
     return GlobalPadding(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('เพิ่มประเภทค่าใช้จ่าย'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            iconSize: 20,
+            color: Color(0xFF414141),
+            onPressed: () {
+              Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
+            },
+          ),
+          title: const Text('เพิ่มหมวดหมู่',
+              style: TextStyle(color: Color(0xFF414141), fontSize: 24)),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
-            // Wrap the content with SingleChildScrollView
-            padding: const EdgeInsets.all(16.0),
-            child: BlocListener<CategoryBloc, CategoryState>(
-              listener: (context, state) {
-                if (state is CategoryAdded) {
-                  // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  //     content: Text('Category updated successfully')));
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            const GlobalPadding(child: HomePage())),
-                  );
-                  // Navigator.pop(context);
-                } else if (state is CategoryError) {
-                  // Handle error state, show a SnackBar for example
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Failed to load categories')),
-                  );
-                }
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Category Card Preview
-                  CategoryCard(
+          padding: const EdgeInsets.all(16.0),
+          child: BlocListener<CategoryBloc, CategoryState>(
+            listener: (context, state) {
+              if (state is CategoryAdded) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const BottomNavBar()),
+                );
+              } else if (state is CategoryError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Failed to load categories')),
+                );
+              }
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 15),
+                // Category Card Preview
+                Center(
+                  child: CategoryCard(
                     category: Category(
                       id: -1,
-                      name: categoryName.isNotEmpty
-                          ? categoryName
+                      name: categoryController.text.isNotEmpty
+                          ? categoryController.text
                           : 'ตัวอย่างประเภทค่าใช้จ่าย',
-                      amount: 2000.00, // Set a default amount here
-                      color: selectedColor, // Use selectedColor here
+                      amount: categoryAmount,
+                      color: selectedColor,
                     ),
+                    height: 120,
+                    width: 320,
+                    fontSize: 15,
+                    amountFontSize: 20,
                   ),
-                  const SizedBox(height: 20),
-                  // Category Name Input
-                  const Text(
-                    'ชื่อประเภทค่าใช้จ่าย',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'กรอกชื่อประเภทค่าใช้จ่าย',
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        categoryName = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  // Color Selector
-                  const Text(
-                    'เลือกสี',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 10,
-                    children: availableColors.map((color) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedColor = color;
-                          });
-                        },
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: color,
-                            shape: BoxShape.circle,
-                            border: selectedColor == color
-                                ? Border.all(width: 3, color: Colors.black)
-                                : null,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 20),
-                  // Save Button
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (categoryName.isNotEmpty) {
-                          final newCategory = Category(
-                            id: -1,
-                            name: categoryName,
-                            amount:
-                                categoryAmount, // Set default or user-inputted amount
-                            color: selectedColor,
-                          );
+                ),
+                const SizedBox(height: 20),
 
-                          BlocProvider.of<CategoryBloc>(context)
-                              .add(AddCategory(category: newCategory));
-                        }
-                      },
-                      child: const Text('เพิ่มประเภทค่าใช้จ่าย'),
+                // Category Name Input
+                // Replace CategoryNameInput with CustomTextInput for category name input
+                TextInput(
+                  controller: categoryController,
+                  hintText: 'กรอกชื่อหมวดหมู่',
+                  labelText: 'ระบุหมวดหมู่',
+                  icon: Icons.category, // Set the icon here
+                  onChanged: (value) {
+                    setState(() {
+                      selectedTag = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
+                // Category Tag Selection arranged in two rows of three tags
+                CategoryTagSelection(
+                  tags: categoryTags,
+                  selectedTag: selectedTag,
+                  onTagSelected: (tag) {
+                    setState(() {
+                      selectedTag = tag;
+                      categoryController.text = tag;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
+
+                // Color Selector
+                ColorSelector(
+                  selectedColor: selectedColor,
+                  onColorSelected: (color) {
+                    setState(() {
+                      selectedColor = color;
+                    });
+                  },
+                ),
+                const SizedBox(height: 40),
+
+                // Replace existing button with CustomButton
+                CustomButton(
+                  text: 'ยืนยัน',
+                  onPressed: () {
+                    if (categoryController.text.isNotEmpty) {
+                      final newCategory = Category(
+                        id: -1,
+                        name: categoryController.text,
+                        amount: categoryAmount,
+                        color: selectedColor,
+                      );
+
+                      BlocProvider.of<CategoryBloc>(context)
+                          .add(AddCategory(category: newCategory));
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Separate widget for Category Name Input with focus styling
+class CategoryNameInput extends StatefulWidget {
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+
+  const CategoryNameInput({
+    super.key,
+    required this.controller,
+    required this.onChanged,
+  });
+
+  @override
+  _CategoryNameInputState createState() => _CategoryNameInputState();
+}
+
+class _CategoryNameInputState extends State<CategoryNameInput> {
+  Color iconColor = const Color(0xFFD0D0D0);
+  Color textColor = const Color(0xFFD0D0D0);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 20),
+        Text(
+          'ระบุหมวดหมู่',
+          style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF414141)),
+        ),
+        SizedBox(height: 10),
+      ],
+    );
+  }
+}
+
+// Category Tag Selection with two rows of three tags, matching width of the input box
+class CategoryTagSelection extends StatelessWidget {
+  final List<String> tags;
+  final String selectedTag;
+  final ValueChanged<String> onTagSelected;
+
+  const CategoryTagSelection({
+    super.key,
+    required this.tags,
+    required this.selectedTag,
+    required this.onTagSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Divide tags into two rows with three tags each
+    List<List<String>> rows = [
+      tags.sublist(0, 3), // First three tags
+      tags.sublist(3, 6), // Last three tags
+    ];
+
+    return Column(
+      children: rows.map((row) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: row.map((tag) {
+            return Expanded(
+              child: GestureDetector(
+                onTap: () => onTagSelected(tag),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 3),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: selectedTag == tag
+                          ? const Color(0xFF41486D)
+                          : Colors.grey.shade300,
+                      width: 1.5,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 4,
+                        offset: const Offset(2, 2),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      tag,
+                      style: TextStyle(
+                        color: selectedTag == tag
+                            ? const Color(0xFF41486D)
+                            : const Color(0xFF414141),
+                        fontSize: 14,
+                      ),
                     ),
                   ),
-                ],
+                ),
               ),
-            )),
-      ),
+            );
+          }).toList(),
+        );
+      }).toList(),
+    );
+  }
+}
+
+class ColorSelector extends StatelessWidget {
+  final Color selectedColor;
+  final ValueChanged<Color> onColorSelected;
+
+  // Define the colors list
+  final List<Color> colors = [
+    const Color(0xFFB39DDB), // Purple
+    const Color(0xFF64B5F6), // Light Blue
+    const Color(0xFF4DD0E1), // Cyan
+    const Color(0xFF81C784), // Green
+    const Color(0xFFAED581), // Light Green
+    const Color(0xFFFFF176), // Yellow
+    const Color(0xFFFFA726), // Orange
+    const Color(0xFFE57373), // Red
+    const Color(0xFFF06292), // Pink
+    const Color(0xFFF8BBD0), // Light Pink
+    const Color(0xFFE0E0E0), // Light Gray
+    const Color(0xFF757575), // Dark Gray
+    const Color(0xFF000000), // Black
+  ];
+
+  ColorSelector({
+    super.key,
+    required this.selectedColor,
+    required this.onColorSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 10),
+        const Text(
+          'เลือกสี',
+          style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF414141)),
+        ),
+        const SizedBox(height: 10),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 6, // 6 colors per row
+            crossAxisSpacing: 30,
+            mainAxisSpacing: 10,
+          ),
+          itemCount: colors.length,
+          itemBuilder: (context, index) {
+            final color = colors[index];
+            return GestureDetector(
+              onTap: () => onColorSelected(color),
+              child: Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                  border: selectedColor == color
+                      ? Border.all(width: 2.5, color: const Color(0xFF41486D))
+                      : Border.all(
+                          width: 1.5,
+                          color: const Color.fromARGB(0, 42, 32, 32)),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 }

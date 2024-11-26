@@ -12,7 +12,7 @@ import '../model/form_model.dart';
 
 class ExpenseForm extends StatefulWidget {
   final void Function(CreateExpenseData) onSubmit;
-
+  final CreateExpenseData? initialData;
   // Remove final from banks and categories
   List<Bank> banks;
   List<Category> categories;
@@ -22,6 +22,7 @@ class ExpenseForm extends StatefulWidget {
     required this.banks,
     required this.categories,
     required this.onSubmit,
+    this.initialData,
   }) : super(key: key);
 
   @override
@@ -315,7 +316,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/add-bank');
+                Navigator.pushNamed(context, '/addBank');
               },
               child: const Text('Add Bank'),
             ),
@@ -333,7 +334,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/add-category');
+                Navigator.pushNamed(context, '/addCategory');
               },
               child: const Text('Add Category'),
             ),

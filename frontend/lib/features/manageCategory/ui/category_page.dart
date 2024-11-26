@@ -1,208 +1,239 @@
 import 'package:flutter/material.dart';
-import 'package:fundflow/core/widgets/global_padding.dart';
-import 'package:fundflow/features/manageBankAccount/ui/transaction_item.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/widgets/home/category_balance_box.dart';
+import 'package:fundflow/core/widgets/management/delete_transaction_page.dart';
+import 'package:fundflow/core/widgets/management/transaction_card_for_category.dart';
+import 'package:fundflow/core/widgets/navBar/main_layout.dart';
+import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
 import 'package:fundflow/features/home/models/category.dart' as categories;
-
-import '../../../core/themes/app_styles.dart';
-import '../../home/models/transaction.dart';
+import '../../home/bloc/transaction/transaction_bloc.dart';
+import '../../home/bloc/transaction/transaction_state.dart';
 import '../../home/pages/category/edit_category_page.dart';
-import '../../home/repository/transaction_repository.dart';
 
 class CategoryPage extends StatefulWidget {
   final categories.Category category;
-  const CategoryPage({super.key, required this.category});
+
+  const CategoryPage({Key? key, required this.category}) : super(key: key);
 
   @override
-  _CategoryPageState createState() => _CategoryPageState();
+  State<StatefulWidget> createState() => _CategoryPageState();
 }
 
 class _CategoryPageState extends State<CategoryPage>
     with SingleTickerProviderStateMixin {
-  String _type = 'income';
-  late TabController _tabController;
-  List<Transaction> transactions = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    _tabController.index = ['income', 'expense'].indexOf(_type);
-
-    _tabController.addListener(() {
-      setState(() {
-        _type = ['income', 'expense'][_tabController.index];
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  List<Transaction> get filteredTransactions {
-    if (_tabController.index == 0) {
-      // Show only income transactions
-      return transactions
-          .where((transaction) => transaction.amount > 0)
-          .toList();
-    } else {
-      // Show only outcome transactions
-      return transactions
-          .where((transaction) => transaction.amount < 0)
-          .toList();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return GlobalPadding(
-      child: Scaffold(
-          appBar: AppBar(
-            // ----------- ชื่อ category
-            title: Text(widget.category.name),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () async {
-                  // Navigate to the EditCategoryPage and get the updated category
-                  final updatedCategory = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          EditCategoryPage(category: widget.category),
-                    ),
-                  );
+    // Ensure that transactions are loaded
+    context.read<TransactionBloc>().add(LoadTransactions());
 
-                  // If there's an updated category, do something with it (e.g., update the list)
-                  if (updatedCategory != null) {
-                    // Handle updated category (e.g., update the state, show a message, etc.)
-                  }
-                },
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60), // AppBar height
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              iconSize: 20,
+              color: const Color(0xFF414141),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const BottomNavBar()),
+                );
+              },
+            ),
+            title: const Text(
+              "หมวดหมู่",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF414141),
               ),
-            ],
+            ),
+            centerTitle: true,
+            elevation: 0,
+            backgroundColor: Colors.white,
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(AppSpacing.medium),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 12),
+          // Header with Category Name and Edit Button
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 45.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const SizedBox(height: 16),
-                //---------- **กล่องเงิน
-                Container(
-                  padding: const EdgeInsets.fromLTRB(
-                      0, 8, 4, 0), // padding (left, top, right, bottom)
-                  width: double.infinity, // สุดขอบ
-                  decoration: BoxDecoration(
-                    //---------- **สี category
-                    color: widget.category.color,
-                    borderRadius: BorderRadius.circular(12),
+                Text(
+                  widget.category.name,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    final updatedCategory = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            EditCategoryPage(category: widget.category),
+                      ),
+                    );
+
+                    if (updatedCategory != null) {
+                      // Handle updated category
+                    }
+                  },
+                  child: const Row(
                     children: [
-                      const Row(
-                        children: [
-                          SizedBox(width: 16),
-                          Text(
-                            'ยอดเงินคงเหลือ',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        ],
+                      Icon(
+                        Icons.edit_outlined,
+                        color: Color(0xFFFF5C5C),
+                        size: 16,
                       ),
-                      const SizedBox(height: 0),
-                      const Divider(
-                        color: Colors.white,
-                        thickness: 2,
-                        height: 3,
-                        indent: 2,
-                      ),
-                      const SizedBox(height: 16),
-                      Center(
-                        child: Text(
-                          '฿ ${widget.category.amount.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 30),
-                const Text(
-                  'ประวัติการทำรายการ',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 12),
-                PreferredSize(
-                  preferredSize: const Size.fromHeight(40),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 40,
-                          width: 200,
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: AppColors.primary,
-                          ),
-                          child: TabBar(
-                            controller: _tabController,
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            dividerColor: Colors.transparent,
-                            indicator: const BoxDecoration(
-                              color: Colors.green,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            labelColor: Colors.white,
-                            unselectedLabelColor: Colors.white,
-                            tabs: const [
-                              Tab(
-                                icon: Icon(Icons.download),
-                              ),
-                              Tab(
-                                icon: Icon(Icons.upload),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                // Transaction ตรงนี้
-                Expanded(
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final filteredItem = filteredTransactions[index];
-                            return TransactionItem(
-                              amount: filteredItem.amount,
-                              category: 'filteredItem.category',
-                              type: filteredItem.memo,
-                            );
-                          },
-                          childCount: filteredTransactions.length,
+                      SizedBox(width: 4),
+                      Text(
+                        "แก้ไข",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Color(0xFFFF5C5C),
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
-          )),
+          ),
+          const SizedBox(height: 16),
+          // Balance Box
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: CategoryBalanceBox(
+              color: widget.category.color,
+              category: widget.category,
+              date: '00:00 น.',
+            ),
+          ),
+          const SizedBox(height: 20),
+          // Header for "ประวัติการทำรายการ"
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 45.0),
+            child: Text(
+              'ประวัติการทำรายการ',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF414141),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          // Container for transaction list
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 0),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 25),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 45.0),
+                    child: Text(
+                      'รายจ่าย',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF414141),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: BlocBuilder<TransactionBloc, TransactionState>(
+                      builder: (context, transactionState) {
+                        if (transactionState is TransactionsLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (transactionState is TransactionsLoaded) {
+                          final categoryTransactions = transactionState
+                              .transactions
+                              .where((transaction) =>
+                                  transaction.categoryId ==
+                                      widget.category.id &&
+                                  transaction.type == 'expense')
+                              .toList();
+
+                          if (categoryTransactions.isEmpty) {
+                            return const Center(
+                              child: Text('ไม่มีรายการสำหรับหมวดหมู่นี้'),
+                            );
+                          }
+
+                          final sortedTransactions =
+                              List.from(categoryTransactions)
+                                ..sort((a, b) => DateTime.parse(b.createdAt)
+                                    .compareTo(DateTime.parse(a.createdAt)));
+
+                          return ListView.builder(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 25.0),
+                            itemCount: sortedTransactions.length,
+                            itemBuilder: (context, index) {
+                              final transaction = sortedTransactions[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            DeleteTransactionPage(
+                                          transaction: transaction,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: TransactionCardForCategory(
+                                    transaction: transaction,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else if (transactionState is TransactionsLoadError) {
+                          return Center(
+                            child: Text(transactionState.message),
+                          );
+                        } else {
+                          return const Center(child: Text('Unknown error'));
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

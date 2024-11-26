@@ -19,6 +19,16 @@ class BankBloc extends Bloc<BankEvent, BankState> {
       }
     });
 
+    on<LoadTransfers>((event, emit) async {
+      emit(TransfersLoading());
+      try {
+        final transfers = await bankRepository.getTransfers();
+        emit(TransfersLoaded(transfers: transfers));
+      } catch (error) {
+        emit(BankError());
+      }
+    });
+
     on<AddBank>((event, emit) async {
       try {
         // Save the bank (e.g., to a repository or API)
@@ -39,6 +49,16 @@ class BankBloc extends Bloc<BankEvent, BankState> {
       } catch (error) {
         print("Error editing bank: $error");
         emit(BankError()); // New error state
+      }
+    });
+
+    on<DeleteBank>((event, emit) async {
+      try {
+        await bankRepository.deleteBank(event.bankId);
+        add(LoadBanks());
+        emit(BankDeleted());
+      } catch (error) {
+        emit(BankError());
       }
     });
   }

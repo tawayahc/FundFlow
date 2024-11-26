@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/features/home/models/transaction.dart';
 import 'package:fundflow/features/overview/ui/tab_categorized.dart';
 import 'package:fundflow/features/overview/ui/tab_overview.dart';
 
 import '../../../core/widgets/custom_tab.dart';
 
 class OverviewPage extends StatefulWidget {
+  // final Transaction transaction;
   const OverviewPage({super.key});
 
   @override
