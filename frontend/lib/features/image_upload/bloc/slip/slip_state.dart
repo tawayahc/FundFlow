@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:fundflow/features/transaction/model/category_model.dart';
+import 'package:image_picker/image_picker.dart';
 
 abstract class SlipState extends Equatable {
   const SlipState();
@@ -12,7 +13,11 @@ class SlipInitial extends SlipState {}
 
 class SlipLoading extends SlipState {}
 
-class SlipSuccess extends SlipState {}
+class SlipSuccess extends SlipState {
+  final List<XFile> images;
+
+  const SlipSuccess({required this.images});
+}
 
 class SlipFailure extends SlipState {
   final String error;

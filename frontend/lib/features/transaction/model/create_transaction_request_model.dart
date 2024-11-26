@@ -6,6 +6,7 @@ class CreateTransactionRequest {
   final String createdAtDate;
   final String? createdAtTime;
   final String memo;
+  final String? metadata;
 
   CreateTransactionRequest({
     required this.bankId,
@@ -15,6 +16,7 @@ class CreateTransactionRequest {
     required this.createdAtDate,
     this.createdAtTime,
     required this.memo,
+    this.metadata,
   });
 
   factory CreateTransactionRequest.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class CreateTransactionRequest {
       createdAtDate: json['created_at_date'],
       createdAtTime: json['created_at_time'],
       memo: json['memo'],
+      metadata: json['metadata'],
     );
   }
 
@@ -38,6 +41,7 @@ class CreateTransactionRequest {
       'created_at_date': createdAtDate,
       'created_at_time': createdAtTime,
       'memo': memo,
+      'metadata': metadata,
     };
   }
 }

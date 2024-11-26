@@ -1,4 +1,7 @@
 // pages/home_page.dart
+import 'dart:io';
+
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/features/auth/bloc/auth_bloc.dart';
@@ -14,6 +17,8 @@ import 'package:fundflow/features/home/repository/bank_repository.dart';
 import 'package:fundflow/features/home/repository/category_repository.dart';
 import 'package:fundflow/features/home/repository/profile_repository.dart';
 import 'package:fundflow/features/home/ui/home_ui.dart';
+import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_bloc.dart';
+import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_event.dart';
 import 'package:fundflow/features/image_upload/bloc/slip/slip_bloc.dart';
 import 'package:fundflow/features/image_upload/bloc/slip/slip_event.dart';
 import 'package:fundflow/features/image_upload/bloc/slip/slip_state.dart';
@@ -38,6 +43,17 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _slipBloc.add(DetectAndUploadSlips());
     });
+  }
+
+  // Note: Open the gallery app on Android
+  Future<void> _openGallery() async {
+    if (Platform.isAndroid) {
+      const intent = AndroidIntent(
+        action: 'android.intent.action.VIEW',
+        type: 'image/*',
+      );
+      await intent.launch();
+    }
   }
 
   @override
@@ -92,6 +108,8 @@ class _HomePageState extends State<HomePage> {
                   const SnackBar(
                       content: Text('Slip images uploaded successfully.')),
                 );
+                final images = state.images;
+                context.read<ImageBloc>().add(SendImages(images: images));
               } else if (state is SlipFailure) {
                 // Show error message when slip upload fails
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -99,32 +117,33 @@ class _HomePageState extends State<HomePage> {
                       content: Text('Failed to upload slips: ${state.error}')),
                 );
                 // Check if the failure was due to no slips being detected
+                // FIX: Should It have?
                 if (state.error.contains('No slip images detected')) {
                   // Prompt the user to manually upload slips
-                  // showDialog(
-                  //   context: context,
-                  //   builder: (context) => AlertDialog(
-                  //     title: const Text('No Slips Detected'),
-                  //     content: const Text(
-                  //         'Would you like to create a slip manually?'),
-                  //     actions: [
-                  //       TextButton(
-                  //         onPressed: () {
-                  //           Navigator.of(context).pop(); // Close the dialog
-                  //         },
-                  //         child: const Text('Cancel'),
-                  //       ),
-                  //       TextButton(
-                  //         onPressed: () {
-                  //           Navigator.of(context).pop(); // Close the dialog
-                  //           Navigator.pushNamed(context,
-                  //               '/manual-slip'); // Navigate to manual upload page
-                  //         },
-                  //         child: const Text('Create Manually'),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // );
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('No Slips Detected'),
+                      content: const Text(
+                          'Would you like to create a slip manually?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close the dialog
+                            Navigator.pushNamed(context,
+                                '/transaction'); // Navigate to manual upload page
+                          },
+                          child: const Text('Create Manually'),
+                        ),
+                      ],
+                    ),
+                  );
                 }
               }
             },

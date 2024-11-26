@@ -7,21 +7,19 @@ import 'package:fundflow/features/image_upload/repository/image_repository.dart'
 import 'package:fundflow/features/image_upload/repository/slip_repository.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
 import 'package:fundflow/features/transaction/model/create_transaction_request_model.dart';
+import 'package:fundflow/features/transaction/model/transaction.dart';
 import 'package:fundflow/features/transaction/repository/transaction_repository.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageBloc extends Bloc<ImageEvent, ImageState> {
   final ImageRepository _imageRepository;
-  final SlipRepository _slipRepository;
   final TransactionAddRepository _transactionAddRepository;
   List<XFile> _selectedImages = [];
 
   ImageBloc({
     required ImageRepository imageRepository,
-    required SlipRepository slipRepository,
     required TransactionAddRepository transactionAddRepository,
   })  : _imageRepository = imageRepository,
-        _slipRepository = slipRepository,
         _transactionAddRepository = transactionAddRepository,
         super(ImageInitial()) {
     on<PickImages>(_onPickImages);
@@ -67,38 +65,36 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
     try {
       emit(ImageLoadInProgress());
 
-      // Fetch all user categories
-      final categories = await _slipRepository.getCategories();
-
-      if (categories.isEmpty) {
-        emit(ImageOperationFailure('No categories available.'));
-        return;
-      }
-
-      // Upload images with categories
       final transactions = await _imageRepository.uploadImages(
         images: event.images,
-        categories: categories,
       );
 
       logger.i('Images sent successfully!');
 
       // Fetch user banks once to optimize performance
       final userBanks = await _transactionAddRepository.fetchBanks();
-
+      // Note: model
+      List<TransactionResponse> transactionsWithMultipleBanks = [];
       // Process each transaction
       for (var transaction in transactions) {
-        // Check if the transaction's bank matches any bank_name in userBanks
         final matchingBanks = userBanks
             .where((bank) =>
-                bank.name.toLowerCase() == transaction.bank.toLowerCase())
+                bank.bankName.toLowerCase() == transaction.bank.toLowerCase())
             .toList();
 
         if (matchingBanks.length >= 2) {
-          // FIX: handle fluke's function
-          // User has two or more accounts with the same bank_name
-          // Send to notification system
-          // await _notificationRepository.sendNotification(transaction.toJson());
+          // TODO: Handle multiple banks for a single transaction
+          transactionsWithMultipleBanks.add(transaction);
+
+          // Log the transaction
+          logger.d('Transaction with multiple banks: ${transaction.toJson()}');
+          logger.d(
+              "List of transactions with multiple banks: $transactionsWithMultipleBanks");
+        } else if (matchingBanks.isEmpty) {
+          // User does not have an account with the bank
+          // Handle accordingly or log
+          logger.w('No bank found for ${transaction.bank}');
+          // Optionally, collect these transactions as well
         } else {
           // Send to create transaction API
           final createTransactionRequest = CreateTransactionRequest(
@@ -106,15 +102,16 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
                 transaction.bank, userBanks), // Implement this mapping
             type: transaction.type,
             amount: transaction.amount,
-            categoryId:
-                transaction.category, // Assuming 'category' maps to categoryId
+            categoryId: transaction.categoryId,
             createdAtDate: transaction.date,
             createdAtTime: transaction.time,
             memo: transaction.memo,
+            metadata: transaction.metadata,
           );
 
           await _transactionAddRepository
               .addTransaction(createTransactionRequest);
+          logger.i('Transaction added successfully');
         }
       }
 
@@ -130,10 +127,13 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
   // Helper method to get bankId by bank name
   int _getBankIdByName(String bankName, List<Bank> userBanks) {
     // Find the first bank with the matching name and return its ID
+    logger.d('Finding bank ID for: $bankName');
+    logger.d('User banks: ${userBanks.map((bank) => bank.bankName).toList()}');
     final bank = userBanks.firstWhere(
-      (bank) => bank.name.toLowerCase() == bankName.toLowerCase(),
-      orElse: () => Bank(id: 0, name: 'Unknown'),
+      (bank) => bank.bankName.toLowerCase() == bankName.toLowerCase(),
+      orElse: () => throw Exception('Bank not found: $bankName'),
     );
+    logger.d('Bank found: ${bank.bankName} with ID: ${bank.id}');
     return bank.id;
   }
 }
