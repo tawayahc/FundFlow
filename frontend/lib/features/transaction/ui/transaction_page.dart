@@ -40,14 +40,35 @@ class _TransactionPageState extends State<TransactionPage>
     _tabController.index = ['income', 'expense', 'transfer'].indexOf(_type);
 
     _tabController.addListener(() {
+      String text;
+
       if (_tabController.indexIsChanging) {
         setState(() {
           _type = ['income', 'expense', 'transfer'][_tabController.index];
         });
       }
+
+      logger.d('Bank length: ${_banks.length}');
+
+      if (_type == 'income' && _banks.isEmpty) {
+        text = 'คุณยังไม่มีบัญชีธนาคาร\nกรุณากดเพิ่มธนาคาร';
+        _showNotEnoughBanksDialog(text);
+        _tabController.index = 0;
+      } else if (_type == 'expense' && _banks.isEmpty) {
+        text = 'คุณยังไม่มีบัญชีธนาคาร\nกรุณากดเพิ่มธนาคาร';
+        _showNotEnoughBanksDialog(text);
+        _tabController.index = 0;
+      } else if (_type == 'expense' && _categories.isEmpty) {
+        text = 'คุณยังไม่มีบัญชีหมมวดหมู่\nกรุณากดเพิ่มหมวดหมู่';
+        _showNotEnoughBanksDialog(text);
+        _tabController.index = 0;
+      } else if (_type == 'transfer' && _banks.length < 2) {
+        text = 'คุณมีบัญชีธนาคารไม่พอ\nกรุณากดเพิ่มธนาคาร';
+        _showNotEnoughBanksDialog(text);
+        _tabController.index = 0;
+      }
     });
 
-    // Fetch banks and categories when the page initializes
     context.read<TransactionAddBloc>().add(FetchBanksAndCategories());
   }
 
@@ -99,6 +120,88 @@ class _TransactionPageState extends State<TransactionPage>
       createdAtTime: data.time != null ? formatTimeOfDay(data.time!) : null,
     );
     context.read<TransactionAddBloc>().add(AddTransferEvent(request));
+  }
+
+  void _showNotEnoughBanksDialog(String text) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.5),
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Container(
+            height: 268,
+            decoration: BoxDecoration(
+              /*border: Border.all(
+                color: Color(0xFF41486D),
+                width: 2,
+              ),*/
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 22,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/home');
+                        },
+                        icon: const Icon(
+                          Icons.close,
+                          size: 22,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(
+                  Icons.warning,
+                  color: Colors.red,
+                  size: 50,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.red),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  height: 40,
+                  width: 200,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/addBank');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      backgroundColor: const Color(0xFF41486D),
+                    ),
+                    child: const Text(
+                      'เพิ่มธนาคาร',
+                      style: TextStyle(fontSize: 16, color: Color(0xffffffff)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -211,6 +314,7 @@ class _TransactionPageState extends State<TransactionPage>
                     if (_type == 'income') ...[
                       IncomeForm(
                         key: ValueKey(_banks), // Use ValueKey with banks list
+                        banks: _banks,
                         onSubmit: _onIncomeSubmit,
                       ),
                     ] else if (_type == 'expense') ...[
