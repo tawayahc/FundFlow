@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/overview/bloc/categorized/categorized_bloc.dart';
 import 'package:fundflow/features/overview/bloc/categorized/categorized_event.dart';
-import 'package:fundflow/features/overview/widget/expense_type_dropdown.dart';
+//import 'package:fundflow/features/overview/widget/expense_type_dropdown.dart';
 import 'package:fundflow/features/overview/widget/date_range.dart';
 import 'package:fundflow/features/overview/model/category_model.dart';
 
@@ -116,7 +116,7 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
                         ),
                       ),
                       controller: _categoryDropDownController,
-                      clearOption: true,
+                      clearOption: false,
                       dropDownItemCount: widget.categories.length + 1,
                       dropDownList: [
                         const DropDownValueModel(name: 'All', value: "all"),

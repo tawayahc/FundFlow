@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/features/overview/widget/routine_summary_item.dart';
-import 'package:fundflow/features/overview/widget/expense_type_dropdown.dart';
+//import 'package:fundflow/features/overview/widget/expense_type_dropdown.dart';
+import 'package:fundflow/features/overview/widget/date_range.dart';
 import '../../../app.dart';
 import '../bloc/overview/overview_bloc.dart';
 import '../bloc/overview/overview_event.dart';
@@ -29,6 +30,7 @@ class MonthlySummaryView extends StatefulWidget {
 
 class _MonthlySummaryViewState extends State<MonthlySummaryView> {
   DateTimeRange? selectedDateRange;
+  String? _selectedDateRange;
 
   Future<void> _selectDateRange(BuildContext context) async {
     final DateTime now = DateTime.now();
@@ -48,32 +50,47 @@ class _MonthlySummaryViewState extends State<MonthlySummaryView> {
 
     if (picked != null && picked != selectedDateRange) {
       setState(() {
-        selectedDateRange = picked;
-      });
+            selectedDateRange = picked;
+            _selectedDateRange =
+                '${picked.start.toLocal().toShortDateString()} - ${picked.end.toLocal().toShortDateString()}';
+          });
       logger.d('Selected Date Range: ${picked.start} - ${picked.end}');
     }
-    _applyFiltered();
   }
 
-  void _applyFiltered () {
-    final String? selectedExpenseType =
-    widget.dropDownController.dropDownValue?.value as String?;
+  void _applyFilters() {
+    String? selectedExpenseType =
+        widget.dropDownController.dropDownValue?.value as String?;
     final DateTime? startDate = selectedDateRange?.start;
     final DateTime? endDate = selectedDateRange?.end;
 
-    // Dispatch ApplyFiltersEvent to BLoC
+    if (startDate == null || endDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a valid date range')),
+      );
+      return;
+    }
+
     context.read<OverviewBloc>().add(ApplyExpenseFiltersEvent(
-      expenseType: selectedExpenseType,
-      startDate: startDate,
-      endDate: endDate,
-    ));
+          expenseType: selectedExpenseType,
+          startDate: startDate,
+          endDate: endDate,
+        ));
 
     logger.d('Applying Filters: $selectedExpenseType');
   }
 
+  void _clearFilters() {
+    setState(() {
+      widget.dropDownController.clearDropDown();
+      _selectedDateRange = null;
+      selectedDateRange = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final sortedMonths =  widget.monthlySummaries.keys.toList()
+    final sortedMonths = widget.monthlySummaries.keys.toList()
       ..sort((a, b) => b.compareTo(a));
 
     return Column(
@@ -88,35 +105,162 @@ class _MonthlySummaryViewState extends State<MonthlySummaryView> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('ประเภทรายการ',),
+                  const Text(
+                    'ประเภทรายการ',
+                  ),
                   SizedBox(
-                    width: 150,
-                    child: ExpenseTypeDropDown(
+                    width: 143,
+                    height: 30,
+                    child: DropDownTextField(
+                      textFieldDecoration: const InputDecoration(
+                        hintText: 'เงินเข้า-เงินออก',
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 11,
+                        ),
+                        suffixIcon: Padding(
+                          padding: EdgeInsets.only(bottom: 4.0),
+                          child: Icon(Icons.arrow_drop_down),
+                        ),
+                        suffixIconColor: Colors.grey,
+                        contentPadding: EdgeInsets.only(
+                            left: 2, right: 2, top: 10, bottom: 4),
+                        isDense: true,
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
                       controller: widget.dropDownController,
-                      onChanged: widget.onFilterChanged!,
+                      clearOption: false,
+                      //clearIconProperty: IconProperty(color: Colors.green),
+                      validator: (value) {
+                        if (value == null) {
+                          return "Required field";
+                        } else {
+                          return null;
+                        }
+                      },
+                      dropDownItemCount: 3,
+                      dropDownList: const [
+                        DropDownValueModel(
+                            name: 'เงินเข้า-เงินออก', value: "all"),
+                        DropDownValueModel(name: 'เงินเข้า', value: "income"),
+                        DropDownValueModel(name: 'เงินออก', value: "expense"),
+                      ],
+                      textStyle: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 11,
+                      ),
                     ),
                   ),
+                  SizedBox(height: 12,),
+                  Container(
+                    width: 143,
+                    height: 30,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF41486d),
+                      ),
+                      onPressed: _applyFilters,
+                      child: const Text(
+                        'เพิ่มตัวกรอง',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text('ช่วงเวลา'),
-                  
+                  GestureDetector(
+                    onTap: ()=>_selectDateRange(context),
+                    child: Container(
+                      width: 143,
+                      height: 30,
+                      //padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      padding: EdgeInsets.only(
+                          left: 2, right: 2, top: 10, bottom: 4),
+                      decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(width: 1, color: Colors.grey)),
+                        //borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _selectedDateRange ?? 'เลือกช่วงเวลา',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: _selectedDateRange == null
+                                  ? Colors.grey
+                                  : Colors.black,
+                            ),
+                          ),
+                          const Icon(Icons.calendar_today,
+                              color: Colors.grey, size: 15),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 12,),
+                  Container(
+                    width: 143,
+                    height: 30,
+                    child: OutlinedButton(
+                      onPressed: _clearFilters,
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Color(0xFF41486d),
+                          width: 1.0,
+                        ),
+                      ),
+                      child: const Text(
+                        'ลบตัวกรอง',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+
                   // Implement Date Picker here
-                  ElevatedButton.icon(
+                  /*ElevatedButton.icon(
                     onPressed: () => _selectDateRange(context),
                     icon: const Icon(Icons.date_range),
                     label: Text(selectedDateRange == null
                         ? 'Select Date Range'
                         : '${selectedDateRange!.start.toLocal().toString().split(' ')[0]} - ${selectedDateRange!.end.toLocal().toString().split(' ')[0]}'),
-                  ),
+                  ),*/
                 ],
               ),
             ],
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 15),
         Expanded(
           child: sortedMonths.isNotEmpty
               ? ListView.builder(
@@ -141,7 +285,8 @@ class _MonthlySummaryViewState extends State<MonthlySummaryView> {
                     };
 
                     return RoutineSummaryItem(
-                      dateString: '${monthNames[month.month]} ${(month.year+543) % 100}',
+                      dateString:
+                          '${monthNames[month.month]} ${(month.year + 543) % 100}',
                       totalIn: summary.totalIncome,
                       totalOut: summary.totalExpense,
                       balance: summary.netTotal,
@@ -149,12 +294,10 @@ class _MonthlySummaryViewState extends State<MonthlySummaryView> {
                   },
                 )
               : const Center(
-              child:
-              Text('No transactions found for the selected criteria.')),
+                  child:
+                      Text('No transactions found for the selected criteria.')),
         ),
       ],
     );
   }
 }
-
-

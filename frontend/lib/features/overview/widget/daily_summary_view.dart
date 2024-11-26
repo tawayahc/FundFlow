@@ -4,7 +4,7 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/overview/widget/routine_summary_item.dart';
-import 'package:fundflow/features/overview/widget/expense_type_dropdown.dart';
+//import 'package:fundflow/features/overview/widget/expense_type_dropdown.dart';
 import 'package:fundflow/features/overview/widget/date_range.dart';
 
 import '../bloc/overview/overview_bloc.dart';
@@ -29,8 +29,10 @@ class DailySummaryView extends StatefulWidget {
   State<DailySummaryView> createState() => _DailySummaryViewState();
 }
 
-class _DailySummaryViewState extends State<DailySummaryView>{
+class _DailySummaryViewState extends State<DailySummaryView> {
   DateTimeRange? selectedDateRange;
+  String? _selectedDateRange;
+  String? selectedExpenseType;
 
   Future<void> _selectDateRange(BuildContext context) async {
     final DateTime now = DateTime.now();
@@ -49,28 +51,60 @@ class _DailySummaryViewState extends State<DailySummaryView>{
     );
 
     if (picked != null && picked != selectedDateRange) {
-      setState(() {
-        selectedDateRange = picked;
-      });
+        setState(() {
+            selectedDateRange = picked;
+            _selectedDateRange =
+                '${picked.start.toLocal().toShortDateString()} - ${picked.end.toLocal().toShortDateString()}';
+          });
       logger.d('Selected Date Range: ${picked.start} - ${picked.end}');
     }
-    _applyFiltered();
+
   }
 
-  void _applyFiltered () {
-    final String? selectedExpenseType =
-    widget.dropDownController.dropDownValue?.value as String?;
+  void _applyFilters() {
+    String? selectedExpenseType =
+        widget.dropDownController.dropDownValue?.value as String?;
+    final DateTime? startDate = selectedDateRange?.start;
+    final DateTime? endDate = selectedDateRange?.end;
+
+    if (startDate == null || endDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a valid date range')),
+      );
+      return;
+    }
+
+    context.read<OverviewBloc>().add(ApplyExpenseFiltersEvent(
+          expenseType: selectedExpenseType,
+          startDate: startDate,
+          endDate: endDate,
+        ));
+
+    logger.d('Applying Filters: $selectedExpenseType');
+  }
+
+  void _applyFiltered() {
+    String? selectedExpenseType =
+        widget.dropDownController.dropDownValue?.value as String?;
     final DateTime? startDate = selectedDateRange?.start;
     final DateTime? endDate = selectedDateRange?.end;
 
     // Dispatch ApplyFiltersEvent to BLoC
     context.read<OverviewBloc>().add(ApplyExpenseFiltersEvent(
-      expenseType: selectedExpenseType,
-      startDate: startDate,
-      endDate: endDate,
-    ));
+          expenseType: selectedExpenseType,
+          startDate: startDate,
+          endDate: endDate,
+        ));
 
     logger.d('Applying Filters: $selectedExpenseType');
+  }
+
+  void _clearFilters() {
+    setState(() {
+      widget.dropDownController.clearDropDown();
+      _selectedDateRange = null;
+      selectedDateRange = null;
+    });
   }
 
   @override
@@ -97,8 +131,8 @@ class _DailySummaryViewState extends State<DailySummaryView>{
                     'ประเภทรายการ',
                   ),
                   SizedBox(
-                    width: 120,
-                    height: 40,
+                    width: 143,
+                    height: 30,
                     child: DropDownTextField(
                       textFieldDecoration: const InputDecoration(
                         hintText: 'เงินเข้า-เงินออก',
@@ -107,11 +141,12 @@ class _DailySummaryViewState extends State<DailySummaryView>{
                           fontSize: 11,
                         ),
                         suffixIcon: Padding(
-                          padding: EdgeInsets.only(bottom: 4.0), 
+                          padding: EdgeInsets.only(bottom: 4.0),
                           child: Icon(Icons.arrow_drop_down),
                         ),
                         suffixIconColor: Colors.grey,
-                        contentPadding: EdgeInsets.only(left: 2, right: 2, top: 10, bottom: 4), 
+                        contentPadding: EdgeInsets.only(
+                            left: 2, right: 2, top: 10, bottom: 4),
                         isDense: true,
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
@@ -144,7 +179,8 @@ class _DailySummaryViewState extends State<DailySummaryView>{
                       },
                       dropDownItemCount: 3,
                       dropDownList: const [
-                        DropDownValueModel(name: 'เงินเข้า-เงินออก', value: "all"),
+                        DropDownValueModel(
+                            name: 'เงินเข้า-เงินออก', value: "all"),
                         DropDownValueModel(name: 'เงินเข้า', value: "income"),
                         DropDownValueModel(name: 'เงินออก', value: "expense"),
                       ],
@@ -152,28 +188,100 @@ class _DailySummaryViewState extends State<DailySummaryView>{
                         color: Colors.black,
                         fontSize: 11,
                       ),
-                      onChanged: (val) {
+                      /*onChanged: (val) {
                         _applyFiltered();
-                      },
+                      },*/
                     ),
                   ),
+                  SizedBox(height: 12,),
+                  Container(
+                    width: 143,
+                    height: 30,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF41486d),
+                      ),
+                      onPressed: _applyFilters,
+                      child: const Text(
+                        'เพิ่มตัวกรอง',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text('ช่วงเวลา'),
-                  DateRangeDropdown(
-                    onDateRangeSelected: widget.onDateRangeSelected),
-                  
+                  /*DateRangeDropdown(
+                    onDateRangeSelected: widget.onDateRangeSelected),*/
+                  GestureDetector(
+                    onTap: ()=>_selectDateRange(context),
+                    child: Container(
+                      width: 143,
+                      height: 30,
+                      //padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      padding: EdgeInsets.only(
+                          left: 2, right: 2, top: 10, bottom: 4),
+                      decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(width: 1, color: Colors.grey)),
+                        //borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _selectedDateRange ?? 'เลือกช่วงเวลา',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: _selectedDateRange == null
+                                  ? Colors.grey
+                                  : Colors.black,
+                            ),
+                          ),
+                          const Icon(Icons.calendar_today,
+                              color: Colors.grey, size: 15),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 12,),
+                  Container(
+                    width: 143,
+                    height: 30,
+                    child: OutlinedButton(
+                      onPressed: _clearFilters,
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Color(0xFF41486d),
+                          width: 1.0,
+                        ),
+                      ),
+                      child: const Text(
+                        'ลบตัวกรอง',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+
                   // Implement Date Picker here
-                  ElevatedButton.icon(
+                  /*ElevatedButton.icon(
                     onPressed: () => _selectDateRange(context),
                     icon: const Icon(Icons.date_range),
                     label: Text(selectedDateRange == null
                         ? 'Select Date Range'
                         : '${selectedDateRange!.start.toLocal().toString().split(' ')[0]} - ${selectedDateRange!.end.toLocal().toString().split(' ')[0]}'),
-                  ),
+                  ),*/
                 ],
               ),
             ],
@@ -183,18 +291,18 @@ class _DailySummaryViewState extends State<DailySummaryView>{
         Expanded(
           child: sortedDates.isNotEmpty
               ? ListView.builder(
-            itemCount: sortedDates.length,
-            itemBuilder: (context, index) {
-              final date = sortedDates[index];
-              final summary = widget.dailySummaries[date];
+                  itemCount: sortedDates.length,
+                  itemBuilder: (context, index) {
+                    final date = sortedDates[index];
+                    final summary = widget.dailySummaries[date];
 
-              // Add logging
-              // logger.d('Date: $date, Summary: $summary');
+                    // Add logging
+                    // logger.d('Date: $date, Summary: $summary');
 
-              if (summary == null) {
-                logger.e('Warning: summary is null for date $date');
-                return Container(); // or some placeholder widget
-              }
+                    if (summary == null) {
+                      logger.e('Warning: summary is null for date $date');
+                      return Container(); // or some placeholder widget
+                    }
 
                     const monthNames = {
                       1: 'ม.ค.',
@@ -212,7 +320,8 @@ class _DailySummaryViewState extends State<DailySummaryView>{
                     };
 
                     return RoutineSummaryItem(
-                      dateString: '${date.day} ${monthNames[date.month]} ${(date.year+543) % 100}',
+                      dateString:
+                          '${date.day} ${monthNames[date.month]} ${(date.year + 543) % 100}',
                       totalIn: summary.totalIncome,
                       totalOut: summary.totalExpense,
                       balance: summary.netTotal,
@@ -220,12 +329,10 @@ class _DailySummaryViewState extends State<DailySummaryView>{
                   },
                 )
               : const Center(
-              child:
-              Text('No transactions found for the selected criteria.')),
+                  child:
+                      Text('No transactions found for the selected criteria.')),
         ),
       ],
     );
   }
 }
-
-

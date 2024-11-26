@@ -68,6 +68,7 @@ class ExpenseBarChartState extends State<ExpenseBarChart> {
                 scrollDirection: Axis.horizontal,
                 child: SizedBox(
                   width: barWidth * 2.5 * showingBarGroups.length,
+                  height: 100,
                   child: BarChart(
                     BarChartData(
                       alignment: BarChartAlignment.center,
@@ -219,18 +220,27 @@ class ExpenseBarChartState extends State<ExpenseBarChart> {
   }
 
   BarChartGroupData makeGroupData(int x, double y1, double y2) {
+    
+    double newY1 = heightPartition;
+    double newY2 = heightPartition;
+    if (y1 > y2 && y1 > heightPartition && y2 > heightPartition) {
+      newY1 = heightPartition - 7;
+    } else if (y1 < y2 && y1 > heightPartition && y2 > heightPartition) {
+      newY2 = heightPartition - 7;
+    }
+
     return BarChartGroupData(
       barsSpace: 0,
       x: x,
       barRods: [
         BarChartRodData(
-          toY: y1,
+          toY: y1 < heightPartition ? y1 : newY1,
           color: widget.leftBarColor,
           width: barWidth,
           borderRadius: const BorderRadius.all(Radius.zero),
         ),
         BarChartRodData(
-          toY: y2,
+          toY: y2 < heightPartition ? y2 : newY2,
           color: widget.rightBarColor,
           width: barWidth,
           borderRadius: const BorderRadius.all(Radius.zero),
