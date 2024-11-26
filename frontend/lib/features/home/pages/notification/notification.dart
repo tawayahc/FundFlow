@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart'; // Add this import
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/widgets/global_padding.dart'; // Added GlobalPadding
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/transaction/ui/edit_transaction_page.dart';
 import 'package:fundflow/core/widgets/notification/notification_card.dart';
@@ -88,78 +89,154 @@ class _NotificationPageState extends State<NotificationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const BottomNavBar()),
-            );
+    return GlobalPadding(
+      // Added GlobalPadding for consistent padding
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const BottomNavBar()),
+              );
+            },
+          ),
+          centerTitle: true,
+          title: const Text(
+            'Notifications',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        body: BlocBuilder<NotificationBloc, NotificationState>(
+          builder: (context, notificationState) {
+            if (notificationState is NotificationsLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (notificationState is NotificationsLoaded) {
+              final sortedNotifications =
+                  List.from(notificationState.notifications)
+                    ..sort((a, b) => b.date.compareTo(a.date));
+
+              final newNotifications =
+                  sortedNotifications.where((notification) {
+                final hash = getNotificationHash(notification);
+                return !oldNotificationHashes.contains(hash);
+              }).toList();
+
+              final oldNotifications =
+                  sortedNotifications.where((notification) {
+                final hash = getNotificationHash(notification);
+                return oldNotificationHashes.contains(hash);
+              }).toList();
+
+              // Save notifications to local storage once
+              _saveNotificationsToLocalStorageOnce(
+                  notificationState.notifications);
+
+              return ListView(
+                children: [
+                  // New Notifications Section
+                  if (newNotifications.isNotEmpty) ...[
+                    const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            "การแจ้งเตือนใหม่",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF414141),
+                            ),
+                          ),
+                          Spacer(),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.info_outline_rounded,
+                                size: 16,
+                                color: Colors.grey,
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                "แตะเพื่อแก้ไข",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    ...newNotifications.map((notification) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: _buildNotificationCard(notification),
+                      );
+                    }),
+                    if (oldNotifications.isNotEmpty) ...[
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        child: Divider(
+                          thickness: 1,
+                          color: Color(0xFFE0E0E0),
+                        ),
+                      ),
+                    ],
+                  ],
+                  // Old Notifications Section
+                  if (oldNotifications.isNotEmpty) ...[
+                    const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            "การแจ้งเตือนเก่า",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF414141),
+                            ),
+                          ),
+                          Spacer(),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.info_outline_rounded,
+                                size: 16,
+                                color: Colors.grey,
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                "แตะเพื่อแก้ไข",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    ...oldNotifications.map((notification) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: _buildNotificationCard(notification),
+                      );
+                    }).toList(),
+                  ],
+                ],
+              );
+            } else {
+              return const Center(child: Text('Unknown error'));
+            }
           },
         ),
-        centerTitle: true,
-        title: const Text(
-          'Notifications',
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
-      body: BlocBuilder<NotificationBloc, NotificationState>(
-        builder: (context, notificationState) {
-          if (notificationState is NotificationsLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (notificationState is NotificationsLoaded) {
-            final sortedNotifications =
-                List.from(notificationState.notifications)
-                  ..sort((a, b) => b.date.compareTo(a.date));
-
-            final newNotifications = sortedNotifications.where((notification) {
-              final hash = getNotificationHash(notification);
-              return !oldNotificationHashes.contains(hash);
-            }).toList();
-
-            final oldNotifications = sortedNotifications.where((notification) {
-              final hash = getNotificationHash(notification);
-              return oldNotificationHashes.contains(hash);
-            }).toList();
-
-            // Save notifications to local storage once
-            _saveNotificationsToLocalStorageOnce(
-                notificationState.notifications);
-
-            return ListView(
-              children: [
-                if (newNotifications.isNotEmpty)
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text(
-                      "New Notifications",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ...newNotifications.map((notification) {
-                  return _buildNotificationCard(notification);
-                }).toList(),
-                if (oldNotifications.isNotEmpty)
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text(
-                      "Old Notifications",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ...oldNotifications.map((notification) {
-                  return _buildNotificationCard(notification);
-                }).toList(),
-              ],
-            );
-          } else {
-            return const Center(child: Text('Unknown error'));
-          }
-        },
       ),
     );
   }

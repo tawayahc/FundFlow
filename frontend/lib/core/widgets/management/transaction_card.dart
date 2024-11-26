@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/core/themes/app_styles.dart';
-import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
@@ -23,74 +21,97 @@ class TransactionCard extends StatelessWidget {
 
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
-        String categoryName = 'undefined';
-        if (state is CategoriesLoaded) {
-          // Only set "undefined" for expenses with invalid or missing categoryId
-          if (isExpense && transaction.categoryId != 0) {
-            final category = state.categories.firstWhere(
-              (cat) => cat.id == transaction.categoryId,
-              orElse: () => Category(
-                id: 0,
-                name: 'undefined',
-                amount: 0.0,
-                color: Colors.grey,
-              ),
-            );
-            categoryName = category.name;
-          } else if (!isExpense) {
-            categoryName = ''; // Do not show "undefined" for incomes
-          }
+        String categoryName = 'No Memo';
+        Color categoryColor = Colors.grey;
+
+        // Fetch category details for expenses
+        if (state is CategoriesLoaded &&
+            isExpense &&
+            transaction.categoryId != 0) {
+          final category = state.categories.firstWhere(
+            (cat) => cat.id == transaction.categoryId,
+            orElse: () => Category(
+              id: 0,
+              name: 'No Category',
+              amount: 0.0,
+              color: Colors.grey,
+            ),
+          );
+          categoryName = category.name;
+          categoryColor = category.color;
         }
 
-        final categoryColor = (isExpense && categoryName == 'undefined')
-            ? const Color(0xFFFF5C5C)
-            : Colors.grey;
-
-        return Card(
+        return Container(
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: const Color(0xFFE0E0E0)), // Light border
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      transaction.memo.isNotEmpty ? transaction.memo : '',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: (isExpense && categoryName == 'undefined')
-                            ? const Color(0xFFFF5C5C)
-                            : AppColors.darkGrey,
-                      ),
+                // Category Color Box (only for expenses)
+                if (isExpense)
+                  Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: categoryColor,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    Text(
-                      formatter.format(transaction.amount),
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: (isExpense && categoryName == 'undefined')
-                            ? categoryColor
-                            : isExpense
-                                ? Colors.red
-                                : Colors.green,
+                  ),
+                if (isExpense) const SizedBox(width: 12),
+                // Memo and Category Name
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        transaction.memo.isNotEmpty
+                            ? transaction.memo // Use Memo if available
+                            : categoryName, // Otherwise, fallback to category name
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF414141),
+                        ),
                       ),
-                    ),
-                  ],
+                      if (isExpense)
+                        const SizedBox(
+                            height: 4), // Space between memo and category
+                      if (isExpense)
+                        Text(
+                          categoryName,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF757575),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // Amount and Date
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      categoryName.isNotEmpty ? categoryName : '',
-                      style: TextStyle(fontSize: 14, color: categoryColor),
+                      '฿ ${transaction.amount.toString()}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF414141),
+                      ),
                     ),
+                    const SizedBox(height: 4),
                     Text(
                       formattedDate,
-                      style: TextStyle(fontSize: 14, color: categoryColor),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF757575),
+                      ),
                     ),
                   ],
                 ),

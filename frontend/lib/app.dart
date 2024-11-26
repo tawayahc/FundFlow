@@ -74,10 +74,10 @@ class MyApp extends StatelessWidget {
       Logger.level = Level.debug;
     }
     // NOTE: API Helper is use for store the base url and token
-    // NOTE: base url is use when we don't have the token
-    final apiHelper =
-        ApiHelper(baseUrl: dotenv.env['BASE_URL'] ?? 'http://10.0.2.2:8080/');
+    // NOTE: AI_API is use for store the base url of AI API
     final String baseUrl = dotenv.env['BASE_URL'] ?? 'http://10.0.2.2:8080/';
+
+    final apiHelper = ApiHelper(baseUrl: baseUrl);
     final authenticationRepository = AuthenticationRepository(baseUrl: baseUrl);
     final settingsRepository = SettingsRepository(apiHelper: apiHelper);
     final repasswordRepository = RepasswordRepository(baseUrl: baseUrl);
@@ -89,10 +89,7 @@ class MyApp extends StatelessWidget {
     final transactionAddRepository =
         TransactionAddRepository(apiHelper: apiHelper);
     final imageRepository = ImageRepository();
-    final slipRepository = SlipRepository(
-      imageRepository: imageRepository,
-      transactionAddRepository: transactionAddRepository,
-    );
+    final slipRepository = SlipRepository();
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authenticationRepository),
@@ -162,11 +159,7 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<ImageBloc>(
             create: (context) => ImageBloc(
-              imageRepository: ImageRepository(),
-              slipRepository: SlipRepository(
-                imageRepository: ImageRepository(),
-                transactionAddRepository: transactionAddRepository,
-              ),
+              imageRepository: imageRepository,
               transactionAddRepository: transactionAddRepository,
             ),
           ),
