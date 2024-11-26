@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/home/category_balance_box.dart';
-import 'package:fundflow/core/widgets/management/delete_transaction_page.dart';
 import 'package:fundflow/core/widgets/management/transaction_card_for_category.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
 import 'package:fundflow/features/home/models/category.dart' as categories;
 import '../../home/bloc/transaction/transaction_bloc.dart';
 import '../../home/bloc/transaction/transaction_state.dart';
+import '../../home/models/transaction.dart';
 import '../../home/pages/category/edit_category_page.dart';
+import '../../../core/widgets/management/delete_transaction_page.dart';
 
 class CategoryPage extends StatefulWidget {
   final categories.Category category;
@@ -17,6 +18,18 @@ class CategoryPage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _CategoryPageState();
+}
+
+void _showDeleteTransactionModal(
+    BuildContext context, Transaction transaction) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    barrierColor: Colors.black54, // โปร่งแสง
+    builder: (BuildContext context) {
+      return DeleteTransactionPage(transaction: transaction);
+    },
+  );
 }
 
 class _CategoryPageState extends State<CategoryPage>
@@ -110,6 +123,7 @@ class _CategoryPageState extends State<CategoryPage>
               ],
             ),
           ),
+
           const SizedBox(height: 16),
           // Balance Box
           Padding(
@@ -151,19 +165,6 @@ class _CategoryPageState extends State<CategoryPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 25),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 45.0),
-                    child: Text(
-                      'รายจ่าย',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF414141),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
                   Expanded(
                     child: BlocBuilder<TransactionBloc, TransactionState>(
                       builder: (context, transactionState) {
@@ -201,15 +202,8 @@ class _CategoryPageState extends State<CategoryPage>
                                 padding: const EdgeInsets.only(bottom: 8.0),
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            DeleteTransactionPage(
-                                          transaction: transaction,
-                                        ),
-                                      ),
-                                    );
+                                    _showDeleteTransactionModal(
+                                        context, transaction);
                                   },
                                   child: TransactionCardForCategory(
                                     transaction: transaction,

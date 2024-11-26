@@ -11,6 +11,7 @@ import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_bloc.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_state.dart';
+import 'package:fundflow/features/home/models/transaction.dart';
 import 'package:fundflow/features/home/pages/bank/edit_bank_page.dart';
 import '../../home/models/bank.dart';
 
@@ -325,14 +326,8 @@ class _BankAccountPageState extends State<BankAccountPage>
                                           const EdgeInsets.only(bottom: 8.0),
                                       child: GestureDetector(
                                         onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DeleteTransactionPage(
-                                                      transaction: transaction),
-                                            ),
-                                          );
+                                          _showDeleteTransactionModal(
+                                              context, transaction);
                                         },
                                         child: TransactionCard(
                                             transaction: transaction),
@@ -359,17 +354,29 @@ class _BankAccountPageState extends State<BankAccountPage>
       ),
     );
   }
+
+  void _showDeleteTransactionModal(
+      BuildContext context, Transaction transaction) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black54, // โปร่งแสง
+      builder: (BuildContext context) {
+        return DeleteTransactionPage(transaction: transaction);
+      },
+    );
+  }
 }
 
 Map<String, Color> bankColorMap = {
-  'ธนาคารกสิกรไทย': Colors.green, // Kasikorn Bank
-  'ธนาคารกรุงไทย': Colors.blue, // Krung Thai Bank
-  'ธนาคารไทยพาณิชย์': Colors.purple, // Siam Commercial Bank
-  'ธนาคารกรุงเทพ': const Color.fromARGB(255, 10, 35, 145), // Bangkok Bank
-  'ธนาคารกรุงศรีอยุธยา': const Color(0xFFffe000), // Krungsri (Bank of Ayudhya)
-  'ธนาคารออมสิน': Colors.pink, // Government Savings Bank
-  'ธนาคารธนชาต': const Color(0xFFF68B1F), // Thanachart Bank
-  'ธนาคารเกียรตินาคิน': const Color(0xFF004B87), // Kiatnakin Bank
-  'ธนาคารซิตี้แบงก์': const Color(0xFF1E90FF), // Citibank
-  'ธนาคารเมกะ': const Color(0xFF3B5998), // Mega Bank
+  'ธนาคารกสิกรไทย': Colors.green,
+  'ธนาคารกรุงไทย': Colors.blue,
+  'ธนาคารไทยพาณิชย์': Colors.purple,
+  'ธนาคารกรุงเทพ': const Color.fromARGB(255, 10, 35, 145),
+  'ธนาคารกรุงศรีอยุธยา': const Color(0xFFffe000),
+  'ธนาคารออมสิน': Colors.pink,
+  'ธนาคารธนชาต': const Color(0xFFF68B1F),
+  'ธนาคารเกียรตินาคิน': const Color(0xFF004B87),
+  'ธนาคารซิตี้แบงก์': const Color(0xFF1E90FF),
+  'ธนาคารเมกะ': const Color(0xFF3B5998),
 };

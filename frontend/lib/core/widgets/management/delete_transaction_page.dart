@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_bloc.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_state.dart';
-import 'package:intl/intl.dart';
 import 'package:fundflow/features/home/models/transaction.dart';
 
 class DeleteTransactionPage extends StatelessWidget {
@@ -15,78 +13,71 @@ class DeleteTransactionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Format the date
-    final dateFormatter = DateFormat('dd/MM/yyyy');
-    final formattedDate =
-        dateFormatter.format(DateTime.parse(transaction.createdAt));
-
-    // Format the amount
-    final formatter = NumberFormat.currency(
-      locale: 'en_US',
-      symbol: '', // No currency symbol
-      decimalDigits: 2,
-    );
-
     return BlocListener<TransactionBloc, TransactionState>(
       listener: (context, state) {
         if (state is TransactionDeleted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const BottomNavBar()),
-          );
+          Navigator.of(context).pop(); // ปิด Modal เมื่อสำเร็จ
         } else if (state is TransactionsLoadError) {
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(content: Text(state.message)),
-          // );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message ?? 'Error occurred')),
+          );
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Transaction Details'),
+      child: Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Memo: ${transaction.memo}',
-                  style: const TextStyle(fontSize: 18)),
-              const SizedBox(height: 8),
-              Text('Amount: ${formatter.format(transaction.amount)}',
-                  style: const TextStyle(fontSize: 18)),
-              const SizedBox(height: 8),
-              Text('Type: ${transaction.type}',
-                  style: const TextStyle(fontSize: 18)),
-              const SizedBox(height: 8),
-              Text('Bank: ${transaction.bankName}',
-                  style: const TextStyle(fontSize: 18)),
-              const SizedBox(height: 8),
-              Text('Created At: $formattedDate',
-                  style: const TextStyle(fontSize: 18)),
-              Center(
-                child: TextButton(
-                  onPressed: () {
-                    BlocProvider.of<TransactionBloc>(context)
-                        .add(DeleteTransaction(transactionId: transaction.id));
-                  },
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.delete,
-                        color: Color(0xFFFF5C5C),
-                      ),
-                      Text(
-                        'ลบธนาคาร',
-                        style: TextStyle(
-                          color: Color(0xFFFF5C5C),
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
+              Align(
+                alignment: Alignment.topRight,
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: const Icon(
+                    Icons.close,
+                    color: Color(0xFF414141),
                   ),
                 ),
               ),
+              const SizedBox(height: 10),
+              const Icon(
+                Icons.warning,
+                color: Color(0xFFFF5C5C),
+                size: 50,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'คุณต้องการที่จะลบ\nรายการนี้หรือไม่',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF414141),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                  onPressed: () {
+                    BlocProvider.of<TransactionBloc>(context).add(
+                      DeleteTransaction(transactionId: transaction.id),
+                    );
+                  },
+                  child: const Text(
+                    'ลบรายการ',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFFFF5C5C), 
+                    minimumSize: const Size(213, 40), 
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(22), 
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

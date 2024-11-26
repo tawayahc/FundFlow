@@ -607,6 +607,54 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 labelText: 'Note',
                 border: OutlineInputBorder(),
               ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "${_selectedDate.toLocal()}".split(' ')[0],
+                  ),
+                  const Icon(Icons.calendar_today),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Time Picker
+          InkWell(
+            onTap: _selectTime,
+            child: InputDecorator(
+              decoration: const InputDecoration(
+                labelText: 'Time',
+                border: OutlineInputBorder(),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    _selectedTime != null
+                        ? _selectedTime!.format(context)
+                        : 'Select Time',
+                  ),
+                  const Icon(Icons.access_time),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Note Field
+          TextFormField(
+            controller: _noteController,
+            decoration: const InputDecoration(
+              labelText: 'Note',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: isFormEnabled ? _submit : null,
+            child: const Text('ยันยัน'),
+          ),
+        ],
             ),*/
             const SizedBox(height: 16),
             CustomButton(text: 'ยืนยัน', onPressed: _submit),
