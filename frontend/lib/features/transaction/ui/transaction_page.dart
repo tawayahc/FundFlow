@@ -320,7 +320,56 @@ class _TransactionPageState extends State<TransactionPage>
                       ),
                     ] else if (_type == 'expense') ...[
                       const SizedBox(height: AppSpacing.medium),
-                      Row(
+                      const Align(
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'เพิ่มรายการด้วยรูปภาพ',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ImageUploadPage()));
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF41486d),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.upload_file,
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: 8.0),
+                              Text(
+                                'เลือกรูปภาพ',
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 22,
+                      ),
+                      Divider(
+                        color: const Color.fromARGB(255, 199, 198, 198),
+                      ),
+                      /*Row(
                         children: [
                           ElevatedButton(
                               onPressed: () {
@@ -341,7 +390,7 @@ class _TransactionPageState extends State<TransactionPage>
                           //     },
                           //     child: Text('gallery')),
                         ],
-                      ),
+                      ),*/
                       ExpenseForm(
                         key: ValueKey(_banks.toString() +
                             _categories.toString()), // Unique Key
