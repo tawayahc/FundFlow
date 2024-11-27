@@ -47,6 +47,17 @@ class ExpenseBarChartState extends State<ExpenseBarChart> {
 
   @override
   Widget build(BuildContext context) {
+    if(widget.monthlySummaries.isEmpty){
+      return const SizedBox(
+        height: 335,
+        child: const Center(
+          child: Text(
+            'No data available',
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+        ),
+      );
+    }
     return AspectRatio(
       aspectRatio: 1.25,
       child: Padding(
@@ -54,13 +65,20 @@ class ExpenseBarChartState extends State<ExpenseBarChart> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              'เงินเข้า-เงินออกรายเดือน', 
-              style: TextStyle(
-                fontWeight: FontWeight.bold
-              ),),
+            const Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                  'เงินเข้า-เงินออกรายเดือน', 
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold
+                  ),),
+            ),
+          ),
             const SizedBox(
-              height: 30,
+              height: 15,
             ),
             Expanded(
               child: SingleChildScrollView(

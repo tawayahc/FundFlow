@@ -25,42 +25,64 @@ class PieChartState extends State<CategorizedPieChart> {
   Widget build(BuildContext context) {
     // Check if categorizedSummaries or categories is empty
     if (widget.categorizedSummaries.isEmpty || widget.categories.isEmpty) {
-      return const Center(
-        child: Text(
-          'No data available',
-          style: TextStyle(fontSize: 16, color: Colors.grey),
+      return const SizedBox(
+        height: 335,
+        child: const Center(
+          child: Text(
+            'No data available',
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
         ),
       );
     }
 
-    return AspectRatio(
-      aspectRatio: 1.3,
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: PieChart(
-          PieChartData(
-            pieTouchData: PieTouchData(
-              touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                setState(() {
-                  if (!event.isInterestedForInteractions ||
-                      pieTouchResponse == null ||
-                      pieTouchResponse.touchedSection == null) {
-                    touchedIndex = -1;
-                    return;
-                  }
-                  touchedIndex =
-                      pieTouchResponse.touchedSection!.touchedSectionIndex;
-                });
-              },
+    return SizedBox(
+      height: 335,
+      //aspectRatio: 1.3,
+      child: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(30.0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                  'เงินเข้า-เงินออก', 
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold
+                  ),),
             ),
-            borderData: FlBorderData(show: true),
-            sectionsSpace: 1.2,
-            centerSpaceRadius: 0,
-
-            //Data part
-            sections: showingSections(),
           ),
-        ),
+          Expanded(
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: PieChart(
+                PieChartData(
+                  pieTouchData: PieTouchData(
+                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                      setState(() {
+                        if (!event.isInterestedForInteractions ||
+                            pieTouchResponse == null ||
+                            pieTouchResponse.touchedSection == null) {
+                          touchedIndex = -1;
+                          return;
+                        }
+                        touchedIndex =
+                            pieTouchResponse.touchedSection!.touchedSectionIndex;
+                      });
+                    },
+                  ),
+                  borderData: FlBorderData(show: true),
+                  sectionsSpace: 1.2,
+                  centerSpaceRadius: 0,
+            
+                  //Data part
+                  sections: showingSections(),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
