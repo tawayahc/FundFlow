@@ -42,7 +42,7 @@ class _TransferFormState extends State<TransferForm> {
   void _selectDate() {
     BottomPicker.date(
       pickerTitle: Text(
-        'Select Date',
+        'เลือกวันที่',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -72,7 +72,7 @@ class _TransferFormState extends State<TransferForm> {
   void _selectTime() {
     BottomPicker.time(
       pickerTitle: Text(
-        'Select Time',
+        'เลือกเวลา',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -166,7 +166,7 @@ class _TransferFormState extends State<TransferForm> {
               });
             },
             displayItem: (Bank bank) => bank.name,
-            validator: (value) => value == null ? 'Please select a bank' : null,
+            validator: (value) => value == null ? 'กรุณาเลือกธนาคาร' : null,
           ),
 
           const SizedBox(height: 16),
@@ -194,7 +194,7 @@ class _TransferFormState extends State<TransferForm> {
             },
             displayItem: (Bank bank) => bank.name,
             validator: (value) =>
-                value == null ? 'Please select a to bank' : null,
+                value == null ? 'กรุณาเลือกธนาคาร' : null,
           ),
 
           const SizedBox(height: 16),
@@ -219,10 +219,10 @@ class _TransferFormState extends State<TransferForm> {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter an amount';
+                return 'กรุณาระบุจำนวนเงิน';
               }
               if (double.tryParse(value) == null) {
-                return 'Please enter a valid number';
+                return 'กรุณาระบุจำนวนเงินที่ถูกต้อง';
               }
               return null;
             },
