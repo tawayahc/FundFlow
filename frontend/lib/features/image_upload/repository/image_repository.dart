@@ -15,7 +15,7 @@ class ImageRepository {
   // Note: URL for the AI server
   ImageRepository()
       : _picker = ImagePicker(),
-        _apiHelper = ApiHelper(baseUrl: 'http://10.0.2.2:3000');
+        _apiHelper = ApiHelper(baseUrl: 'http://10.0.2.2:3000/');
 
   Future<List<XFile>?> pickImages() async {
     try {
@@ -69,7 +69,7 @@ class ImageRepository {
     try {
       // FIXME: Update with your server's URL
       final response = await _apiHelper.dio.post(
-        '/upload', // Update to your server's endpoint
+        '/get_transaction', // Update to your server's endpoint
         data: formData,
       );
 

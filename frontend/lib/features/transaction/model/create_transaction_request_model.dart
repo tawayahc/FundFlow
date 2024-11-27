@@ -5,7 +5,7 @@ class CreateTransactionRequest {
   final int? categoryId;
   final String createdAtDate;
   final String? createdAtTime;
-  final String memo;
+  final String? memo;
   final String? metadata;
 
   CreateTransactionRequest({
@@ -15,7 +15,7 @@ class CreateTransactionRequest {
     this.categoryId,
     required this.createdAtDate,
     this.createdAtTime,
-    required this.memo,
+    this.memo,
     this.metadata,
   });
 
@@ -28,7 +28,7 @@ class CreateTransactionRequest {
       createdAtDate: json['created_at_date'],
       createdAtTime: json['created_at_time'],
       memo: json['memo'],
-      metadata: json['metadata'],
+      metadata: json['meta_data'],
     );
   }
 
@@ -41,7 +41,7 @@ class CreateTransactionRequest {
       'created_at_date': createdAtDate,
       'created_at_time': createdAtTime,
       'memo': memo,
-      'metadata': metadata,
+      'meta_data': metadata,
     };
   }
 }
