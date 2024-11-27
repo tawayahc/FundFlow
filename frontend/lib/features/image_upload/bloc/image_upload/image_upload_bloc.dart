@@ -142,7 +142,6 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
       if (transactionsToNotify.isNotEmpty) {
         // Store transactions in local storage as notifications
         await _storeNotificationsLocally(transactionsToNotify);
-        logger.d('Notifications stored locally: $transactionsToNotify');
         // log Instance of 'TransactionResponse' to console by mapping each transaction to json
         logger.d(
             'Notifications stored locally: ${transactionsToNotify.map((transaction) => jsonEncode(transaction.toJson()))}');
