@@ -4,24 +4,26 @@ import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/features/home/models/notification.dart' as fundflow;
+import 'package:fundflow/features/transaction/model/transaction.dart';
 
 class NotificationCard extends StatelessWidget {
-  final fundflow.Notification notification;
+  final TransactionResponse transaction;
 
-  const NotificationCard({super.key, required this.notification});
+  const NotificationCard({Key? key, required this.transaction})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final isExpense = notification.type == 'expense';
+    final isExpense = transaction.type == 'expense';
 
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
-        String categoryName = 'undefined';
+        String categoryName = 'Undefined';
         Color categoryColor = Colors.grey;
 
-        if (notification.categoryId != -1 && state is CategoriesLoaded) {
+        if (transaction.categoryId != -1 && state is CategoriesLoaded) {
           final category = state.categories.firstWhere(
-            (cat) => cat.id == notification.categoryId,
+            (cat) => cat.id == transaction.categoryId,
             orElse: () => Category(
               id: -1,
               name: 'No Category',
@@ -53,14 +55,14 @@ class NotificationCard extends StatelessWidget {
               children: [
                 // Icon box
                 Container(
-                  width: 30, // ปรับขนาดให้เล็กลง
-                  height: 30, // ปรับขนาดให้เล็กลง
+                  width: 30,
+                  height: 30,
                   decoration: BoxDecoration(
                     color: categoryColor,
                     borderRadius: BorderRadius.circular(6),
                   ),
                 ),
-                const SizedBox(width: 12), // ลดระยะห่างระหว่าง Icon กับข้อความ
+                const SizedBox(width: 12),
 
                 // Text and details
                 Expanded(
@@ -68,11 +70,11 @@ class NotificationCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        notification.memo.isNotEmpty
-                            ? notification.memo
+                        transaction.memo != null && transaction.memo!.isNotEmpty
+                            ? transaction.memo!
                             : categoryName,
                         style: const TextStyle(
-                          fontSize: 14, // ลดขนาดตัวอักษร
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF414141),
                         ),
@@ -80,7 +82,7 @@ class NotificationCard extends StatelessWidget {
                       Text(
                         categoryName,
                         style: const TextStyle(
-                          fontSize: 12, // ลดขนาดตัวอักษร
+                          fontSize: 12,
                           color: Color(0xFF414141),
                         ),
                       ),
@@ -93,17 +95,17 @@ class NotificationCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '฿ ${notification.amount.toString()}',
+                      '฿ ${transaction.amount.toString()}',
                       style: const TextStyle(
-                        fontSize: 14, // ลดขนาดตัวอักษร
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF414141),
                       ),
                     ),
                     Text(
-                      notification.date,
+                      transaction.date ?? '',
                       style: const TextStyle(
-                        fontSize: 12, // ลดขนาดตัวอักษร
+                        fontSize: 12,
                         color: Color(0xFF5A5A5A),
                       ),
                     ),
