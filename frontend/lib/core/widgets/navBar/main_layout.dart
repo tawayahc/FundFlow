@@ -11,7 +11,6 @@ import 'package:fundflow/features/manageCategory/ui/category_page.dart';
 import 'package:fundflow/features/transaction/ui/transaction_page.dart';
 import 'package:fundflow/features/overview/ui/overview_page.dart';
 import 'package:fundflow/features/setting/ui/setting_page.dart';
-// import 'package:fundflow/features/test/ui/test_page.dart';
 
 class BottomNavBar extends StatefulWidget {
   // final Bank bank;
@@ -45,29 +44,24 @@ class _NavBarState extends State<BottomNavBar>
   @override
   Widget build(BuildContext context) {
     final List<Widget> onNavBarPages = [
-      HomePage(
-        pageController: _pageController,
+      GlobalPadding(
+        child: HomePage(
+          pageController: _pageController,
+        ),
       ),
-      TransactionPage(),
-      AddBankPage(),
+      GlobalPadding(child: TransactionPage()),
+      const OverviewPage(),
 
-      // HomePage section
-
-      SettingsPage(
-        pageController: _pageController,
-      ),
+      // Sub-page from home
+      SettingsPage(pageController: _pageController),
     ];
 
     return Scaffold(
-      body: SafeArea(
-        child: GlobalPadding(
-          child: PageView(
-            controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            children: List.generate(
-                onNavBarPages.length, (index) => onNavBarPages[index]),
-          ),
-        ),
+      body: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: List.generate(
+            onNavBarPages.length, (index) => onNavBarPages[index]),
       ),
       extendBody: true,
       bottomNavigationBar: /*SlidingClippedNavBar(
