@@ -145,7 +145,7 @@ class _TransactionPageState extends State<TransactionPage>
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Container(
-                height: 268,
+                height: 250,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -179,7 +179,9 @@ class _TransactionPageState extends State<TransactionPage>
                     Text(
                       text,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.red),
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontSize: 20),
                     ),
                     const SizedBox(height: 16),
                     Container(
