@@ -25,6 +25,9 @@ import 'package:fundflow/features/image_upload/bloc/slip/slip_bloc.dart';
 import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_bloc.dart';
 import 'package:fundflow/features/image_upload/repository/image_repository.dart';
 import 'package:fundflow/features/image_upload/repository/slip_repository.dart';
+import 'package:fundflow/features/overview/bloc/categorized/categorized_bloc.dart';
+import 'package:fundflow/features/overview/bloc/overview/overview_bloc.dart';
+import 'package:fundflow/features/overview/bloc/overview/overview_event.dart';
 import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
 import 'package:fundflow/features/setting/ui/change_password.dart';
@@ -157,6 +160,16 @@ class MyApp extends StatelessWidget {
               repository: transactionAddRepository,
             ),
           ),
+          BlocProvider<OverviewBloc>(
+            create: (context) => OverviewBloc(
+              repository: transactionAddRepository,
+            )..add(FetchTransactionsEvent()),
+          ),
+          BlocProvider<CategorizedBloc>(
+            create: (context) => CategorizedBloc(
+              repository: transactionAddRepository,
+            ),
+          ),
           BlocProvider<ImageBloc>(
             create: (context) => ImageBloc(
               imageRepository: imageRepository,
@@ -164,10 +177,9 @@ class MyApp extends StatelessWidget {
             ),
           ),
           BlocProvider<SlipBloc>(
-            create: (context) => SlipBloc(
-              slipRepository,
-            ),
-          ),
+              create: (context) => SlipBloc(
+                    slipRepository,
+                  )),
         ],
         child: MaterialApp(
           title: 'FundFlow',
