@@ -1,12 +1,22 @@
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+import 'package:fundflow/features/transaction/model/bank_model.dart';
+import 'package:fundflow/features/transaction/model/category_model.dart';
+
 class TransactionResponse {
-  final String metadata;
-  final String bank;
-  final String type;
-  final double amount;
-  final int categoryId;
-  final String date;
-  final String time;
-  final String memo;
+  String metadata;
+  String bank;
+  String type;
+  double amount;
+  int categoryId;
+  String? date;
+  String? time;
+  String? memo;
+
+  // Optional fields for processing
+  int? bankId;
+  List<Bank>? possibleBanks;
+  List<Category>? possibleCategories;
 
   TransactionResponse({
     required this.metadata,
@@ -14,9 +24,11 @@ class TransactionResponse {
     required this.type,
     required this.amount,
     required this.categoryId,
-    required this.date,
-    required this.time,
-    required this.memo,
+    this.date,
+    this.time,
+    this.memo,
+    this.possibleBanks,
+    this.possibleCategories,
   });
 
   factory TransactionResponse.fromJson(Map<String, dynamic> json) {
@@ -26,9 +38,9 @@ class TransactionResponse {
       type: json['type'] as String,
       amount: (json['amount'] as num).toDouble(),
       categoryId: json['category_id'] as int,
-      date: json['date'] as String,
-      time: json['time'] as String,
-      memo: json['memo'] as String,
+      date: json['date'] as String?, // Allow null
+      time: json['time'] as String?, // Allow null
+      memo: json['memo'] as String?, // Allow null
     );
   }
 
@@ -43,5 +55,12 @@ class TransactionResponse {
       'time': time,
       'memo': memo,
     };
+  }
+
+  String get transactionHash {
+    final transactionJson = jsonEncode(toJson());
+    final bytes = utf8.encode(transactionJson);
+    final digest = md5.convert(bytes);
+    return digest.toString();
   }
 }

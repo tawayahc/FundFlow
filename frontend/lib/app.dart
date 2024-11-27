@@ -143,7 +143,7 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<NotificationBloc>(
             create: (context) => NotificationBloc(
-              notificationRepository: notificationRepository,
+              transactionAddRepository: transactionAddRepository,
             )..add(LoadNotifications()),
           ),
           BlocProvider<ProfileBloc>(

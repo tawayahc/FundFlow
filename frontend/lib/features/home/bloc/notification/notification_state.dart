@@ -1,17 +1,29 @@
-import 'package:fundflow/features/home/models/notification.dart';
+import 'package:equatable/equatable.dart';
+import '../../../transaction/model/transaction.dart';
 
-abstract class NotificationState {}
+abstract class NotificationState extends Equatable {
+  const NotificationState();
+
+  @override
+  List<Object?> get props => [];
+}
 
 class NotificationsLoading extends NotificationState {}
 
 class NotificationsLoaded extends NotificationState {
-  final List<Notification> notifications;
+  final List<TransactionResponse> notifications;
 
-  NotificationsLoaded({required this.notifications});
+  const NotificationsLoaded({required this.notifications});
+
+  @override
+  List<Object?> get props => [notifications];
 }
 
-class NotificationsLoadError extends NotificationState {
-  final String message;
+class NotificationsError extends NotificationState {
+  final String error;
 
-  NotificationsLoadError(this.message);
+  const NotificationsError({required this.error});
+
+  @override
+  List<Object?> get props => [error];
 }
