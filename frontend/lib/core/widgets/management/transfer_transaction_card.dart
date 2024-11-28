@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/features/home/models/bank.dart';
+import 'package:fundflow/utils/bank_logo_util.dart';
 import 'package:intl/intl.dart';
 import 'package:fundflow/features/home/models/transfer.dart';
 
@@ -28,24 +29,6 @@ class TransferTransactionCard extends StatelessWidget {
     return bank.bank_name;
   }
 
-  // Function to fetch bank logo path based on bank name
-  String _getBankLogo(String bankName) {
-    print('Bank Name Received: $bankName');
-    final logos = {
-      'ธนาคารกสิกรไทย': 'assets/LogoBank/Kplus.png',
-      'ธนาคารกรุงไทย': 'assets/LogoBank/Krungthai.png',
-      'ธนาคารไทยพาณิชย์': 'assets/LogoBank/SCB.png',
-      'ธนาคารกรุงเทพ': 'assets/LogoBank/Krungthep.png',
-      'ธนาคารกรุงศรี': 'assets/LogoBank/krungsri.png',
-      'ธนาคารออมสิน': 'assets/LogoBank/GSB.png',
-      'ธนาคารธนชาต': 'assets/LogoBank/ttb.png',
-      'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
-      'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
-    };
-    return logos[bankName.trim()] ??
-        'assets/LogoBank/default.png'; // Default logo
-  }
-
   @override
   Widget build(BuildContext context) {
     final isIncoming = transfer.toBankId == currentBankId;
@@ -58,7 +41,7 @@ class TransferTransactionCard extends StatelessWidget {
         : _mapBankName(transfer.toBankName);
 
     // Get bank logo
-    final bankLogo = _getBankLogo(bankName);
+    final bankLogo = BankLogoUtil.getBankLogo(bankName);
 
     // Dynamic color based on transfer type
     final textColor =
