@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -22,7 +23,7 @@ class CustomButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
           ),
-          backgroundColor: const Color(0xFF41486D), // ปุ่มสีน้ำเงินเข้ม
+          backgroundColor: AppColors.darkBlue, // ปุ่มสีน้ำเงินเข้ม
         ),
         child: Text(
           text,

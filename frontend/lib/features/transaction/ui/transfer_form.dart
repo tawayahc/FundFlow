@@ -41,14 +41,14 @@ class _TransferFormState extends State<TransferForm> {
 
   void _selectDate() {
     BottomPicker.date(
-      pickerTitle: Text(
+      pickerTitle: const Text(
         'เลือกวันที่',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
       ),
-      titlePadding: EdgeInsets.all(20),
+      titlePadding: const EdgeInsets.all(20),
       dismissable: true,
       initialDateTime: _selectedDate,
       minDateTime: DateTime(2000),
@@ -71,14 +71,14 @@ class _TransferFormState extends State<TransferForm> {
 
   void _selectTime() {
     BottomPicker.time(
-      pickerTitle: Text(
+      pickerTitle: const Text(
         'เลือกเวลา',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
       ),
-      titlePadding: EdgeInsets.all(20),
+      titlePadding: const EdgeInsets.all(20),
       dismissable: true,
       initialTime:
           _selectedTime != null ? _timeOfDayToTime(_selectedTime!) : Time.now(),
@@ -193,8 +193,7 @@ class _TransferFormState extends State<TransferForm> {
               });
             },
             displayItem: (Bank bank) => bank.name,
-            validator: (value) =>
-                value == null ? 'กรุณาเลือกธนาคาร' : null,
+            validator: (value) => value == null ? 'กรุณาเลือกธนาคาร' : null,
           ),
 
           const SizedBox(height: 16),
@@ -213,7 +212,7 @@ class _TransferFormState extends State<TransferForm> {
             labelText: 'ระบุจำนวนเงิน',
             prefixIcon: const Icon(
               Icons.account_balance_wallet,
-              color: Color(0xFFD0D0D0),
+              color: AppColors.icon,
             ),
             controller: _amountController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),

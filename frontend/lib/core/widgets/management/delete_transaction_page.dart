@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_bloc.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_state.dart';
@@ -39,7 +40,7 @@ class DeleteTransactionPage extends StatelessWidget {
                   onTap: () => Navigator.of(context).pop(),
                   child: const Icon(
                     Icons.close,
-                    color: Color(0xFF414141),
+                    color: AppColors.darkGrey,
                   ),
                 ),
               ),
@@ -56,28 +57,28 @@ class DeleteTransactionPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF414141),
+                  color: AppColors.darkGrey,
                 ),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: () {
-                    BlocProvider.of<TransactionBloc>(context).add(
-                      DeleteTransaction(transactionId: transaction.id),
-                    );
-                  },
-                  child: const Text(
-                    'ลบรายการ',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFFF5C5C), 
-                    minimumSize: const Size(213, 40), 
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(22), 
-                    ),
+                onPressed: () {
+                  BlocProvider.of<TransactionBloc>(context).add(
+                    DeleteTransaction(transactionId: transaction.id),
+                  );
+                },
+                child: const Text(
+                  'ลบรายการ',
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFFF5C5C),
+                  minimumSize: const Size(213, 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22),
                   ),
                 ),
+              ),
             ],
           ),
         ),

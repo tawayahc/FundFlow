@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_input_box.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
@@ -21,7 +22,7 @@ class EditEmailPage extends StatelessWidget {
             children: [
               IconButton(
                 icon: const Icon(Icons.arrow_back_ios),
-                color: Color(0xFF414141),
+                color: AppColors.darkGrey,
                 iconSize: 20,
                 onPressed: () {
                   Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
@@ -35,7 +36,7 @@ class EditEmailPage extends StatelessWidget {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF414141),
+              color: AppColors.darkGrey,
             ),
           ),
         ),
@@ -80,7 +81,7 @@ class _EditEmailFormState extends State<EditEmailForm> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF414141),
+                color: AppColors.darkGrey,
               ),
             ),
             const SizedBox(height: 12),
@@ -89,7 +90,7 @@ class _EditEmailFormState extends State<EditEmailForm> {
               controller: _newEmailController,
               prefixIcon: const Icon(
                 Icons.email,
-                color: Color(0xFFD0D0D0),
+                color: AppColors.icon,
               ),
             ),
             const SizedBox(height: 30),

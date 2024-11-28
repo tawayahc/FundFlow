@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fundflow/features/auth/bloc/repassword/repassword_bloc.dart';
 import 'package:fundflow/features/auth/repository/repassword_repo.dart';
-import 'package:fundflow/core/widgets/global_padding.dart';
+
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/auth/ui/auth_wrapper.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
@@ -18,7 +18,7 @@ import 'package:fundflow/features/home/bloc/transaction/transaction_bloc.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
 import 'package:fundflow/features/home/pages/bank/add_bank_page.dart';
 import 'package:fundflow/features/home/pages/notification/notification.dart';
-import 'package:fundflow/features/home/pages/notification/test.dart';
+
 import 'package:fundflow/features/home/repository/notification_repository.dart';
 import 'package:fundflow/features/home/repository/transaction_repository.dart';
 import 'package:fundflow/features/image_upload/bloc/slip/slip_bloc.dart';
@@ -34,11 +34,7 @@ import 'package:fundflow/features/setting/ui/change_password.dart';
 import 'package:fundflow/features/setting/ui/delete_acc_page.dart';
 import 'package:fundflow/features/setting/ui/edit_email_page.dart';
 import 'package:fundflow/features/auth/ui/forget_page.dart';
-import 'package:fundflow/features/auth/ui/verification_page.dart';
-import 'package:fundflow/features/auth/ui/reset_page.dart';
-import 'package:fundflow/features/setting/ui/setting_page.dart';
-import 'package:fundflow/features/home/pages/home_page.dart';
-import 'package:fundflow/features/manageCategory/ui/category_page.dart';
+
 import 'package:fundflow/features/home/pages/category/add_category_page.dart';
 import 'package:fundflow/utils/api_helper.dart';
 import 'package:logger/logger.dart';
@@ -48,10 +44,7 @@ import 'features/auth/bloc/auth_event.dart';
 import 'features/auth/repository/auth_repository.dart';
 import 'features/auth/ui/login_page.dart';
 import 'features/auth/ui/registeration_page.dart';
-import 'features/auth/ui/forget_page.dart';
-import 'features/auth/ui/verification_page.dart';
-import 'features/auth/ui/reset_page.dart';
-import 'features/manageBankAccount/ui/bank_account_page.dart';
+
 import 'features/home/repository/bank_repository.dart';
 import 'features/home/repository/category_repository.dart';
 import 'features/home/repository/profile_repository.dart';
@@ -76,8 +69,7 @@ class MyApp extends StatelessWidget {
     } else {
       Logger.level = Level.debug;
     }
-    // NOTE: API Helper is use for store the base url and token
-    // NOTE: AI_API is use for store the base url of AI API
+
     final String baseUrl = dotenv.env['BASE_URL'] ?? 'http://10.0.2.2:8080/';
 
     final apiHelper = ApiHelper(baseUrl: baseUrl);
@@ -183,17 +175,14 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: 'FundFlow',
-          theme: AppTheme.lightTheme, // Apply the Poppins light theme
-          darkTheme: AppTheme.darkTheme, // Apply the Poppins dark theme
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
           themeMode: ThemeMode.system,
-          home: //ResetPasswordPage(email: 'p.ploy547@gmail.com'),
-              //VerificationPage(email: 'p.ploy547@gmail.com'),
-              const AuthenticationWrapper(), // Decide whether to show login or HomePage
+          home: const AuthenticationWrapper(),
           routes: {
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegistrationPage(),
             '/forget1': (context) => const ForgetPage(),
-            // '/pocket_management': (context) => CategoryPage(),
             '/setting_page/edit_email': (context) =>
                 EditEmailPage(repository: settingsRepository),
             '/setting_page/change_password': (context) =>
@@ -205,9 +194,7 @@ class MyApp extends StatelessWidget {
             '/addCategory': (context) => const AddCategoryPage(),
             '/transaction': (context) => TransactionPage(),
             '/notification': (context) => const NotificationPage(),
-            // '/manageBankAccount': (context) => const BankAccountPage(bank: bank,),
           },
-          // builder: (context, child) => const BottomNavBar(), // Apply padding only to the body
           debugShowCheckedModeBanner: false,
         ),
       ),

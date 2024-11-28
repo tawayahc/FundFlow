@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 
 class CustomPasswordInputBox extends StatefulWidget {
   final String labelText;
@@ -56,7 +57,7 @@ class _CustomPasswordInputBoxState extends State<CustomPasswordInputBox> {
             labelText: widget.labelText,
             prefixIcon: const Icon(
               Icons.lock_outline,
-              color: Color(0xFFD0D0D0),
+              color: AppColors.icon,
             ),
             suffixIcon: widget.focusNode.hasFocus
                 ? IconButton(
@@ -65,8 +66,8 @@ class _CustomPasswordInputBoxState extends State<CustomPasswordInputBox> {
                           ? Icons.visibility
                           : Icons.visibility_off,
                       color: _isPasswordVisible
-                          ? const Color(0xFF41486D)
-                          : const Color(0xFFD0D0D0),
+                          ? AppColors.darkBlue
+                          : AppColors.icon,
                     ),
                     onPressed: () {
                       setState(() {
@@ -81,13 +82,13 @@ class _CustomPasswordInputBoxState extends State<CustomPasswordInputBox> {
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
               borderSide: const BorderSide(
-                color: Color(0xFFD0D0D0),
+                color: AppColors.icon,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
               borderSide: const BorderSide(
-                color: Color(0xFF41486D),
+                color: AppColors.darkBlue,
                 width: 2.0,
               ),
             ),

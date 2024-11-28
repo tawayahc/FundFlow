@@ -1,6 +1,7 @@
 // transaction_card_for_category.dart
 
 import 'package:flutter/material.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/utils/bank_logo_util.dart';
 import 'package:intl/intl.dart';
 import 'package:fundflow/features/home/models/transaction.dart';
@@ -22,15 +23,14 @@ class TransactionCardForCategory extends StatelessWidget {
     final bankLogo = BankLogoUtil.getBankLogo(transaction.bankName);
 
     // Dynamic color based on transaction type
-    final textColor =
-        isExpense ? const Color(0xFF414141) : const Color(0xFF80D084);
+    final textColor = isExpense ? AppColors.darkGrey : const Color(0xFF80D084);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE0E0E0)), // Light border
+        border: Border.all(color: AppColors.lightGrey), // Light border
       ),
       child: Padding(
         padding: const EdgeInsets.all(12.0), // Reduced padding

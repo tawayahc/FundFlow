@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
-import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/core/widgets/custom_text_ip.dart';
 
 class TransferCategoryAmount extends StatelessWidget {
@@ -39,8 +38,7 @@ class TransferCategoryAmount extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        const BottomNavBar(),
+                    builder: (context) => const BottomNavBar(),
                   ),
                 );
               } else if (state is CategoryError) {
@@ -61,12 +59,12 @@ class TransferCategoryAmount extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF414141), // Text color
+                        color: AppColors.darkGrey, // Text color
                       ),
                     ),
                     IconButton(
                       icon: const Icon(Icons.close,
-                          color: Color(0xFFD0D0D0), size: 35),
+                          color: AppColors.icon, size: 35),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],
@@ -89,7 +87,7 @@ class TransferCategoryAmount extends StatelessWidget {
                                     .withOpacity(0.5), // Shadow color
                                 spreadRadius: 2,
                                 blurRadius: 5,
-                                offset: Offset(0, 3),
+                                offset: const Offset(0, 3),
                               ),
                             ],
                           ),
@@ -123,7 +121,7 @@ class TransferCategoryAmount extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF414141),
+                            color: AppColors.darkGrey,
                           ),
                         ),
                       ],
@@ -143,7 +141,7 @@ class TransferCategoryAmount extends StatelessWidget {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 1,
                                 blurRadius: 2,
-                                offset: Offset(0, 0),
+                                offset: const Offset(0, 0),
                               ),
                             ],
                           ),
@@ -166,7 +164,7 @@ class TransferCategoryAmount extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF414141),
+                            color: AppColors.darkGrey,
                           ),
                         ),
                       ],
@@ -188,7 +186,7 @@ class TransferCategoryAmount extends StatelessWidget {
                 // Confirm Button
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF41486D), // Custom color
+                    backgroundColor: AppColors.darkBlue, // Custom color
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),

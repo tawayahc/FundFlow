@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/home/bank_balance_box.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/utils/bank_color_util.dart';
@@ -66,7 +67,7 @@ class _EditBankPageState extends State<EditBankPage> {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF414141),
+              color: AppColors.darkGrey,
             ),
           ),
         ),
@@ -94,7 +95,7 @@ class _EditBankPageState extends State<EditBankPage> {
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF414141)),
+                      color: AppColors.darkGrey),
                 ),
                 const SizedBox(height: 10),
                 Row(
@@ -131,14 +132,14 @@ class _EditBankPageState extends State<EditBankPage> {
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF414141),
+                              color: AppColors.darkGrey,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             widget.bank.bank_name,
                             style: const TextStyle(
-                              color: Color(0xFF414141),
+                              color: AppColors.darkGrey,
                               fontSize: 16,
                             ),
                           ),

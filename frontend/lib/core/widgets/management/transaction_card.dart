@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
@@ -46,7 +47,7 @@ class TransactionCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFE0E0E0)), // Light border
+            border: Border.all(color: AppColors.lightGrey), // Light border
           ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -76,7 +77,7 @@ class TransactionCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF414141),
+                          color: AppColors.darkGrey,
                         ),
                       ),
                       if (isExpense)
@@ -102,7 +103,7 @@ class TransactionCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF414141),
+                        color: AppColors.darkGrey,
                       ),
                     ),
                     const SizedBox(height: 4),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/home/category_card.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
@@ -9,7 +10,7 @@ import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_text_ip.dart';
-import 'package:fundflow/features/manageCategory/ui/category_page.dart';
+import 'package:fundflow/features/home/pages/category/category_page.dart';
 
 class EditCategoryPage extends StatefulWidget {
   final Category category;
@@ -97,7 +98,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
           centerTitle: true,
           title: const Text(
             'แก้ไขหมวดหมู่',
-            style: TextStyle(color: Color(0xFF414141), fontSize: 24),
+            style: TextStyle(color: AppColors.darkGrey, fontSize: 24),
           ),
         ),
         body: SingleChildScrollView(
@@ -256,8 +257,8 @@ class CustomTextInput extends StatefulWidget {
 }
 
 class _CustomTextInputState extends State<CustomTextInput> {
-  Color iconColor = const Color(0xFFD0D0D0);
-  Color textColor = const Color(0xFFD0D0D0);
+  Color iconColor = AppColors.icon;
+  Color textColor = AppColors.icon;
 
   @override
   Widget build(BuildContext context) {
@@ -269,17 +270,15 @@ class _CustomTextInputState extends State<CustomTextInput> {
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF414141),
+            color: AppColors.darkGrey,
           ),
         ),
         const SizedBox(height: 10),
         Focus(
           onFocusChange: (hasFocus) {
             setState(() {
-              iconColor =
-                  hasFocus ? const Color(0xFF41486D) : const Color(0xFFD0D0D0);
-              textColor =
-                  hasFocus ? const Color(0xFF414141) : const Color(0xFFD0D0D0);
+              iconColor = hasFocus ? AppColors.darkBlue : AppColors.icon;
+              textColor = hasFocus ? AppColors.darkGrey : AppColors.icon;
             });
           },
           child: TextField(
@@ -287,14 +286,14 @@ class _CustomTextInputState extends State<CustomTextInput> {
             style: TextStyle(color: textColor),
             decoration: InputDecoration(
               hintText: widget.hintText,
-              hintStyle: const TextStyle(color: Color(0xFFD0D0D0)),
+              hintStyle: const TextStyle(color: AppColors.icon),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
-                borderSide: const BorderSide(color: Color(0xFFD0D0D0)),
+                borderSide: const BorderSide(color: AppColors.icon),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
-                borderSide: const BorderSide(color: Color(0xFF41486D)),
+                borderSide: const BorderSide(color: AppColors.darkBlue),
               ),
               prefixIcon: Icon(
                 Icons.category,
@@ -347,7 +346,7 @@ class CategoryTagSelection extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: selectedTag == tag
-                          ? const Color(0xFF41486D)
+                          ? AppColors.darkBlue
                           : Colors.grey.shade300,
                       width: 1.5,
                     ),
@@ -364,8 +363,8 @@ class CategoryTagSelection extends StatelessWidget {
                       tag,
                       style: TextStyle(
                         color: selectedTag == tag
-                            ? const Color(0xFF41486D)
-                            : const Color(0xFF414141),
+                            ? AppColors.darkBlue
+                            : AppColors.darkGrey,
                         fontSize: 14,
                       ),
                     ),
@@ -418,7 +417,7 @@ class ColorSelector extends StatelessWidget {
           style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF414141)),
+              color: AppColors.darkGrey),
         ),
         const SizedBox(height: 10),
         GridView.builder(
@@ -441,7 +440,7 @@ class ColorSelector extends StatelessWidget {
                   color: color,
                   shape: BoxShape.circle,
                   border: selectedColor == color
-                      ? Border.all(width: 2.5, color: const Color(0xFF41486D))
+                      ? Border.all(width: 2.5, color: AppColors.darkBlue)
                       : Border.all(
                           width: 1.5,
                           color: const Color.fromARGB(0, 42, 32, 32)),

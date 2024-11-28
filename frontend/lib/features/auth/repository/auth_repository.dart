@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Secure storage
 import 'package:fundflow/app.dart';
-import '../models/user_model.dart';
 
 class AuthenticationRepository {
   final Dio _dio;

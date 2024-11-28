@@ -103,11 +103,6 @@ class _HomePageState extends State<HomePage> {
           BlocListener<SlipBloc, SlipState>(
             listener: (context, state) {
               if (state is SlipSuccess) {
-                // Show success message when slips are uploaded successfully
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   const SnackBar(
-                //       content: Text('Slip images uploaded successfully.')),
-                // );
                 final images = state.images;
                 context.read<ImageBloc>().add(SendImages(images: images));
               } else if (state is SlipFailure) {
@@ -116,8 +111,6 @@ class _HomePageState extends State<HomePage> {
                   SnackBar(
                       content: Text('Failed to upload slips: ${state.error}')),
                 );
-                // Check if the failure was due to no slips being detected
-                // FIX: Should It have?
                 if (state.error.contains('No slip images detected')) {
                   // Prompt the user to manually upload slips
                   showDialog(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
-import 'package:fundflow/features/home/models/notification.dart' as fundflow;
 import 'package:fundflow/features/transaction/model/transaction.dart';
 
 class NotificationCard extends StatelessWidget {
@@ -14,8 +14,6 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isExpense = transaction.type == 'expense';
-
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
         String categoryName = 'Undefined';
@@ -76,14 +74,14 @@ class NotificationCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF414141),
+                          color: AppColors.darkGrey,
                         ),
                       ),
                       Text(
                         categoryName,
                         style: const TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF414141),
+                          color: AppColors.darkGrey,
                         ),
                       ),
                     ],
@@ -99,14 +97,14 @@ class NotificationCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF414141),
+                        color: AppColors.darkGrey,
                       ),
                     ),
                     Text(
                       transaction.date ?? '',
                       style: const TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF5A5A5A),
+                        color: AppColors.lightBlack,
                       ),
                     ),
                   ],

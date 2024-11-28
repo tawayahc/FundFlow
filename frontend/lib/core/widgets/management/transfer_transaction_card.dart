@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/features/home/models/bank.dart';
 import 'package:fundflow/utils/bank_logo_util.dart';
 import 'package:intl/intl.dart';
@@ -52,7 +53,7 @@ class TransferTransactionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE0E0E0)), // Light border
+        border: Border.all(color: AppColors.lightGrey), // Light border
       ),
       child: Padding(
         padding: const EdgeInsets.all(12.0), // Reduced padding

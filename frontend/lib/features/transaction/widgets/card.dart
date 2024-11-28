@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
-import 'package:fundflow/core/widgets/global_padding.dart';
 
 class CardTransaction extends StatefulWidget {
   const CardTransaction({super.key});
@@ -39,10 +38,10 @@ class _CardTransactionState extends State<CardTransaction> {
             ),
           ),
           const SizedBox(width: 10),
-          Column(
+          const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'แคชบ๊อกซ์',
                 style: TextStyle(
                   fontSize: 16,
@@ -51,7 +50,7 @@ class _CardTransactionState extends State<CardTransaction> {
               ),
               Text(
                 '฿ ',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: AppColors.darkBlue,

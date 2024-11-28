@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 
 class CustomInputTransactionBox extends StatefulWidget {
   final String labelText;
@@ -37,7 +38,7 @@ class _CustomInputTransactionBoxState extends State<CustomInputTransactionBox> {
             decoration: InputDecoration(
               labelText: widget.labelText,
               labelStyle: const TextStyle(
-                color: Color(0xFFD0D0D0),
+                color: AppColors.icon,
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
               ),
@@ -49,13 +50,13 @@ class _CustomInputTransactionBoxState extends State<CustomInputTransactionBox> {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
                 borderSide: const BorderSide(
-                  color: Color(0xFFD0D0D0),
+                  color: AppColors.icon,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
                 borderSide: const BorderSide(
-                  color: Color(0xFF41486D),
+                  color: AppColors.darkBlue,
                   width: 2.0,
                 ),
               ),

@@ -64,9 +64,6 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
           } else if (state is OverviewLoaded) {
             final dailySummaries = state.dailySummaries;
 
-            final sortedDates = dailySummaries.keys.toList()
-              ..sort((a, b) => b.compareTo(a));
-
             return DailySummaryView(
               dailySummaries: dailySummaries,
               dropDownController: _dropDownController,

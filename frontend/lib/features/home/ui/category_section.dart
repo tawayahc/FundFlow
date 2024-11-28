@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/home/category_card.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/core/widgets/home/cash_box.dart';
 import 'package:fundflow/features/home/pages/category/transfer_category_amount.dart';
-import 'package:fundflow/features/manageCategory/ui/category_page.dart';
+import 'package:fundflow/features/home/pages/category/category_page.dart';
 
 class CategorySection extends StatelessWidget {
   const CategorySection({super.key});
@@ -16,8 +17,6 @@ class CategorySection extends StatelessWidget {
     return BlocConsumer<CategoryBloc, CategoryState>(
       listener: (context, state) {
         if (state is CategoriesLoaded) {
-          // Optionally do something when the categories are loaded
-          // like showing a snack bar or any other action
         } else if (state is CategoryError) {
           // Handle error state, show a SnackBar for example
           ScaffoldMessenger.of(context).showSnackBar(
@@ -52,7 +51,7 @@ class CategorySection extends StatelessWidget {
                                   id: -1,
                                   name: 'CashBox',
                                   amount: state.cashBox,
-                                  color: Color(0xFF414141)),
+                                  color: AppColors.darkGrey),
                             );
                           },
                         );
@@ -74,7 +73,7 @@ class CategorySection extends StatelessWidget {
                             id: -1,
                             name: 'CashBox',
                             amount: state.cashBox,
-                            color: Color(0xFF414141)),
+                            color: AppColors.darkGrey),
                         child: CashBox(
                             cashBox: state.cashBox, width: cashBoxWidth),
                       );

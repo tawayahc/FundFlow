@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/home/category_card.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
-import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_text_ip.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
@@ -62,13 +62,13 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             iconSize: 20,
-            color: Color(0xFF414141),
+            color: AppColors.darkGrey,
             onPressed: () {
               Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
             },
           ),
           title: const Text('เพิ่มหมวดหมู่',
-              style: TextStyle(color: Color(0xFF414141), fontSize: 24)),
+              style: TextStyle(color: AppColors.darkGrey, fontSize: 24)),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -189,8 +189,8 @@ class CategoryNameInput extends StatefulWidget {
 }
 
 class _CategoryNameInputState extends State<CategoryNameInput> {
-  Color iconColor = const Color(0xFFD0D0D0);
-  Color textColor = const Color(0xFFD0D0D0);
+  Color iconColor = AppColors.icon;
+  Color textColor = AppColors.icon;
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +203,7 @@ class _CategoryNameInputState extends State<CategoryNameInput> {
           style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF414141)),
+              color: AppColors.darkGrey),
         ),
         SizedBox(height: 10),
       ],
@@ -249,7 +249,7 @@ class CategoryTagSelection extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: selectedTag == tag
-                          ? const Color(0xFF41486D)
+                          ? AppColors.darkBlue
                           : Colors.grey.shade300,
                       width: 1.5,
                     ),
@@ -266,8 +266,8 @@ class CategoryTagSelection extends StatelessWidget {
                       tag,
                       style: TextStyle(
                         color: selectedTag == tag
-                            ? const Color(0xFF41486D)
-                            : const Color(0xFF414141),
+                            ? AppColors.darkBlue
+                            : AppColors.darkGrey,
                         fontSize: 14,
                       ),
                     ),
@@ -320,7 +320,7 @@ class ColorSelector extends StatelessWidget {
           style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF414141)),
+              color: AppColors.darkGrey),
         ),
         const SizedBox(height: 10),
         GridView.builder(
@@ -343,7 +343,7 @@ class ColorSelector extends StatelessWidget {
                   color: color,
                   shape: BoxShape.circle,
                   border: selectedColor == color
-                      ? Border.all(width: 2.5, color: const Color(0xFF41486D))
+                      ? Border.all(width: 2.5, color: AppColors.darkBlue)
                       : Border.all(
                           width: 1.5,
                           color: const Color.fromARGB(0, 42, 32, 32)),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:intl/intl.dart'; // Import intl package
 
@@ -69,7 +70,7 @@ class CategoryBalanceBox extends StatelessWidget {
           Text(
             '฿ ${currencyFormatter.format(category.amount)}', // Format with commas
             style: const TextStyle(
-              color: Color(0xFF414141), // Text color
+              color: AppColors.darkGrey, // Text color
               fontSize: 24, // Font size for amount
               fontWeight: FontWeight.normal,
             ),

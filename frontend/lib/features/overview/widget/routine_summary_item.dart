@@ -21,24 +21,21 @@ class RoutineSummaryItem extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: const Border(
-          top: BorderSide(
-          color: Colors.white, // Color of the top border
-          width: 1.0, // Width of the top border
+          color: Colors.white,
+          border: const Border(
+            top: BorderSide(
+              color: Colors.white, // Color of the top border
+              width: 1.0, // Width of the top border
+            ),
           ),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 0,
-            blurRadius: 3,
-            offset: Offset(0, 0),
-          )
-        ]
-      ),
-      //margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 0,
+              blurRadius: 3,
+              offset: const Offset(0, 0),
+            )
+          ]),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -51,7 +48,9 @@ class RoutineSummaryItem extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: Colors.grey[800]),
             ),
-            SizedBox(height: 4,),
+            const SizedBox(
+              height: 4,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

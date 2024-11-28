@@ -2,7 +2,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/image_upload/repository/slip_repository.dart';
-import 'package:fundflow/features/transaction/model/category_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'slip_event.dart';
 import 'slip_state.dart';

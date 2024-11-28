@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 
 class CustomDropdown<T> extends StatelessWidget {
   final IconData prefixIcon;
@@ -30,7 +31,7 @@ class CustomDropdown<T> extends StatelessWidget {
         hint: Text(
           hintText,
           style: const TextStyle(
-            color: Color(0xFFD0D0D0),
+            color: AppColors.icon,
             fontSize: 14,
             fontWeight: FontWeight.normal,
           ),
@@ -47,25 +48,25 @@ class CustomDropdown<T> extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(horizontal: 10),
           prefixIcon: Icon(
             prefixIcon,
-            color: Color(0xFFD0D0D0),
+            color: AppColors.icon,
           ),
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),
             borderSide: BorderSide(
-              color: Color(0xFFD0D0D0),
+              color: AppColors.icon,
               width: 2,
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(
-              color: Color(0xFFD0D0D0),
+              color: AppColors.icon,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(
-              color: Color(0xFF41486D),
+              color: AppColors.darkBlue,
             ),
           ),
         ),

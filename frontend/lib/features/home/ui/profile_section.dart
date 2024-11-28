@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_bloc.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_state.dart';
@@ -60,7 +61,7 @@ class _ProfileSectionState extends State<ProfileSection> {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF41486D),
+                              color: AppColors.darkBlue,
                             ),
                           ),
                           const SizedBox(width: 4),
@@ -69,7 +70,7 @@ class _ProfileSectionState extends State<ProfileSection> {
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF41486D),
+                              color: AppColors.darkBlue,
                             ),
                           ),
                         ],
@@ -79,7 +80,7 @@ class _ProfileSectionState extends State<ProfileSection> {
                         userProfile.username ?? 'Unknown User',
                         style: const TextStyle(
                           fontSize: 14,
-                          color: Color(0xFF414141),
+                          color: AppColors.darkGrey,
                         ),
                       ),
                     ],
@@ -94,8 +95,8 @@ class _ProfileSectionState extends State<ProfileSection> {
                           ? Icons.notifications
                           : Icons.notifications_outlined,
                       color: isNotificationActive
-                          ? Color(0xFF41486D)
-                          : const Color(0xFF414141),
+                          ? AppColors.darkBlue
+                          : AppColors.darkGrey,
                     ),
                     iconSize: 28,
                     onPressed: () {
@@ -115,8 +116,8 @@ class _ProfileSectionState extends State<ProfileSection> {
                           ? Icons.settings
                           : Icons.settings_outlined,
                       color: isSettingsActive
-                          ? Color(0xFF41486D)
-                          : const Color(0xFF414141),
+                          ? AppColors.darkBlue
+                          : AppColors.darkGrey,
                     ),
                     iconSize: 28,
                     onPressed: () {
@@ -125,7 +126,6 @@ class _ProfileSectionState extends State<ProfileSection> {
                       });
 
                       widget.pageController.jumpToPage(3);
-
                     },
                   ),
                 ],

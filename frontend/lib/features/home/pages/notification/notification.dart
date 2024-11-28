@@ -6,7 +6,6 @@ import 'package:fundflow/core/widgets/notification/notification_card.dart';
 import 'package:fundflow/features/home/bloc/notification/notification_bloc.dart';
 import 'package:fundflow/features/home/bloc/notification/notification_event.dart';
 import 'package:fundflow/features/home/bloc/notification/notification_state.dart';
-import 'package:fundflow/features/home/models/transaction.dart';
 import 'edit_transaction_page.dart';
 
 class NotificationPage extends StatefulWidget {
