@@ -13,23 +13,9 @@ import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_state.dart';
 import 'package:fundflow/features/home/models/transaction.dart';
 import 'package:fundflow/features/home/pages/bank/edit_bank_page.dart';
+import 'package:fundflow/utils/bank_color_util.dart';
+import 'package:fundflow/utils/bank_logo_util.dart';
 import '../../home/models/bank.dart';
-
-String _getBankLogo(String bankName) {
-  final logos = {
-    'ธนาคารกสิกรไทย': 'assets/LogoBank/Kplus.png',
-    'ธนาคารกรุงไทย': 'assets/LogoBank/Krungthai.png',
-    'ธนาคารไทยพาณิชย์': 'assets/LogoBank/SCB.png',
-    'ธนาคารกรุงเทพ': 'assets/LogoBank/Krungthep.png',
-    'ธนาคารกรุงศรีอยุธยา': 'assets/LogoBank/krungsri.png',
-    'ธนาคารออมสิน': 'assets/LogoBank/GSB.png',
-    'ธนาคารธนชาต': 'assets/LogoBank/ttb.png',
-    'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
-    'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
-  };
-
-  return logos[bankName.trim()] ?? 'assets/CashBox.png';
-}
 
 class BankAccountPage extends StatefulWidget {
   final Bank bank;
@@ -69,7 +55,7 @@ class _BankAccountPageState extends State<BankAccountPage>
   @override
   Widget build(BuildContext context) {
     context.read<TransactionBloc>().add(LoadTransactions());
-    Color color = bankColorMap[widget.bank.bank_name] ?? Colors.grey;
+    Color color = BankColorUtil.getBankColor(widget.bank.bank_name);
 
     return Scaffold(
       appBar: AppBar(
@@ -112,7 +98,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                   ),
                   child: ClipOval(
                     child: Image.asset(
-                      _getBankLogo(widget.bank.bank_name),
+                      BankLogoUtil.getBankLogo(widget.bank.bank_name),
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return const Icon(Icons.error, color: Colors.red);
@@ -153,7 +139,6 @@ class _BankAccountPageState extends State<BankAccountPage>
                                 MaterialPageRoute(
                                   builder: (context) => EditBankPage(
                                     bank: widget.bank,
-                                    bankColorMap: bankColorMap,
                                   ),
                                 ),
                               );
@@ -389,15 +374,3 @@ class _BankAccountPageState extends State<BankAccountPage>
     );
   }
 }
-
-Map<String, Color> bankColorMap = {
-  'ธนาคารกสิกรไทย': Colors.green,
-  'ธนาคารกรุงไทย': Colors.blue,
-  'ธนาคารไทยพาณิชย์': Colors.purple,
-  'ธนาคารกรุงเทพ': const Color.fromARGB(255, 10, 35, 145),
-  'ธนาคารกรุงศรีอยุธยา': const Color(0xFFffe000),
-  'ธนาคารออมสิน': Colors.pink,
-  'ธนาคารธนชาต': const Color(0xFFF68B1F),
-  'ธนาคารเกียรตินาคิน': const Color(0xFF004B87),
-  'ธนาคารซิตี้แบงก์': const Color(0xFF1E90FF),
-};

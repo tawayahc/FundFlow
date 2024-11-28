@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/features/home/models/bank.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fundflow/utils/bank_color_util.dart';
+import 'package:fundflow/utils/bank_logo_util.dart';
 import 'package:intl/intl.dart';
 
 class BankCard extends StatelessWidget {
   final Bank bank;
-  final Map<String, Color> bankColorMap;
 
-  const BankCard({super.key, required this.bank, required this.bankColorMap});
+  const BankCard({super.key, required this.bank});
 
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat.currency(locale: 'th_TH', symbol: '฿');
     // Normalize bank name before lookup
     final normalizedBankName = normalizeBankName(bank.bank_name);
-    Color color = bankColorMap[normalizedBankName] ?? Colors.grey;
+    Color color = BankColorUtil.getBankColor(normalizedBankName);
 
     debugPrint('Normalized Bank Name: "$normalizedBankName", Color: $color');
 
@@ -139,40 +140,14 @@ class BankCard extends StatelessWidget {
     );
   }
 
-  // Function to normalize bank name
   String normalizeBankName(String bankName) {
-    // Remove all whitespaces and trim
     return bankName.replaceAll(RegExp(r'\s+'), '').trim();
   }
 
-  // Map bank name to logo
   String _getBankLogo(String bankName) {
-    final logos = {
-      'ธนาคารกสิกรไทย': 'assets/LogoBank/Kplus.png',
-      'ธนาคารกรุงไทย': 'assets/LogoBank/Krungthai.png',
-      'ธนาคารไทยพาณิชย์': 'assets/LogoBank/SCB.png',
-      'ธนาคารกรุงเทพ': 'assets/LogoBank/Krungthep.png',
-      'ธนาคารกรุงศรี': 'assets/LogoBank/krungsri.png',
-      'ธนาคารออมสิน': 'assets/LogoBank/GSB.png',
-      'ธนาคารธนชาติ': 'assets/LogoBank/ttb.png',
-      'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
-      'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
-    };
+    final normalizedBankName = normalizeBankName(bankName);
+    final path = BankLogoUtil.getBankLogo(normalizedBankName);
 
-    final trimmedBankName = normalizeBankName(bankName);
-
-    String? matchedKey = logos.keys.firstWhere(
-      (key) => key == trimmedBankName,
-      orElse: () => '',
-    );
-
-    if (matchedKey.isEmpty) {
-      debugPrint('No exact match for $trimmedBankName, using default image.');
-      return 'assets/CashBox.png'; // Default fallback image
-    }
-
-    final path = logos[matchedKey];
-    debugPrint('Matched bank name: $matchedKey, using path: $path');
-    return path!;
+    return path ?? 'assets/CashBox.png';
   }
 }

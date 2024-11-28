@@ -1,6 +1,7 @@
 // transaction_card_for_category.dart
 
 import 'package:flutter/material.dart';
+import 'package:fundflow/utils/bank_logo_util.dart';
 import 'package:intl/intl.dart';
 import 'package:fundflow/features/home/models/transaction.dart';
 
@@ -10,23 +11,6 @@ class TransactionCardForCategory extends StatelessWidget {
   const TransactionCardForCategory({Key? key, required this.transaction})
       : super(key: key);
 
-  // Function to fetch bank logo path based on bank name
-  String _getBankLogo(String bankName) {
-    final logos = {
-      'ธนาคารกสิกรไทย': 'assets/LogoBank/Kplus.png',
-      'ธนาคารกรุงไทย': 'assets/LogoBank/Krungthai.png',
-      'ธนาคารไทยพาณิชย์': 'assets/LogoBank/SCB.png',
-      'ธนาคารกรุงเทพ': 'assets/LogoBank/Krungthep.png',
-      'ธนาคารกรุงศรี': 'assets/LogoBank/krungsri.png',
-      'ธนาคารออมสิน': 'assets/LogoBank/GSB.png',
-      'ธนาคารธนชาต': 'assets/LogoBank/ttb.png',
-      'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
-      'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
-    };
-    return logos[bankName.trim()] ??
-        'assets/LogoBank/default.png'; // Default logo
-  }
-
   @override
   Widget build(BuildContext context) {
     final isExpense = transaction.type == 'expense';
@@ -35,7 +19,7 @@ class TransactionCardForCategory extends StatelessWidget {
         dateFormatter.format(DateTime.parse(transaction.createdAt));
 
     // Get bank logo
-    final bankLogo = _getBankLogo(transaction.bankName);
+    final bankLogo = BankLogoUtil.getBankLogo(transaction.bankName);
 
     // Dynamic color based on transaction type
     final textColor =

@@ -1,20 +1,6 @@
 import 'package:flutter/material.dart';
-
-const Map<String, Color> bankColors = {
-  'ธนาคารกรุงไทย': Colors.blue,
-  'ธนาคารไทยพาณิชย์': Colors.purple,
-  'ธนาคารออมสิน': Colors.pink,
-  'ธนาคารกสิกรไทย': Colors.green,
-  'ธนาคารกรุงเทพ': Colors.blueAccent,
-};
-
-const Map<String, String> bankImages = {
-  'ธนาคารกรุงไทย': 'lib/images/Krungthai.png',
-  'ธนาคารไทยพาณิชย์': 'lib/images/SCB.png',
-  'ธนาคารออมสิน': 'lib/images/GSB.png',
-  'ธนาคารกสิกรไทย': 'lib/images/Kplus.png',
-  'ธนาคารกรุงเทพ': 'lib/images/Krungthep.png',
-};
+import 'package:fundflow/utils/bank_color_util.dart';
+import 'package:fundflow/utils/bank_logo_util.dart';
 
 class Bank {
   final int id;
@@ -42,10 +28,10 @@ class Bank {
   }
 
   Color get color {
-    return bankColors[bankName] ?? Colors.grey;
+    return BankColorUtil.getBankColor(bankName);
   }
 
   String get image {
-    return bankImages[bankName] ?? 'lib/images/GSB.png';
+    return BankLogoUtil.getBankLogo(bankName) ?? 'lib/images/GSB.png';
   }
 }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/home/bank_balance_box.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
-import 'package:intl/intl.dart';
+import 'package:fundflow/utils/bank_color_util.dart';
+import 'package:fundflow/utils/bank_logo_util.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/custom_text_ip.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
@@ -10,16 +11,13 @@ import 'package:fundflow/features/home/models/bank.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
-import 'package:fundflow/features/home/pages/home_page.dart';
 
 class EditBankPage extends StatefulWidget {
   final Bank bank;
-  final Map<String, Color> bankColorMap;
 
   const EditBankPage({
     super.key,
     required this.bank,
-    required this.bankColorMap,
   });
 
   @override
@@ -52,9 +50,6 @@ class _EditBankPageState extends State<EditBankPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Color color =
-        widget.bankColorMap[widget.bank.bank_name] ?? Colors.grey;
-
     return GlobalPadding(
       child: Scaffold(
         appBar: AppBar(
@@ -115,7 +110,7 @@ class _EditBankPageState extends State<EditBankPage> {
                       ),
                       child: ClipOval(
                         child: Image.asset(
-                          _getBankLogo(widget.bank.bank_name),
+                          BankLogoUtil.getBankLogo(widget.bank.bank_name),
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             debugPrint(
@@ -161,8 +156,7 @@ class _EditBankPageState extends State<EditBankPage> {
                     child: BankBalanceBox(
                       title: 'ยอดเงินคงเหลือ',
                       amount: widget.bank.amount,
-                      color: widget.bankColorMap[widget.bank.bank_name] ??
-                          Colors.grey,
+                      color: BankColorUtil.getBankColor(widget.bank.bank_name),
                     ),
                   ),
                 ),
@@ -239,21 +233,5 @@ class _EditBankPageState extends State<EditBankPage> {
         ),
       ),
     );
-  }
-
-  String _getBankLogo(String bankName) {
-    final logos = {
-      'ธนาคารกสิกรไทย': 'assets/LogoBank/Kplus.png',
-      'ธนาคารกรุงไทย': 'assets/LogoBank/Krungthai.png',
-      'ธนาคารไทยพาณิชย์': 'assets/LogoBank/SCB.png',
-      'ธนาคารกรุงเทพ': 'assets/LogoBank/Krungthep.png',
-      'ธนาคารกรุงศรีอยุธยา': 'assets/LogoBank/krungsri.png',
-      'ธนาคารออมสิน': 'assets/LogoBank/GSB.png',
-      'ธนาคารธนชาต': 'assets/LogoBank/ttb.png',
-      'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
-      'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
-    };
-
-    return logos[bankName.trim()] ?? 'assets/CashBox.png';
   }
 }
