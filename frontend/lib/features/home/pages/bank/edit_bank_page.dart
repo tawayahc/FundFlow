@@ -252,7 +252,6 @@ class _EditBankPageState extends State<EditBankPage> {
       'ธนาคารธนชาต': 'assets/LogoBank/ttb.png',
       'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
       'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
-      'ธนาคารเมกะ': 'assets/LogoBank/make.png',
     };
 
     return logos[bankName.trim()] ?? 'assets/CashBox.png';

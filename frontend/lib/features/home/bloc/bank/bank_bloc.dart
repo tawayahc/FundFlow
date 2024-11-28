@@ -25,7 +25,8 @@ class BankBloc extends Bloc<BankEvent, BankState> {
       emit(TransfersLoading());
       try {
         final transfers = await bankRepository.getTransfers();
-        emit(TransfersLoaded(transfers: transfers));
+        final banks = await bankRepository.getBanks();
+        emit(TransfersLoaded(transfers: transfers, banks: banks['banks']));
       } catch (error) {
         emit(BankError());
       }
