@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/home/models/category.dart';
+import 'package:fundflow/features/home/models/transaction.dart';
 import 'package:fundflow/utils/api_helper.dart';
 
 //http://localhost:8080/categories/all
@@ -150,6 +151,48 @@ class CategoryRepository {
     }
   }
 
+  Future<Map<String, List<Transaction>>> getCategoryTransactions(
+      int categoryId) async {
+    try {
+      final response = await dio.get("/categories/$categoryId");
+
+      if (response.statusCode == 200) {
+        // Ensure response data is parsed correctly
+        final Map<String, dynamic> data = response.data;
+
+        if (data.containsKey('transactions') && data['transactions'] is List) {
+          final List<dynamic> transactionsData = data['transactions'];
+
+          final categoryTransactions = transactionsData
+              .map((item) => Transaction(
+                    id: item['id'],
+                    categoryId: item['category_id'],
+                    amount: (item['amount'] as num).toDouble(),
+                    memo: item['memo'],
+                    type: item['type'],
+                    bankId: item['bank_id'],
+                    bankNickname: item['bank_nickname'],
+                    bankName: item['bank_name'],
+                    createdAt: item['created_at'],
+                  ))
+              .toList();
+
+          return {
+            'transactions': categoryTransactions,
+          };
+        } else {
+          throw Exception('Invalid transactions format in response');
+        }
+      } else {
+        logger.e('Failed to load categories: ${response.data}');
+        throw Exception('Failed to load categories');
+      }
+    } catch (error) {
+      logger.e('Error fetching categories: $error');
+      throw Exception('Error fetching categories: $error');
+    }
+  }
+
   Future<void> transferAmount(
       int fromCategoryId, int toCategoryId, double amount) async {
     try {
@@ -201,6 +244,24 @@ class CategoryRepository {
         logger.e('Error updating category amount: $error');
       }
       throw Exception('Error updating category amount: $error');
+    }
+  }
+
+  Future<void> deleteTransaction(int transactionId) async {
+    try {
+      final response = await dio.delete("/transactions/$transactionId");
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        logger.e('Failed to delete transaction, Response: ${response.data}');
+        throw Exception('Failed to delete transaction');
+      }
+    } catch (error) {
+      if (error is DioException) {
+        logger.e('Dio Error: ${error.response?.data ?? error.message}');
+      } else {
+        logger.e('Error deleting transaction: $error');
+      }
+      throw Exception('Error deleting transaction: $error');
     }
   }
 }

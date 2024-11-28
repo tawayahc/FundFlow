@@ -179,9 +179,7 @@ class _TransactionPageState extends State<TransactionPage>
                     Text(
                       text,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.red,
-                        fontSize: 20),
+                      style: const TextStyle(color: Colors.red, fontSize: 20),
                     ),
                     const SizedBox(height: 16),
                     Container(
@@ -400,6 +398,9 @@ class _TransactionPageState extends State<TransactionPage>
                         banks: _banks,
                         categories: _categories,
                         onSubmit: _onExpenseSubmit,
+                      ),
+                      const SizedBox(
+                        height: 100,
                       ),
                     ] else if (_type == 'transfer') ...[
                       TransferForm(
