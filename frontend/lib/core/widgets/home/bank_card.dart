@@ -156,8 +156,7 @@ class BankCard extends StatelessWidget {
       'ธนาคารออมสิน': 'assets/LogoBank/GSB.png',
       'ธนาคารธนชาติ': 'assets/LogoBank/ttb.png',
       'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
-      'ธนาคารCity': 'assets/LogoBank/city.png',
-      'ธนาคารMake': 'assets/LogoBank/make.png',
+      'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
     };
 
     final trimmedBankName = normalizeBankName(bankName);

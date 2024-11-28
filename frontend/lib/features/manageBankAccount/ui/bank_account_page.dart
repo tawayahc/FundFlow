@@ -26,7 +26,6 @@ String _getBankLogo(String bankName) {
     'ธนาคารธนชาต': 'assets/LogoBank/ttb.png',
     'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
     'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
-    'ธนาคารเมกะ': 'assets/LogoBank/make.png',
   };
 
   return logos[bankName.trim()] ?? 'assets/CashBox.png';
@@ -201,10 +200,10 @@ class _BankAccountPageState extends State<BankAccountPage>
           ),
           const SizedBox(height: 30),
           // Transaction History Header
-           const Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 45.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'ประวัติการทำรายการ',
@@ -214,14 +213,14 @@ class _BankAccountPageState extends State<BankAccountPage>
                     color: Color(0xFF414141),
                   ),
                 ),
-                Row( 
+                Row(
                   children: [
                     Icon(
-                      Icons.info_outline, 
+                      Icons.info_outline,
                       size: 16,
                       color: Color(0xFFB2B2B2),
                     ),
-                    SizedBox(width: 4), 
+                    SizedBox(width: 4),
                     Text(
                       'แตะที่รายการเพื่อลบ',
                       style: TextStyle(
@@ -296,13 +295,14 @@ class _BankAccountPageState extends State<BankAccountPage>
                                   itemCount: transfers.length,
                                   itemBuilder: (context, index) {
                                     final transfer = transfers[index];
+                                    print('Test , ${bankState.transfers}');
                                     return Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 8.0),
                                       child: TransferTransactionCard(
-                                        transfer: transfer,
-                                        currentBankId: widget.bank.id,
-                                      ),
+                                          transfer: transfer,
+                                          currentBankId: widget.bank.id,
+                                          banks: bankState.banks ?? []),
                                     );
                                   },
                                 );
@@ -400,5 +400,4 @@ Map<String, Color> bankColorMap = {
   'ธนาคารธนชาต': const Color(0xFFF68B1F),
   'ธนาคารเกียรตินาคิน': const Color(0xFF004B87),
   'ธนาคารซิตี้แบงก์': const Color(0xFF1E90FF),
-  'ธนาคารเมกะ': const Color(0xFF3B5998),
 };

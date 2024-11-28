@@ -1,19 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:fundflow/features/home/models/bank.dart';
 import 'package:intl/intl.dart';
 import 'package:fundflow/features/home/models/transfer.dart';
 
 class TransferTransactionCard extends StatelessWidget {
   final Transfer transfer;
   final int currentBankId;
+  final List<Bank> banks;
 
   const TransferTransactionCard({
     Key? key,
     required this.transfer,
     required this.currentBankId,
+    required this.banks,
   }) : super(key: key);
+
+  String _mapBankName(String bankName) {
+    final bank = banks.firstWhere(
+      (b) => b.name == bankName || b.bank_name == bankName,
+      orElse: () => Bank(
+        id: 0,
+        name: 'Unknown',
+        bank_name: 'Unknown Bank',
+        amount: 0.0,
+      ),
+    );
+    return bank.bank_name;
+  }
 
   // Function to fetch bank logo path based on bank name
   String _getBankLogo(String bankName) {
+    print('Bank Name Received: $bankName');
     final logos = {
       'ธนาคารกสิกรไทย': 'assets/LogoBank/Kplus.png',
       'ธนาคารกรุงไทย': 'assets/LogoBank/Krungthai.png',
@@ -23,29 +40,10 @@ class TransferTransactionCard extends StatelessWidget {
       'ธนาคารออมสิน': 'assets/LogoBank/GSB.png',
       'ธนาคารธนชาต': 'assets/LogoBank/ttb.png',
       'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
-      'ธนาคารCity': 'assets/LogoBank/city.png',
-      'ธนาคารMake': 'assets/LogoBank/make.png',
+      'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
     };
     return logos[bankName.trim()] ??
         'assets/LogoBank/default.png'; // Default logo
-  }
-
-  // Function to map bankId to bank_name
-  String _mapBankIdToName(int bankId) {
-    final bankData = {
-      1: 'ธนาคารกสิกรไทย',
-      2: 'ธนาคารกรุงไทย',
-      3: 'ธนาคารไทยพาณิชย์',
-      4: 'ธนาคารกรุงเทพ',
-      5: 'ธนาคารกรุงศรี',
-      6: 'ธนาคารออมสิน',
-      7: 'ธนาคารธนชาต',
-      8: 'ธนาคารเกียรตินาคิน',
-      9: 'ธนาคารCity',
-      10: 'ธนาคารMake',
-    };
-    return bankData[bankId] ??
-        'Unknown Bank'; // Default to 'Unknown Bank' if not found
   }
 
   @override
@@ -55,9 +53,9 @@ class TransferTransactionCard extends StatelessWidget {
     final formattedDate =
         dateFormatter.format(DateTime.parse(transfer.createdAt));
 
-    // Determine bank name dynamically using _mapBankIdToName
-    final bankId = isIncoming ? transfer.fromBankId : transfer.toBankId;
-    final bankName = _mapBankIdToName(bankId);
+    final bankName = isIncoming
+        ? _mapBankName(transfer.fromBankName)
+        : _mapBankName(transfer.toBankName);
 
     // Get bank logo
     final bankLogo = _getBankLogo(bankName);

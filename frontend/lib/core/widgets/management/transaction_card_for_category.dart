@@ -21,8 +21,7 @@ class TransactionCardForCategory extends StatelessWidget {
       'ธนาคารออมสิน': 'assets/LogoBank/GSB.png',
       'ธนาคารธนชาต': 'assets/LogoBank/ttb.png',
       'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
-      'ธนาคารCity': 'assets/LogoBank/city.png',
-      'ธนาคารMake': 'assets/LogoBank/make.png',
+      'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
     };
     return logos[bankName.trim()] ??
         'assets/LogoBank/default.png'; // Default logo

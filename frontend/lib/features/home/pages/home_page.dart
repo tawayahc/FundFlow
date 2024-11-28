@@ -104,10 +104,10 @@ class _HomePageState extends State<HomePage> {
             listener: (context, state) {
               if (state is SlipSuccess) {
                 // Show success message when slips are uploaded successfully
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text('Slip images uploaded successfully.')),
-                );
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   const SnackBar(
+                //       content: Text('Slip images uploaded successfully.')),
+                // );
                 final images = state.images;
                 context.read<ImageBloc>().add(SendImages(images: images));
               } else if (state is SlipFailure) {

@@ -60,6 +60,5 @@ Map<String, Color> bankColorMap = {
   'ธนาคารออมสิน': Colors.pink, // Government Savings Bank
   'ธนาคารธนชาติ': const Color(0xFFF68B1F), // Thanachart Bank
   'ธนาคารเกียรตินาคิน': const Color(0xFF004B87), // Kiatnakin Bank
-  'ธนาคารCity': const Color(0xFF1E90FF), // Citibank
-  'ธนาคารMake': const Color.fromARGB(255, 104, 212, 50), // Make Bank
+  'ธนาคารซิตี้แบงก์': const Color(0xFF1E90FF), // Citibank
 };

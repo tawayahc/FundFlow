@@ -16,8 +16,9 @@ class TransfersLoading extends BankState {}
 
 class TransfersLoaded extends BankState {
   final List<Transfer> transfers;
+  final List<Bank>? banks;
 
-  TransfersLoaded({required this.transfers});
+  TransfersLoaded({required this.transfers, this.banks});
 }
 
 class BankAdded extends BankState {}

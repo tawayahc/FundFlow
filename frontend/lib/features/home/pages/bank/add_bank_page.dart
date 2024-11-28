@@ -32,8 +32,7 @@ class _AddBankPageState extends State<AddBankPage> {
     {'กรุงศรี': 'assets/LogoBank/krungsri.png'},
     {'ธนชาติ': 'assets/LogoBank/ttb.png'},
     {'เกียรตินาคิน': 'assets/LogoBank/knk.png'},
-    {'City': 'assets/LogoBank/city.png'},
-    {'Make': 'assets/LogoBank/make.png'},
+    {'ซิตี้แบงก์': 'assets/LogoBank/city.png'},
   ];
 
   final TextEditingController bankNameController = TextEditingController();
