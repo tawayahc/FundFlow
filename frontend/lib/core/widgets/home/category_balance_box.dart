@@ -1,61 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/features/home/models/category.dart';
-
-import '../../../features/home/models/bank.dart';
+import 'package:intl/intl.dart'; // Import intl package
 
 class CategoryBalanceBox extends StatelessWidget {
-  final Color color;
+  final Color color; // Main color for the lines
   final Category category;
   final String date;
-  const CategoryBalanceBox({super.key, required this.color, required this.category, required this.date});
+
+  const CategoryBalanceBox({
+    super.key,
+    required this.color,
+    required this.category,
+    required this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
+    // Create a formatter for the currency with commas and two decimals
+    final currencyFormatter = NumberFormat("#,##0.00", "en_US");
+
     return Container(
-      padding: const EdgeInsets.fromLTRB(
-          0, 8, 4, 0), // padding (left, top, right, bottom)
-      width: double.infinity, // สุดขอบ
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.only(
+          top: 20, bottom: 16), // Remove horizontal padding
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(12),
-      ),
+          color: Colors.white, // Background color
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1), // Subtle shadow color
+              offset: const Offset(0, 0), // Centered shadow
+              blurRadius: 8,
+              spreadRadius: 1,
+            ),
+          ],
+          borderRadius: BorderRadius.circular(12.0)),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Row(
+          // Top bar (thicker solid line)
+          Row(
             children: [
-              SizedBox(width: 16),
-              Text(
-                'ยอดเงินคงเหลือ',
-                style: TextStyle(color: Colors.white, fontSize: 16),
+              Expanded(
+                child: Container(
+                  height: 15, // Height of the first bar
+                  color: color, // Matches the category color
+                ),
               ),
             ],
           ),
-          const Divider(
-            color: Colors.white,
-            thickness: 2,
-            height: 3,
-            indent: 2,
+          const SizedBox(height: 3), // Space between the two lines
+
+          // Second thin line with lighter opacity
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 2, // Height of the second line
+                  color: color.withOpacity(0.5), // Semi-transparent line
+                ),
+              ),
+            ],
           ),
+
+          // Spacing below the lines
           const SizedBox(height: 16),
-          Center(
-            child: Text(
-              '฿ ${category.amount.toStringAsFixed(2)}',
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
+
+          // Centered amount text
+          Text(
+            '฿ ${currencyFormatter.format(category.amount)}', // Format with commas
+            style: const TextStyle(
+              color: Color(0xFF414141), // Text color
+              fontSize: 24, // Font size for amount
+              fontWeight: FontWeight.normal,
             ),
           ),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              'ข้อมูล ณ $date',
-              style: const TextStyle(color: Colors.white, fontSize: 11),
-              textAlign: TextAlign.right,
-            ),
-          )
+          const SizedBox(height: 16), // Space below the amount
         ],
       ),
     );

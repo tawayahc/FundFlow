@@ -1,90 +1,118 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/core/widgets/notification/transaction_card.dart';
-import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
-import 'package:fundflow/features/home/bloc/category/category_state.dart';
-import 'package:fundflow/features/home/bloc/transaction/transaction_bloc.dart';
-import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
-import 'package:fundflow/features/home/bloc/transaction/transaction_state.dart';
-import 'package:fundflow/features/home/models/category.dart';
-import 'package:fundflow/features/home/pages/category/edit_category_page.dart';
+import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/core/widgets/navBar/main_layout.dart';
+import 'package:fundflow/core/widgets/notification/notification_card.dart';
+import 'package:fundflow/features/home/bloc/notification/notification_bloc.dart';
+import 'package:fundflow/features/home/bloc/notification/notification_event.dart';
+import 'package:fundflow/features/home/bloc/notification/notification_state.dart';
+import 'package:fundflow/features/home/models/transaction.dart';
+import 'edit_transaction_page.dart';
+import 'package:fundflow/app.dart';
 
-class NotificationPage extends StatelessWidget {
+class NotificationPage extends StatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
 
   @override
+  State<NotificationPage> createState() => _NotificationPageState();
+}
+
+class _NotificationPageState extends State<NotificationPage> with RouteAware {
+  @override
+  void initState() {
+    super.initState();
+    context.read<NotificationBloc>().add(LoadNotifications());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      routeObserver.subscribe(this, route); // Safely cast to PageRoute
+    }
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    // Called when this page becomes visible again
+    context.read<NotificationBloc>().add(LoadNotifications());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    context.read<TransactionBloc>().add(LoadTransactions());
+    return GlobalPadding(
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const BottomNavBar()),
+              );
+            },
+          ),
+          centerTitle: true,
+          title: const Text(
+            'การแจ้งเตือน',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        body: BlocBuilder<NotificationBloc, NotificationState>(
+          builder: (context, state) {
+            if (state is NotificationsLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is NotificationsLoaded) {
+              final notifications = state.notifications;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Notifications'),
-        centerTitle: true,
-      ),
-      body: BlocBuilder<TransactionBloc, TransactionState>(
-        builder: (context, transactionState) {
-          if (transactionState is TransactionsLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (transactionState is TransactionsLoaded) {
-            final sortedTransactions = List.from(transactionState.transactions)
-              ..sort((a, b) => DateTime.parse(b.createdAt)
-                  .compareTo(DateTime.parse(a.createdAt)));
+              if (notifications.isEmpty) {
+                return const Center(child: Text('ไม่มีการแจ้งเตือน'));
+              }
 
-            return BlocBuilder<CategoryBloc, CategoryState>(
-              builder: (context, categoryState) {
-                return ListView.builder(
-                  itemCount: sortedTransactions.length,
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<NotificationBloc>().add(LoadNotifications());
+                },
+                child: ListView.builder(
+                  itemCount: notifications.length,
                   itemBuilder: (context, index) {
-                    final transaction = sortedTransactions[index];
-                    final isExpense = transaction.type == 'expense';
-
-                    // Retrieve the matching Category object based on the transaction categoryId
-                    Category category = Category(
-                      id: 0,
-                      name: 'undefined',
-                      amount: 0.0,
-                      color: Colors.grey,
-                    );
-
-                    if (transaction.categoryId != 0 &&
-                        categoryState is CategoriesLoaded) {
-                      category = categoryState.categories.firstWhere(
-                        (cat) => cat.id == transaction.categoryId,
-                        orElse: () => category,
-                      );
-                    }
-
-                    final categoryName = category.name;
-                    final isClickable =
-                        isExpense && categoryName == 'undefined';
-
+                    final transaction = notifications[index];
                     return GestureDetector(
-                      onTap: () {
-                        if (isClickable) {
-                          // Change this to edit transaction page
-
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => EditCategoryPage(
-                          //       category: category,
-                          //     ),
-                          //   ),
-                          // );
+                      onTap: () async {
+                        final updatedTransaction = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditTransactionPage(
+                              transaction: transaction,
+                            ),
+                          ),
+                        );
+                        if (updatedTransaction != null) {
+                          context.read<NotificationBloc>().add(
+                                UpdateNotification(
+                                    transaction: updatedTransaction),
+                              );
                         }
                       },
-                      child: TransactionCard(transaction: transaction),
+                      child: NotificationCard(transaction: transaction),
                     );
                   },
-                );
-              },
-            );
-          } else if (transactionState is TransactionsLoadError) {
-            return Center(child: Text(transactionState.message));
-          } else {
-            return const Center(child: Text('Unknown error'));
-          }
-        },
+                ),
+              );
+            } else if (state is NotificationsError) {
+              return Center(child: Text('Error: ${state.error}'));
+            } else {
+              return const Center(child: Text('Unknown error'));
+            }
+          },
+        ),
       ),
     );
   }

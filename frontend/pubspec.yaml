@@ -34,6 +34,12 @@ dependencies:
   bottom_picker: ^2.9.0
   dropdown_textfield: ^1.2.0
   calendar_date_picker2: ^1.1.7
+  archive: ^3.6.1
+  http_parser: ^4.0.0
+  url_launcher: ^6.3.1
+  android_intent_plus: ^5.2.0
+  dotted_border: ^2.1.0
+  crypto: ^3.0.6
 
 dev_dependencies:
   flutter_test:
@@ -45,10 +51,11 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  #assets:
+  #   - frontend/lib/images/
   #   - images/a_dot_ham.jpeg
   assets:
+    - lib/images/
     - .env
     - assets/
     - assets/LogoBank/

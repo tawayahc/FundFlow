@@ -1,7 +1,12 @@
 import 'package:bottom_picker/bottom_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/custom_input_transaction_box.dart';
 import 'package:fundflow/features/transaction/model/form_model.dart';
+import 'package:fundflow/core/widgets/custom_input_inkwell.dart';
+import 'package:fundflow/core/widgets/custom_button.dart';
+import 'package:fundflow/core/widgets/custom_dropdown.dart';
+import 'package:fundflow/core/widgets/transaction/transfer_card.dart';
 import '../model/bank_model.dart';
 
 class TransferForm extends StatefulWidget {
@@ -24,6 +29,11 @@ class _TransferFormState extends State<TransferForm> {
   TimeOfDay? _selectedTime;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _amountController.dispose();
     super.dispose();
@@ -32,7 +42,7 @@ class _TransferFormState extends State<TransferForm> {
   void _selectDate() {
     BottomPicker.date(
       pickerTitle: Text(
-        'Select Date',
+        'เลือกวันที่',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -62,7 +72,7 @@ class _TransferFormState extends State<TransferForm> {
   void _selectTime() {
     BottomPicker.time(
       pickerTitle: Text(
-        'Select Time',
+        'เลือกเวลา',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -106,27 +116,6 @@ class _TransferFormState extends State<TransferForm> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.banks.length < 2) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child:
-                  Text('At least two banks are required to make a transfer .'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/addBank');
-              },
-              child: const Text('Add Bank'),
-            ),
-          ],
-        ),
-      );
-    }
     List<Bank> toBankOptions = widget.banks;
     if (_fromBank != null) {
       toBankOptions =
@@ -143,131 +132,143 @@ class _TransferFormState extends State<TransferForm> {
       key: _formKey,
       child: Column(
         children: [
+          const SizedBox(
+            height: 16,
+          ),
+          TransferCard(
+              fromBank: _fromBank,
+              toBank: _toBank,
+              amount: _amountController,
+              selectedTime: _selectedDate),
+          const SizedBox(
+            height: 16,
+          ),
           // From Bank Dropdown
-          DropdownButtonFormField<Bank>(
-            value: _fromBank,
-            hint: const Text('Select From Bank'),
-            items: fromBankOptions.map((Bank bank) {
-              return DropdownMenuItem<Bank>(
-                value: bank,
-                child: Text(bank.name),
-              );
-            }).toList(),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              'ย้ายธนาคารจาก',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          // Bank Dropdown
+          CustomDropdown<Bank>(
+            prefixIcon: Icons.balance,
+            hintText: 'กรอกธนาคาร',
+            selectedItem: _fromBank,
+            items: widget.banks,
             onChanged: (Bank? newValue) {
               setState(() {
                 _fromBank = newValue;
-                // Reset toBank if it's the same as fromBank
-                if (_toBank != null && _toBank!.id == _fromBank!.id) {
-                  _toBank = null;
-                }
               });
             },
-            validator: (value) =>
-                value == null ? 'Please select a from bank' : null,
-            decoration: const InputDecoration(
-              labelText: 'From Bank',
-              border: OutlineInputBorder(),
-            ),
+            displayItem: (Bank bank) => bank.name,
+            validator: (value) => value == null ? 'กรุณาเลือกธนาคาร' : null,
           ),
+
           const SizedBox(height: 16),
           // To Bank Dropdown
-          DropdownButtonFormField<Bank>(
-            value: _toBank,
-            hint: const Text('Select To Bank'),
-            items: toBankOptions.map((Bank bank) {
-              return DropdownMenuItem<Bank>(
-                value: bank,
-                child: Text(bank.name),
-              );
-            }).toList(),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              'ไปยังธนาคาร',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          // Bank Dropdown
+          CustomDropdown<Bank>(
+            prefixIcon: Icons.balance,
+            hintText: 'กรอกธนาคาร',
+            selectedItem: _toBank,
+            items: widget.banks,
             onChanged: (Bank? newValue) {
               setState(() {
                 _toBank = newValue;
-                // Reset fromBank if it's the same as toBank
-                if (_fromBank != null && _fromBank!.id == _toBank!.id) {
-                  _fromBank = null;
-                }
               });
             },
+            displayItem: (Bank bank) => bank.name,
             validator: (value) =>
-                value == null ? 'Please select a to bank' : null,
-            decoration: const InputDecoration(
-              labelText: 'To Bank',
-              border: OutlineInputBorder(),
-            ),
+                value == null ? 'กรุณาเลือกธนาคาร' : null,
           ),
+
           const SizedBox(height: 16),
           // Amount Field
-          TextFormField(
-            controller: _amountController,
-            decoration: const InputDecoration(
-              labelText: 'Amount',
-              border: OutlineInputBorder(),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              'ระบุจำนวนเงิน',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+          ),
+          CustomInputTransactionBox(
+            labelText: 'ระบุจำนวนเงิน',
+            prefixIcon: const Icon(
+              Icons.account_balance_wallet,
+              color: Color(0xFFD0D0D0),
+            ),
+            controller: _amountController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter an amount';
+                return 'กรุณาระบุจำนวนเงิน';
               }
               if (double.tryParse(value) == null) {
-                return 'Please enter a valid number';
+                return 'กรุณาระบุจำนวนเงินที่ถูกต้อง';
               }
               return null;
             },
           ),
+
           const SizedBox(height: 16),
           // Date Picker
-          InkWell(
-            onTap: _selectDate,
-            child: InputDecorator(
-              decoration: const InputDecoration(
-                labelText: 'Date',
-                border: OutlineInputBorder(),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "${_selectedDate.toLocal()}".split(' ')[0],
-                  ),
-                  const Icon(Icons.calendar_today),
-                ],
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              'ระบุวันที่',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
+          CustomInputInkwell(
+              prefixIcon: Icons.calendar_today,
+              labelText: "${_selectedDate.toLocal()}".split(' ')[0],
+              onTap: _selectDate),
+
           const SizedBox(height: 16),
           // Time Picker
-          InkWell(
-            onTap: _selectTime,
-            child: InputDecorator(
-              decoration: const InputDecoration(
-                labelText: 'Time',
-                border: OutlineInputBorder(),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    _selectedTime != null
-                        ? _selectedTime!.format(context)
-                        : 'Select Time',
-                  ),
-                  const Icon(Icons.access_time),
-                ],
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              'ระบุเวลา',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
+          // Time Picker
+          CustomInputInkwell(
+              prefixIcon: Icons.access_time,
+              labelText: _selectedTime != null
+                  ? _selectedTime!.format(context)
+                  : 'กรอกเวลา(ไม่จำเป็น)',
+              onTap: _selectTime),
+
           const SizedBox(height: 16),
-          // Note Field
-          ElevatedButton(
-            onPressed: _submit,
-            child: const Text('Submit'),
-          ),
+          CustomButton(text: 'ยืนยัน', onPressed: _submit),
         ],
       ),
     );
   }
 }
-
-// Model class for Transfer Data
-

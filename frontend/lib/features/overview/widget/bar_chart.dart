@@ -47,7 +47,7 @@ class ExpenseBarChartState extends State<ExpenseBarChart> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.monthlySummaries.isEmpty){
+    if (widget.monthlySummaries.isEmpty) {
       return const SizedBox(
         height: 335,
         child: const Center(
@@ -66,17 +66,15 @@ class ExpenseBarChartState extends State<ExpenseBarChart> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Padding(
-            padding: EdgeInsets.all(20.0),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                  'เงินเข้า-เงินออกรายเดือน', 
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold
-                  ),),
+              padding: EdgeInsets.all(20.0),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  'เงินเข้า-เงินออกรายเดือน',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
-          ),
             const SizedBox(
               height: 15,
             ),
@@ -99,47 +97,6 @@ class ExpenseBarChartState extends State<ExpenseBarChart> {
                           }),
                           getTooltipItem: (a, b, c, d) => null,
                         ),
-                        // touchCallback: (FlTouchEvent event, response) {
-                        //   if (response == null || response.spot == null) {
-                        //     setState(() {
-                        //       touchedGroupIndex = -1;
-                        //       showingBarGroups = List.of(rawBarGroups);
-                        //     });
-                        //     return;
-                        //   }
-                        //
-                        //   touchedGroupIndex = response.spot!.touchedBarGroupIndex;
-                        //
-                        //   setState(() {
-                        //     if (!event.isInterestedForInteractions) {
-                        //       touchedGroupIndex = -1;
-                        //       showingBarGroups = List.of(rawBarGroups);
-                        //       return;
-                        //     }
-                        //     showingBarGroups = List.of(rawBarGroups);
-                        //     if (touchedGroupIndex != -1) {
-                        //       var sum = 0.0;
-                        //       for (final rod
-                        //       in showingBarGroups[touchedGroupIndex].barRods) {
-                        //         sum += rod.toY;
-                        //       }
-                        //       final avg = sum /
-                        //           showingBarGroups[touchedGroupIndex]
-                        //               .barRods
-                        //               .length;
-                        //
-                        //       showingBarGroups[touchedGroupIndex] =
-                        //           showingBarGroups[touchedGroupIndex].copyWith(
-                        //             barRods: showingBarGroups[touchedGroupIndex]
-                        //                 .barRods
-                        //                 .map((rod) {
-                        //               return rod.copyWith(
-                        //                   toY: avg, color: widget.avgColor);
-                        //             }).toList(),
-                        //           );
-                        //     }
-                        //   });
-                        // },
                       ),
                       titlesData: FlTitlesData(
                         show: true,
@@ -152,7 +109,8 @@ class ExpenseBarChartState extends State<ExpenseBarChart> {
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
-                            getTitlesWidget: bottomTitles, // Pass formatted dates
+                            getTitlesWidget:
+                                bottomTitles, // Pass formatted dates
                             reservedSize: 42,
                           ),
                         ),
@@ -205,8 +163,18 @@ class ExpenseBarChartState extends State<ExpenseBarChart> {
   Widget bottomTitles(double value, TitleMeta meta) {
     // List of month names
     const List<String> monthNames = [
-    'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
-      'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.',
+      'ม.ค.',
+      'ก.พ.',
+      'มี.ค.',
+      'เม.ย.',
+      'พ.ค.',
+      'มิ.ย.',
+      'ก.ค.',
+      'ส.ค.',
+      'ก.ย.',
+      'ต.ค.',
+      'พ.ย.',
+      'ธ.ค.',
     ];
 
     // Retrieve the sorted list of dates
@@ -238,27 +206,18 @@ class ExpenseBarChartState extends State<ExpenseBarChart> {
   }
 
   BarChartGroupData makeGroupData(int x, double y1, double y2) {
-    
-    double newY1 = heightPartition;
-    double newY2 = heightPartition;
-    if (y1 > y2 && y1 > heightPartition && y2 > heightPartition) {
-      newY1 = heightPartition - 7;
-    } else if (y1 < y2 && y1 > heightPartition && y2 > heightPartition) {
-      newY2 = heightPartition - 7;
-    }
-
     return BarChartGroupData(
       barsSpace: 0,
       x: x,
       barRods: [
         BarChartRodData(
-          toY: y1 < heightPartition ? y1 : newY1,
+          toY: y1 < heightPartition ? y1 : heightPartition,
           color: widget.leftBarColor,
           width: barWidth,
           borderRadius: const BorderRadius.all(Radius.zero),
         ),
         BarChartRodData(
-          toY: y2 < heightPartition ? y2 : newY2,
+          toY: y2 < heightPartition ? y2 : heightPartition,
           color: widget.rightBarColor,
           width: barWidth,
           borderRadius: const BorderRadius.all(Radius.zero),

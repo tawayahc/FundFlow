@@ -1,7 +1,9 @@
 // category_bloc.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/app.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
+import 'package:fundflow/features/home/models/transaction.dart';
 import 'package:fundflow/features/home/repository/category_repository.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
@@ -42,6 +44,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         await categoryRepository.editCategory(
             event.originalCategory, event.category);
         // If successful, reload categories or navigate to the previous screen
+        add(LoadCategories());
         emit(CategoryUpdated());
       } catch (error) {
         print("Error editing category: $error");
@@ -51,13 +54,25 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
     on<DeleteCategory>((event, emit) async {
       try {
-        // Add the new category to the repository
+        final transactionMap =
+            await categoryRepository.getCategoryTransactions(event.categoryId);
+        final transactions = transactionMap['transactions'] ?? <Transaction>[];
+
+        logger.i('Found ${transactions.length} transactions to delete.');
+
+        for (final transaction in transactions) {
+          await categoryRepository.deleteTransaction(transaction.id);
+          logger.i('Deleted transaction with ID: ${transaction.id}');
+        }
+
         await categoryRepository.deleteCategory(event.categoryId);
-        // Reload categories after addition
+        logger.i('Deleted category with ID: ${event.categoryId}');
+
         add(LoadCategories());
         emit(CategoryDeleted());
       } catch (error) {
-        emit(CategoriesLoading()); // Handle error as needed
+        logger.e('Error deleting category: $error');
+        emit(CategoriesLoading());
       }
     });
 
@@ -80,6 +95,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         await categoryRepository.updateCategoryAmount(
             event.categoryId, event.newAmount);
         // If successful, reload categories or navigate to the previous screen
+        add(LoadCategories());
         emit(CategoryAmountUpdated());
       } catch (error) {
         print("Error updated category: $error");

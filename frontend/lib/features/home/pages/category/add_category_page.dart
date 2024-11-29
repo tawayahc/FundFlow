@@ -61,14 +61,14 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
+            iconSize: 20,
+            color: Color(0xFF414141),
             onPressed: () {
               Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
             },
           ),
-          title: const Text(
-            'เพิ่มหมวดหมู่',
-            style: TextStyle(color: Color(0xFF414141)),
-          ),
+          title: const Text('เพิ่มหมวดหมู่',
+              style: TextStyle(color: Color(0xFF414141), fontSize: 24)),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -78,9 +78,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
               if (state is CategoryAdded) {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const BottomNavBar()),
+                  MaterialPageRoute(builder: (context) => const BottomNavBar()),
                 );
               } else if (state is CategoryError) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -91,7 +89,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 // Category Card Preview
                 Center(
                   child: CategoryCard(

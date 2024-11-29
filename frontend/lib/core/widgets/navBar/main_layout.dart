@@ -26,6 +26,7 @@ class _NavBarState extends State<BottomNavBar>
     with SingleTickerProviderStateMixin {
   final _pageController = PageController(initialPage: 0);
   late NotchBottomBarController _controller;
+  int _selectedIndex = 0;
   final int maxPage = 3;
 
   @override
@@ -63,7 +64,35 @@ class _NavBarState extends State<BottomNavBar>
             onNavBarPages.length, (index) => onNavBarPages[index]),
       ),
       extendBody: true,
-      bottomNavigationBar: AnimatedNotchBottomBar(
+      bottomNavigationBar: /*SlidingClippedNavBar(
+        backgroundColor: Colors.white,
+        onButtonPressed: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          _pageController.jumpToPage(index);
+        },
+        iconSize: 24,
+        activeColor: Colors.blueAccent,
+        inactiveColor: Colors.blueGrey,
+        selectedIndex: _selectedIndex,
+        barItems: [
+          BarItem(
+            icon: Icons.home_filled,
+            title: 'Home',
+          ),
+          BarItem(
+            icon: Icons.add_circle_outline,
+            title: 'Add',
+          ),
+          BarItem(
+            icon: Icons.insert_chart_outlined_rounded,
+            title: 'Stats',
+          ),
+        ],
+      ),
+    );*/
+          AnimatedNotchBottomBar(
         notchBottomBarController: _controller,
         bottomBarItems: const [
           BottomBarItem(
@@ -75,7 +104,7 @@ class _NavBarState extends State<BottomNavBar>
               Icons.home_filled,
               color: Colors.blueAccent,
             ),
-            itemLabel: 'Page 1',
+            itemLabel: 'Home',
           ),
           BottomBarItem(
             inActiveItem: Icon(
@@ -97,7 +126,7 @@ class _NavBarState extends State<BottomNavBar>
               Icons.insert_chart_outlined_rounded,
               color: Colors.blueAccent,
             ),
-            itemLabel: 'Page 3',
+            itemLabel: 'Overview',
           ),
         ],
         onTap: (index) {

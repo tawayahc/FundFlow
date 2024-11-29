@@ -1,13 +1,18 @@
 import 'package:bottom_picker/bottom_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/custom_input_inkwell.dart';
+import 'package:fundflow/core/widgets/custom_button.dart';
+import 'package:fundflow/core/widgets/custom_dropdown.dart';
+import 'package:fundflow/core/widgets/custom_input_transaction_box.dart';
+import 'package:fundflow/core/widgets/transaction/expense_card.dart';
 import '../model/bank_model.dart';
 import '../model/category_model.dart';
 import '../model/form_model.dart';
 
 class ExpenseForm extends StatefulWidget {
   final void Function(CreateExpenseData) onSubmit;
-
+  final CreateExpenseData? initialData;
   // Remove final from banks and categories
   List<Bank> banks;
   List<Category> categories;
@@ -17,6 +22,7 @@ class ExpenseForm extends StatefulWidget {
     required this.banks,
     required this.categories,
     required this.onSubmit,
+    this.initialData,
   }) : super(key: key);
 
   @override
@@ -33,6 +39,11 @@ class _ExpenseFormState extends State<ExpenseForm> {
   TimeOfDay? _selectedTime;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _amountController.dispose();
     _noteController.dispose();
@@ -41,14 +52,14 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   void _selectDate() {
     BottomPicker.date(
-      pickerTitle: Text(
-        'Select Date',
+      pickerTitle: const Text(
+        'เลือกวันที่',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
       ),
-      titlePadding: EdgeInsets.all(20),
+      titlePadding: const EdgeInsets.all(20),
       dismissable: true,
       initialDateTime: _selectedDate,
       minDateTime: DateTime(2000),
@@ -71,14 +82,14 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   void _selectTime() {
     BottomPicker.time(
-      pickerTitle: Text(
-        'Select Time',
+      pickerTitle: const Text(
+        'เลือกเวลา',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
       ),
-      titlePadding: EdgeInsets.all(20),
+      titlePadding: const EdgeInsets.all(20),
       dismissable: true,
       initialTime:
           _selectedTime != null ? _timeOfDayToTime(_selectedTime!) : Time.now(),
@@ -117,169 +128,175 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   @override
   Widget build(BuildContext context) {
-    bool isFormEnabled = widget.categories.isNotEmpty;
-    if (widget.banks.isEmpty) {
-      return Center(
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('No banks available.'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/addBank');
-              },
-              child: const Text('Add Bank'),
+            const SizedBox(
+              height: 16,
             ),
+            const Align(
+              alignment: Alignment.center,
+              child: const Text(
+                'เพิ่มรายการด้วยแบบฟอร์ม',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            ExpenseCard(
+              selectedCategory: _selectedCategory,
+              amount: _amountController,
+              note: _noteController,
+              selectedTime: _selectedDate,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            // Bank Dropdown
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: const Text(
+                'ระบุธนาคาร',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            // Bank Dropdown
+            CustomDropdown<Bank>(
+              prefixIcon: Icons.balance,
+              hintText: 'กรอกธนาคาร',
+              selectedItem: _selectedBank,
+              items: widget.banks,
+              onChanged: (Bank? newValue) {
+                setState(() {
+                  _selectedBank = newValue;
+                });
+              },
+              displayItem: (Bank bank) => bank.name,
+              validator: (value) => value == null ? 'กรุณาเลือกธนาคาร' : null,
+            ),
+            const SizedBox(height: 16),
+            // Category Dropdown
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: const Text(
+                'ระบุหมวดหมู่',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            CustomDropdown<Category>(
+              prefixIcon: Icons.category,
+              hintText: 'ระบุหมวดหมู่',
+              selectedItem: _selectedCategory,
+              items: widget.categories,
+              onChanged: (Category? newValue) {
+                setState(() {
+                  _selectedCategory = newValue;
+                });
+              },
+              displayItem: (Category category) => category.name,
+              validator: (value) => value == null ? 'กรุณาเลือกหมวดหมู่' : null,
+            ),
+            const SizedBox(height: 16),
+            // Amount Field
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: const Text(
+                'ระบุจำนวนเงิน',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            CustomInputTransactionBox(
+              labelText: 'ระบุจำนวนเงิน',
+              prefixIcon: const Icon(
+                Icons.account_balance_wallet,
+                color: Color(0xFFD0D0D0),
+              ),
+              controller: _amountController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'กรุณาระบุจำนวนเงิน';
+                }
+                if (double.tryParse(value) == null) {
+                  return 'กรุณาระบุจำนวนเงินที่ถูกต้อง';
+                }
+                return null;
+              },
+            ),
+
+            const SizedBox(height: 16),
+            // Date Picker
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: const Text(
+                'ระบุวันที่',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            CustomInputInkwell(
+                prefixIcon: Icons.calendar_today,
+                labelText: "${_selectedDate.toLocal()}".split(' ')[0],
+                onTap: _selectDate),
+            const SizedBox(height: 16),
+            // Time Picker
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: const Text(
+                'ระบุเวลา',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            CustomInputInkwell(
+                prefixIcon: Icons.access_time,
+                labelText: _selectedTime != null
+                    ? _selectedTime!.format(context)
+                    : 'กรอกเวลา(ไม่จำเป็น)',
+                onTap: _selectTime),
+            const SizedBox(height: 16),
+            // Note Field
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: const Text(
+                'โน้ตเพิ่มเติม',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            CustomInputTransactionBox(
+                labelText: 'โน้ต',
+                prefixIcon: const Icon(
+                  Icons.note,
+                  color: Color(0xFFD0D0D0),
+                ),
+                controller: _noteController),
+            const SizedBox(height: 16),
+            CustomButton(text: 'ยืนยัน', onPressed: _submit),
           ],
         ),
-      );
-    }
-
-    if (widget.categories.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('No categories available.'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/addCategory');
-              },
-              child: const Text('Add Category'),
-            ),
-          ],
-        ),
-      );
-    }
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          // Bank Dropdown
-          DropdownButtonFormField<Bank>(
-            value: _selectedBank,
-            hint: const Text('Select Bank'),
-            items: widget.banks.map((Bank bank) {
-              return DropdownMenuItem<Bank>(
-                value: bank,
-                child: Text(bank.name),
-              );
-            }).toList(),
-            onChanged: (Bank? newValue) {
-              setState(() {
-                _selectedBank = newValue;
-              });
-            },
-            validator: (value) => value == null ? 'Please select a bank' : null,
-            decoration: const InputDecoration(
-              labelText: 'Bank',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Category Dropdown
-          DropdownButtonFormField<Category>(
-            value: _selectedCategory,
-            hint: const Text('Select Category'),
-            items: widget.categories.map((Category category) {
-              return DropdownMenuItem<Category>(
-                value: category,
-                child: Text(category.name),
-              );
-            }).toList(),
-            onChanged: isFormEnabled
-                ? (Category? newValue) {
-                    setState(() {
-                      _selectedCategory = newValue;
-                    });
-                  }
-                : null,
-            validator: (value) =>
-                value == null ? 'Please select a category' : null,
-            decoration: const InputDecoration(
-              labelText: 'Category',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Amount Field
-          TextFormField(
-            controller: _amountController,
-            decoration: const InputDecoration(
-              labelText: 'Amount',
-              border: OutlineInputBorder(),
-            ),
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter an amount';
-              }
-              if (double.tryParse(value) == null) {
-                return 'Please enter a valid number';
-              }
-              return null;
-            },
-          ),
-
-          const SizedBox(height: 16),
-          // Date Picker
-          InkWell(
-            onTap: _selectDate,
-            child: InputDecorator(
-              decoration: const InputDecoration(
-                labelText: 'Date',
-                border: OutlineInputBorder(),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "${_selectedDate.toLocal()}".split(' ')[0],
-                  ),
-                  const Icon(Icons.calendar_today),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Time Picker
-          InkWell(
-            onTap: _selectTime,
-            child: InputDecorator(
-              decoration: const InputDecoration(
-                labelText: 'Time',
-                border: OutlineInputBorder(),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    _selectedTime != null
-                        ? _selectedTime!.format(context)
-                        : 'Select Time',
-                  ),
-                  const Icon(Icons.access_time),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Note Field
-          TextFormField(
-            controller: _noteController,
-            decoration: const InputDecoration(
-              labelText: 'Note',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: isFormEnabled ? _submit : null,
-            child: const Text('Submit'),
-          ),
-        ],
       ),
     );
   }

@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/features/home/models/bank.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fundflow/utils/bank_color_util.dart';
+import 'package:fundflow/utils/bank_logo_util.dart';
 import 'package:intl/intl.dart';
 
 class BankCard extends StatelessWidget {
   final Bank bank;
-  final Map<String, Color> bankColorMap;
 
-  const BankCard({super.key, required this.bank, required this.bankColorMap});
+  const BankCard({super.key, required this.bank});
 
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat.currency(locale: 'th_TH', symbol: '฿');
-    Color color = bankColorMap[bank.bank_name] ?? Colors.grey;
+    // Normalize bank name before lookup
+    final normalizedBankName = normalizeBankName(bank.bank_name);
+    Color color = BankColorUtil.getBankColor(normalizedBankName);
+
+    debugPrint('Normalized Bank Name: "$normalizedBankName", Color: $color');
 
     return Material(
       child: Container(
@@ -50,11 +55,11 @@ class BankCard extends StatelessWidget {
                     ),
                     child: ClipOval(
                       child: Image.asset(
-                        _getBankLogo(bank.bank_name),
+                        _getBankLogo(normalizedBankName),
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           debugPrint(
-                              'Error loading image for ${bank.bank_name}');
+                              'Error loading image for $normalizedBankName');
                           return Icon(Icons.error, color: Colors.red);
                         },
                       ),
@@ -135,34 +140,14 @@ class BankCard extends StatelessWidget {
     );
   }
 
+  String normalizeBankName(String bankName) {
+    return bankName.replaceAll(RegExp(r'\s+'), '').trim();
+  }
+
   String _getBankLogo(String bankName) {
-    final logos = {
-      'ธนาคารกสิกรไทย': 'assets/LogoBank/Kplus.png',
-      'ธนาคารกรุงไทย': 'assets/LogoBank/Krungthai.png',
-      'ธนาคารไทยพาณิชย์': 'assets/LogoBank/SCB.png',
-      'ธนาคารกรุงเทพ': 'assets/LogoBank/Krungthep.png',
-      'ธนาคารกรุงศรีอยุธยา': 'assets/LogoBank/krungsri.png',
-      'ธนาคารออมสิน': 'assets/LogoBank/GSB.png',
-      'ธนาคารธนชาต': 'assets/LogoBank/ttb.png',
-      'ธนาคารเกียรตินาคิน': 'assets/LogoBank/knk.png',
-      'ธนาคารซิตี้แบงก์': 'assets/LogoBank/city.png',
-      'ธนาคารเมกะ': 'assets/LogoBank/make.png',
-    };
+    final normalizedBankName = normalizeBankName(bankName);
+    final path = BankLogoUtil.getBankLogo(normalizedBankName);
 
-    final trimmedBankName = bankName.trim();
-
-    String? matchedKey = logos.keys.firstWhere(
-      (key) => key == trimmedBankName,
-      orElse: () => '',
-    );
-
-    if (matchedKey.isEmpty) {
-      debugPrint('No exact match for $trimmedBankName, using default image.');
-      return 'assets/CashBox.png'; // Default fallback image
-    }
-
-    final path = logos[matchedKey];
-    debugPrint('Matched bank name: $matchedKey, using path: $path');
-    return path!;
+    return path ?? 'assets/CashBox.png';
   }
 }

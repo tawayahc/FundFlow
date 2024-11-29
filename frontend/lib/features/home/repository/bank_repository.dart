@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/home/models/bank.dart';
+import 'package:fundflow/features/home/models/transaction.dart';
+import 'package:fundflow/features/home/models/transfer.dart';
 import 'package:fundflow/utils/api_helper.dart';
 
 class BankRepository {
@@ -29,6 +31,21 @@ class BankRepository {
     } catch (error) {
       logger.e('Error fetching banks: $error');
       throw Exception('Error fetching banks: $error');
+    }
+  }
+
+  Future<List<Transfer>> getTransfers() async {
+    try {
+      final response = await dio.get("/banks/transfer");
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        final transfers = data.map((item) => Transfer.fromJson(item)).toList();
+        return transfers;
+      } else {
+        throw Exception('Failed to load transfers: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error fetching transfers: $error');
     }
   }
 
@@ -109,6 +126,65 @@ class BankRepository {
     } catch (error) {
       logger.e('Error deleting bank: $error');
       throw Exception('Error deleting bank: $error');
+    }
+  }
+
+  Future<Map<String, List<Transaction>>> getBankTransactions(int bankId) async {
+    try {
+      final response = await dio.get("/banks/$bankId");
+
+      if (response.statusCode == 200) {
+        // Ensure response data is parsed correctly
+        final Map<String, dynamic> data = response.data;
+
+        if (data.containsKey('transactions') && data['transactions'] is List) {
+          final List<dynamic> transactionsData = data['transactions'];
+
+          final bankTransactions = transactionsData
+              .map((item) => Transaction(
+                    id: item['id'],
+                    bankId: item['bank_id'],
+                    amount: (item['amount'] as num).toDouble(),
+                    memo: item['memo'],
+                    type: item['type'],
+                    categoryId: item['category_id'] ?? 0,
+                    bankNickname: item['bank_nickname'],
+                    bankName: item['bank_name'],
+                    createdAt: item['created_at'],
+                  ))
+              .toList();
+
+          return {
+            'transactions': bankTransactions,
+          };
+        } else {
+          throw Exception('Invalid transactions format in response');
+        }
+      } else {
+        logger.e('Failed to load banks: ${response.data}');
+        throw Exception('Failed to load banks');
+      }
+    } catch (error) {
+      logger.e('Error fetching banks: $error');
+      throw Exception('Error fetching banks: $error');
+    }
+  }
+
+  Future<void> deleteTransaction(int transactionId) async {
+    try {
+      final response = await dio.delete("/transactions/$transactionId");
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        logger.e('Failed to delete transaction, Response: ${response.data}');
+        throw Exception('Failed to delete transaction');
+      }
+    } catch (error) {
+      if (error is DioException) {
+        logger.e('Dio Error: ${error.response?.data ?? error.message}');
+      } else {
+        logger.e('Error deleting transaction: $error');
+      }
+      throw Exception('Error deleting transaction: $error');
     }
   }
 }

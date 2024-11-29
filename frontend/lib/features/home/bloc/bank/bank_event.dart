@@ -5,6 +5,8 @@ abstract class BankEvent {}
 
 class LoadBanks extends BankEvent {}
 
+class LoadTransfers extends BankEvent {}
+
 class AddBank extends BankEvent {
   final Bank bank;
   AddBank({required this.bank});

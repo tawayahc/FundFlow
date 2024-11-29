@@ -6,7 +6,7 @@ import 'package:fundflow/features/transaction/model/bank_model.dart';
 import 'package:fundflow/features/transaction/model/category_model.dart';
 import 'package:fundflow/features/transaction/model/create_transfer_request.dart';
 import 'package:fundflow/utils/api_helper.dart';
-import '../model/transaction_model.dart';
+import '../model/create_transaction_request_model.dart';
 
 class TransactionAddRepository {
   final Dio dio;
@@ -19,6 +19,7 @@ class TransactionAddRepository {
       final response = await dio.get('/banks/all');
       final List<dynamic> data = response.data;
       logger.d('Banks loaded successfully');
+      print(data);
       return data.map((bank) => Bank.fromJson(bank)).toList();
     } catch (e) {
       logger.e('Failed to load banks: $e');
@@ -33,6 +34,7 @@ class TransactionAddRepository {
       final List<dynamic> data =
           response.data.where((category) => category['id'] != 0).toList();
       logger.d('Categories loaded successfully');
+      print(data);
       return data.map((category) => Category.fromJson(category)).toList();
     } catch (e) {
       logger.e('Failed to load categories: $e');

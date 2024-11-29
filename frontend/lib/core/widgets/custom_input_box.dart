@@ -4,6 +4,7 @@ class CustomInputBox extends StatefulWidget {
   final String labelText;
   final Icon prefixIcon;
   final TextEditingController controller;
+  final TextInputType? keyboardType;
   final String? Function(String?)? validator;
 
   const CustomInputBox({
@@ -11,6 +12,7 @@ class CustomInputBox extends StatefulWidget {
     required this.labelText,
     required this.prefixIcon,
     required this.controller,
+    this.keyboardType,
     this.validator,
   }) : super(key: key);
 
@@ -21,16 +23,20 @@ class CustomInputBox extends StatefulWidget {
 class _CustomInputBoxState extends State<CustomInputBox> {
   @override
   Widget build(BuildContext context) {
-    // NOTE: Adjust it without using sized box
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
-          controller: widget
-              .controller, // Use widget.controller to access the controller passed in
+          controller: widget.controller,
           validator: widget.validator,
+          keyboardType: widget.keyboardType,
           decoration: InputDecoration(
             labelText: widget.labelText,
+            labelStyle: const TextStyle(
+              color: Color(0xFFD0D0D0),
+              fontSize: 14,
+              fontWeight: FontWeight.normal,
+            ),
             prefixIcon: widget.prefixIcon,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
