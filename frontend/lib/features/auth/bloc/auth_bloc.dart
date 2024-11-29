@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/setting/models/user_profile.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 import '../repository/auth_repository.dart';
@@ -99,6 +100,8 @@ class AuthenticationBloc
   ) async {
     emit(AuthenticationLoading());
     try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('notifications');
       await authenticationRepository.logout();
       emit(Unauthenticated());
     } catch (e) {
