@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/app.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
 import 'package:fundflow/features/home/models/category.dart';
@@ -15,10 +16,12 @@ class NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isExpense = transaction.type == 'expense';
+    bool isUnread = !transaction.isRead;
+    logger.d('Building NotificationCard: isRead = ${transaction.isRead}');
 
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
-        String categoryName = 'Undefined';
+        String categoryName = 'ไม่มีหมวดหมู่';
         Color categoryColor = Colors.grey;
 
         if (transaction.categoryId != -1 && state is CategoriesLoaded) {
@@ -26,7 +29,7 @@ class NotificationCard extends StatelessWidget {
             (cat) => cat.id == transaction.categoryId,
             orElse: () => Category(
               id: -1,
-              name: 'No Category',
+              name: 'ไม่มีหมวดหมู่',
               amount: 0.0,
               color: Colors.grey,
             ),
@@ -38,7 +41,7 @@ class NotificationCard extends StatelessWidget {
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isUnread ? Colors.blue[50] : Colors.white,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -72,11 +75,12 @@ class NotificationCard extends StatelessWidget {
                       Text(
                         transaction.memo != null && transaction.memo!.isNotEmpty
                             ? transaction.memo!
-                            : categoryName,
-                        style: const TextStyle(
+                            : 'No Memo',
+                        style: TextStyle(
                           fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF414141),
+                          fontWeight:
+                              isUnread ? FontWeight.bold : FontWeight.normal,
+                          color: const Color(0xFF414141),
                         ),
                       ),
                       Text(
@@ -96,14 +100,15 @@ class NotificationCard extends StatelessWidget {
                   children: [
                     Text(
                       '฿ ${transaction.amount.toString()}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF414141),
+                        fontWeight:
+                            isUnread ? FontWeight.bold : FontWeight.normal,
+                        color: const Color(0xFF414141),
                       ),
                     ),
                     Text(
-                      transaction.date ?? '',
+                      transaction.date ?? 'ไม่มีวันที่',
                       style: const TextStyle(
                         fontSize: 12,
                         color: Color(0xFF5A5A5A),
