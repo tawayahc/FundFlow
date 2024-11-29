@@ -27,3 +27,21 @@ class RemoveNotification extends NotificationEvent {
   @override
   List<Object?> get props => [transaction];
 }
+
+class DismissNotification extends NotificationEvent {
+  final TransactionResponse transaction;
+
+  const DismissNotification({required this.transaction});
+
+  @override
+  List<Object?> get props => [transaction];
+}
+
+class MarkNotificationAsRead extends NotificationEvent {
+  final TransactionResponse transaction;
+
+  const MarkNotificationAsRead({required this.transaction});
+
+  @override
+  List<Object?> get props => [transaction];
+}

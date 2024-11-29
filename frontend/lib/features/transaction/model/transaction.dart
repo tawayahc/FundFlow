@@ -18,6 +18,8 @@ class TransactionResponse {
   List<Bank>? possibleBanks;
   List<Category>? possibleCategories;
 
+  bool isRead;
+
   TransactionResponse({
     required this.metadata,
     required this.bank,
@@ -29,6 +31,7 @@ class TransactionResponse {
     this.memo,
     this.possibleBanks,
     this.possibleCategories,
+    this.isRead = false,
   });
 
   factory TransactionResponse.fromJson(Map<String, dynamic> json) {
@@ -41,6 +44,7 @@ class TransactionResponse {
       date: json['date'] as String?, // Allow null
       time: json['time'] as String?, // Allow null
       memo: json['memo'] as String?, // Allow null
+      isRead: json['is_read'] as bool? ?? false,
     );
   }
 
@@ -54,6 +58,7 @@ class TransactionResponse {
       'date': date,
       'time': time,
       'memo': memo,
+      'is_read': isRead,
     };
   }
 

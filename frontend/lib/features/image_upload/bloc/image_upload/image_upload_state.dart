@@ -14,12 +14,21 @@ class ImageLoadSuccess extends ImageState {
 }
 
 class ImageSendSuccess extends ImageState {
-  final List<TransactionResponse> transactions;
+  final List<TransactionResponse> allTransactions;
+  final List<TransactionResponse> successful;
+  final List<TransactionResponse> failed;
+  final List<TransactionResponse> notifications;
 
-  ImageSendSuccess({required this.transactions});
+  ImageSendSuccess({
+    required this.allTransactions,
+    required this.successful,
+    required this.failed,
+    required this.notifications,
+  });
 
   @override
-  List<Object?> get props => [transactions];
+  List<Object?> get props =>
+      [allTransactions, successful, failed, notifications];
 }
 
 class ImageOperationFailure extends ImageState {

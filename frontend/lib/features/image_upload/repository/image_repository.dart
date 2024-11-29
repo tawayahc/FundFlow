@@ -1,5 +1,6 @@
 // image_repository.dart
 import 'package:archive/archive_io.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/transaction/model/transaction.dart';
 import 'package:fundflow/utils/api_helper.dart';
@@ -15,7 +16,8 @@ class ImageRepository {
   // Note: URL for the AI server
   ImageRepository()
       : _picker = ImagePicker(),
-        _apiHelper = ApiHelper(baseUrl: 'http://10.0.2.2:3000/');
+        _apiHelper =
+            ApiHelper(baseUrl: dotenv.env['AI_URL'] ?? 'http://10.0.2.2:3000/');
 
   Future<List<XFile>?> pickImages() async {
     try {

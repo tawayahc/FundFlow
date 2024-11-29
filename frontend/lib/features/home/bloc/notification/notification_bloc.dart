@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/app.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
 import 'package:fundflow/features/transaction/model/create_transaction_request_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +18,8 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     on<LoadNotifications>(_onLoadNotifications);
     on<UpdateNotification>(_onUpdateNotification);
     on<RemoveNotification>(_onRemoveNotification);
+    on<DismissNotification>(_onDismissNotification);
+    on<MarkNotificationAsRead>(_onMarkNotificationAsRead);
   }
 
   Future<void> _onLoadNotifications(
@@ -96,6 +99,54 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     }
   }
 
+  Future<void> _onDismissNotification(
+      DismissNotification event, Emitter<NotificationState> emit) async {
+    if (state is NotificationsLoaded) {
+      final notifications = List<TransactionResponse>.from(
+          (state as NotificationsLoaded).notifications);
+
+      notifications.removeWhere(
+          (transaction) => transaction.metadata == event.transaction.metadata);
+
+      // Save updated notifications back to local storage
+      await _saveNotificationsToLocalStorage(notifications);
+
+      emit(NotificationsLoaded(notifications: notifications));
+    }
+  }
+
+  Future<void> _onMarkNotificationAsRead(
+      MarkNotificationAsRead event, Emitter<NotificationState> emit) async {
+    logger.d(
+        'Handling MarkNotificationAsRead for metadata: ${event.transaction.metadata}');
+    if (state is NotificationsLoaded) {
+      final notifications = List<TransactionResponse>.from(
+          (state as NotificationsLoaded).notifications);
+
+      final index = notifications.indexWhere(
+          (transaction) => transaction.metadata == event.transaction.metadata);
+
+      if (index != -1) {
+        notifications[index].isRead = true;
+        logger
+            .d('Notification marked as read: ${notifications[index].metadata}');
+
+        // Save updated notifications back to local storage
+        await _saveNotificationsToLocalStorage(notifications);
+
+        emit(NotificationsLoaded(notifications: notifications));
+        logger
+            .d('Emitted NotificationsLoaded state with updated notifications.');
+      } else {
+        logger.e(
+            'No matching notification found for metadata: ${event.transaction.metadata}');
+      }
+    } else {
+      logger
+          .e('Current state is not NotificationsLoaded. Current state: $state');
+    }
+  }
+
   Future<void> _saveNotificationsToLocalStorage(
       List<TransactionResponse> notifications) async {
     final prefs = await SharedPreferences.getInstance();
@@ -105,12 +156,12 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
     await prefs.setStringList('notifications', notificationsJson);
   }
-}
 
-int _getBankIdByName(String bankName, List<Bank> userBanks) {
-  final bank = userBanks.firstWhere(
-    (bank) => bank.bankName.toLowerCase() == bankName.toLowerCase(),
-    orElse: () => throw Exception('Bank not found: $bankName'),
-  );
-  return bank.id;
+  int _getBankIdByName(String bankName, List<Bank> userBanks) {
+    final bank = userBanks.firstWhere(
+      (bank) => bank.bankName.toLowerCase() == bankName.toLowerCase(),
+      orElse: () => throw Exception('Bank not found: $bankName'),
+    );
+    return bank.id;
+  }
 }
