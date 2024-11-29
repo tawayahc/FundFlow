@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 
 // Updated CustomTextInput Widget
 class TextInput extends StatefulWidget {
@@ -22,8 +23,8 @@ class TextInput extends StatefulWidget {
 }
 
 class _CustomTextInputState extends State<TextInput> {
-  Color iconColor = const Color(0xFFD0D0D0);
-  Color textColor = const Color(0xFFD0D0D0);
+  Color iconColor = AppColors.icon;
+  Color textColor = AppColors.icon;
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +36,15 @@ class _CustomTextInputState extends State<TextInput> {
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF414141),
+            color: AppColors.darkGrey,
           ),
         ),
         const SizedBox(height: 10),
         Focus(
           onFocusChange: (hasFocus) {
             setState(() {
-              iconColor =
-                  hasFocus ? const Color(0xFF41486D) : const Color(0xFFD0D0D0);
-              textColor =
-                  hasFocus ? const Color(0xFF414141) : const Color(0xFFD0D0D0);
+              iconColor = hasFocus ? AppColors.darkBlue : AppColors.icon;
+              textColor = hasFocus ? AppColors.darkGrey : AppColors.icon;
             });
           },
           child: TextField(
@@ -53,14 +52,14 @@ class _CustomTextInputState extends State<TextInput> {
             style: TextStyle(color: textColor),
             decoration: InputDecoration(
               hintText: widget.hintText,
-              hintStyle: const TextStyle(color: Color(0xFFD0D0D0)),
+              hintStyle: const TextStyle(color: AppColors.icon),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
-                borderSide: const BorderSide(color: Color(0xFFD0D0D0)),
+                borderSide: const BorderSide(color: AppColors.icon),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
-                borderSide: const BorderSide(color: Color(0xFF41486D)),
+                borderSide: const BorderSide(color: AppColors.darkBlue),
               ),
               prefixIcon: Icon(
                 widget.icon, // This should use widget.icon

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
@@ -55,7 +56,7 @@ class _AddBankPageState extends State<AddBankPage> {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF414141),
+              color: AppColors.darkGrey,
             ),
           ),
         ),
@@ -118,7 +119,7 @@ class _AddBankPageState extends State<AddBankPage> {
                               border: Border.all(
                                 width: 2,
                                 color: selectedBank == bankName
-                                    ? Color(0xFF41486D)
+                                    ? AppColors.darkBlue
                                     : Colors.transparent,
                               ),
                             ),

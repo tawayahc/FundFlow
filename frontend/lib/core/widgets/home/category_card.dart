@@ -62,7 +62,7 @@ class CategoryCard extends StatelessWidget {
                   style: TextStyle(
                       fontSize: fontSize,
                       fontWeight: FontWeight.normal,
-                      color: const Color(0xFF414141)),
+                      color: AppColors.darkGrey),
                 ),
                 Text(
                   '฿ ${formatter.format(category.amount)}', // No formatter needed

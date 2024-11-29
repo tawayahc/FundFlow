@@ -4,7 +4,7 @@ import 'package:fundflow/core/widgets/home/bank_card.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
 import 'package:fundflow/features/home/models/bank.dart';
-import 'package:fundflow/features/manageBankAccount/ui/bank_account_page.dart';
+import 'package:fundflow/features/home/pages/bank/bank_account_page.dart';
 
 class BankSection extends StatelessWidget {
   const BankSection({super.key});

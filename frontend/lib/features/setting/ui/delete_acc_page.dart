@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/app.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/setting/bloc/delete_account/delete_account_bloc.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
@@ -19,7 +19,7 @@ class DeleteAccountPage extends StatelessWidget {
             appBar: AppBar(
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios),
-                color: Color(0xFF414141),
+                color: AppColors.darkGrey,
                 onPressed: () {
                   Navigator.pop(context); // กลับไปหน้าก่อนหน้า (SettingsPage)
                 },
@@ -30,7 +30,7 @@ class DeleteAccountPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF414141),
+                  color: AppColors.darkGrey,
                 ),
               ),
             ),
@@ -49,7 +49,6 @@ class DeleteAccountForm extends StatefulWidget {
 
 class _DeleteAccountFormState extends State<DeleteAccountForm> {
   bool _isOldPasswordVisible = false; // สำหรับจัดการการแสดงรหัสผ่านเดิม
-  final bool _isNewPasswordVisible = false; // สำหรับจัดการการแสดงรหัสผ่านใหม่
   final FocusNode _oldPasswordFocusNode = FocusNode(); // สำหรับการจัดการ focus
   final FocusNode _newPasswordFocusNode = FocusNode(); // สำหรับการจัดการ focus
 
@@ -68,7 +67,7 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
         listener: (context, state) {
           if (state is DeleteAccountSuccess) {
             ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('Account deleted')));
+                .showSnackBar(const SnackBar(content: Text('Account deleted')));
             Navigator.pushNamedAndRemoveUntil(
                 context, '/login', (route) => false);
           } else if (state is DeleteAccountFailure) {
@@ -87,7 +86,7 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF414141)),
+                    color: AppColors.darkGrey),
               ),
               const SizedBox(height: 20),
               // รหัสผ่านเดิม
@@ -99,7 +98,7 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
                   labelText: 'รหัสผ่าน',
                   prefixIcon: const Icon(
                     Icons.lock_outline,
-                    color: Color(0xFFD0D0D0),
+                    color: AppColors.icon,
                   ),
                   suffixIcon: _oldPasswordFocusNode
                           .hasFocus // ตรวจสอบว่ามีโฟกัสอยู่หรือไม่
@@ -109,9 +108,8 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
                                 ? Icons.visibility
                                 : Icons.visibility_off,
                             color: _isOldPasswordVisible
-                                ? const Color(0xFF41486D) // สีเมื่อแสดงรหัสผ่าน
-                                : const Color(
-                                    0xFFD0D0D0), // สีเมื่อซ่อนรหัสผ่าน
+                                ? AppColors.darkBlue // สีเมื่อแสดงรหัสผ่าน
+                                : AppColors.icon, // สีเมื่อซ่อนรหัสผ่าน
                           ),
                           onPressed: () {
                             setState(() {
@@ -127,13 +125,13 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: const BorderSide(
-                      color: Color(0xFFD0D0D0),
+                      color: AppColors.icon,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: const BorderSide(
-                      color: Color(0xFF41486D),
+                      color: AppColors.darkBlue,
                       width: 2.0,
                     ),
                   ),

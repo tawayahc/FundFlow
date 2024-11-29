@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
-import 'package:fundflow/core/widgets/global_padding.dart';
-import 'package:flutter/src/widgets/editable_text.dart';
 import 'package:intl/intl.dart';
 
 class IncomeCard extends StatefulWidget {
@@ -86,9 +83,8 @@ class _IncomeCardState extends State<IncomeCard> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
-                  color: widget.selectedBank != null
-                      ? Colors.white
-                      : Colors.black,
+                  color:
+                      widget.selectedBank != null ? Colors.white : Colors.black,
                 ),
               ),
               Text(
@@ -96,9 +92,8 @@ class _IncomeCardState extends State<IncomeCard> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: widget.selectedBank != null
-                      ? Colors.white
-                      : Colors.black,
+                  color:
+                      widget.selectedBank != null ? Colors.white : Colors.black,
                 ),
               ),
             ],
@@ -111,18 +106,16 @@ class _IncomeCardState extends State<IncomeCard> {
                 _noteText,
                 style: TextStyle(
                   fontSize: 10,
-                  color: widget.selectedBank != null
-                      ? Colors.white
-                      : Colors.black,
+                  color:
+                      widget.selectedBank != null ? Colors.white : Colors.black,
                 ),
               ),
               Text(
                 _formatTime(widget.selectedTime),
                 style: TextStyle(
                   fontSize: 10,
-                  color: widget.selectedBank != null
-                      ? Colors.white
-                      : Colors.black,
+                  color:
+                      widget.selectedBank != null ? Colors.white : Colors.black,
                 ),
               ),
             ],

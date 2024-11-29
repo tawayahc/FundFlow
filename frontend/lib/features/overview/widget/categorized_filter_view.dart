@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/features/overview/bloc/categorized/categorized_bloc.dart';
 import 'package:fundflow/features/overview/bloc/categorized/categorized_event.dart';
 import 'package:fundflow/features/overview/widget/date_range.dart';
@@ -50,14 +51,13 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
     );
 
     if (picked != null && picked != selectedDateRange) {
-        setState(() {
-            selectedDateRange = picked;
-            _selectedDateRange =
-                '${picked.start.toLocal().toShortDateString()} - ${picked.end.toLocal().toShortDateString()}';
-          });
+      setState(() {
+        selectedDateRange = picked;
+        _selectedDateRange =
+            '${picked.start.toLocal().toShortDateString()} - ${picked.end.toLocal().toShortDateString()}';
+      });
       logger.d('Selected Date Range: ${picked.start} - ${picked.end}');
     }
-
   }
 
   void _applyFilters() {
@@ -79,7 +79,6 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
           endDate: endDate,
         ));
 
-
     logger.d(
         'Applying Filters - Category: $selectedCategory, Start: $startDate, End: $endDate');
   }
@@ -91,37 +90,6 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
       selectedDateRange = null;
     });
   }
-
-  /*void _applyFilters() {
-    final String? selectedCategory =
-        _categoryDropDownController.dropDownValue?.value as String?;
-    final DateTime? startDate = selectedDateRange?.start;
-    final DateTime? endDate = selectedDateRange?.end;
-
-    if (startDate == null || endDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a valid date range')),
-      );
-      return;
-    }
-
-    context.read<CategorizedBloc>().add(ApplyFiltersEvent(
-          categoryName: selectedCategory,
-          startDate: startDate,
-          endDate: endDate,
-        ));
-
-
-    logger.d(
-        'Applying Filters - Category: $selectedCategory, Start: $startDate, End: $endDate');
-  }
-
-  void _clearFilters() {
-    setState(() {
-      _categoryDropDownController.clearDropDown();
-      selectedDateRange = null;
-    });
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -150,11 +118,12 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
                           fontSize: 11,
                         ),
                         suffixIcon: Padding(
-                          padding: EdgeInsets.only(bottom: 4.0), 
+                          padding: EdgeInsets.only(bottom: 4.0),
                           child: Icon(Icons.arrow_drop_down),
                         ),
                         suffixIconColor: Colors.grey,
-                        contentPadding: EdgeInsets.only(left: 2, right: 2, top: 10, bottom: 10), 
+                        contentPadding: EdgeInsets.only(
+                            left: 2, right: 2, top: 10, bottom: 10),
                         isDense: true,
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
@@ -182,9 +151,10 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
                         const DropDownValueModel(name: 'All', value: "all"),
                         ...widget.categories
                             // Brute force method to exclude 'income' category from showing
-                            .where((category) => category.name.toLowerCase() != 'income')
+                            .where((category) =>
+                                category.name.toLowerCase() != 'income')
                             .map((category) => DropDownValueModel(
-                            name: category.name, value: category.name))
+                                name: category.name, value: category.name))
                             .toList(),
                       ],
                       onChanged: (val) {
@@ -192,13 +162,15 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
                       },
                     ),
                   ),
-                  SizedBox(height: 12,),
+                  const SizedBox(
+                    height: 12,
+                  ),
                   Container(
                     width: 143,
                     height: 30,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF41486d),
+                        backgroundColor: AppColors.primary,
                       ),
                       onPressed: _applyFilters,
                       child: const Text(
@@ -211,7 +183,6 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
                       ),
                     ),
                   )
-
                 ],
               ),
 
@@ -221,14 +192,14 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
                 children: [
                   const Text('ช่วงเวลา'),
                   GestureDetector(
-                    onTap: ()=>_selectDateRange(context),
+                    onTap: () => _selectDateRange(context),
                     child: Container(
                       width: 143,
                       height: 30,
                       //padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                      padding: EdgeInsets.only(
+                      padding: const EdgeInsets.only(
                           left: 2, right: 2, top: 10, bottom: 4),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         border: Border(
                             bottom: BorderSide(width: 1, color: Colors.grey)),
                         //borderRadius: BorderRadius.circular(8),
@@ -252,16 +223,18 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 12,),
+                  const SizedBox(
+                    height: 12,
+                  ),
                   Container(
                     width: 143,
                     height: 30,
                     child: OutlinedButton(
-                      onPressed:  _clearFilters,
+                      onPressed: _clearFilters,
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(
-                          color: Color(0xFF41486d), 
-                          width: 1.0, 
+                          color: AppColors.primary,
+                          width: 1.0,
                         ),
                       ),
                       child: const Text(
@@ -278,55 +251,7 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
             ],
           ),
         ),
-        // Buttons Row
-        /*Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              width: 143,
-              height: 30,
-              child: OutlinedButton(
-                onPressed: _applyFilters,
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Color(0xFF41486d), 
-                    width: 1.0, 
-                  ),
-                ),
-                child: const Text(
-                  'Apply Filters',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              width: 143,
-              height: 30,
-              child: OutlinedButton(
-                onPressed: _clearFilters,
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Color(0xFF41486d), 
-                    width: 1.0, 
-                  ),
-                ),
-                child: const Text(
-                  'Clear Filters',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            )
-          ],
-          
-        ),*/
       ],
     );
   }
 }
-

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_bloc.dart';
 import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_event.dart';
 import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_state.dart';
@@ -24,10 +25,6 @@ class ImageUploadPage extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Images sent successfully!')),
           );
-
-          // Optionally, navigate to another page or update UI with transaction data
-          // For example:
-          // Navigator.pushNamed(context, '/transactions', arguments: state.transactions);
         }
       },
       builder: (context, state) {
@@ -70,7 +67,7 @@ class ImageUploadPage extends StatelessWidget {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8.0),
                               border: Border.all(
-                                color: Color(0xFF41486d),
+                                color: AppColors.primary,
                                 width: 1,
                               )),
                           child: const Row(
@@ -78,13 +75,13 @@ class ImageUploadPage extends StatelessWidget {
                             children: [
                               Icon(
                                 Icons.upload_file,
-                                color: Color(0xFF41486d),
+                                color: AppColors.primary,
                               ),
                               SizedBox(width: 8.0),
                               Text(
                                 'เลือกรูปภาพ',
                                 style: TextStyle(
-                                    fontSize: 18.0, color: Color(0xFF41486d)),
+                                    fontSize: 18.0, color: AppColors.primary),
                               ),
                             ],
                           ),
@@ -143,8 +140,7 @@ class ImageUploadPage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
-                    backgroundColor:
-                        const Color(0xFF41486D), // ปุ่มสีน้ำเงินเข้ม
+                    backgroundColor: AppColors.darkBlue, // ปุ่มสีน้ำเงินเข้ม
                   ),
                   onPressed: (images.isEmpty || isLoading)
                       ? null

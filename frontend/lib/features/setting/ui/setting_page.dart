@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
-import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/auth/bloc/auth_bloc.dart';
 import 'package:fundflow/features/auth/bloc/auth_event.dart';
-import 'package:fundflow/features/home/pages/home_page.dart';
 import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/widgets/avatar_selection_modal.dart';
 
@@ -34,7 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
-            color: const Color(0xFF414141),
+            color: AppColors.darkGrey,
             onPressed: () {
               widget.pageController.jumpToPage(0);
             },
@@ -45,7 +44,7 @@ class _SettingsPageState extends State<SettingsPage> {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF414141),
+              color: AppColors.darkGrey,
             ),
           ),
         ),
@@ -94,7 +93,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w700,
-                                  color: Color(0xFF414141),
+                                  color: AppColors.darkGrey,
                                 ),
                               ),
                             ],
@@ -110,13 +109,13 @@ class _SettingsPageState extends State<SettingsPage> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF414141),
+                        color: AppColors.darkGrey,
                       ),
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: const Icon(Icons.email_outlined,
-                          color: Color(0xFF5A5A5A)),
+                          color: AppColors.lightBlack),
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -124,14 +123,14 @@ class _SettingsPageState extends State<SettingsPage> {
                             'อีเมล',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Color(0xFF5A5A5A),
+                              color: AppColors.lightBlack,
                             ),
                           ),
                           Text(
                             user.email,
                             style: const TextStyle(
                               fontSize: 16,
-                              color: Color(0xFF41486D),
+                              color: AppColors.darkBlue,
                             ),
                           ),
                         ],
@@ -144,12 +143,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: const Icon(Icons.lock_outline,
-                          color: Color(0xFF5A5A5A)),
+                          color: AppColors.lightBlack),
                       title: const Text(
                         'เปลี่ยนรหัสผ่าน',
                         style: TextStyle(
                           fontSize: 16,
-                          color: Color(0xFF5A5A5A), // สีดำสำหรับ "อีเมล"
+                          color: AppColors.lightBlack, // สีดำสำหรับ "อีเมล"
                         ),
                       ),
                       onTap: () {
@@ -160,12 +159,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: const Icon(Icons.delete_outline,
-                          color: Color(0xFF5A5A5A)),
+                          color: AppColors.lightBlack),
                       title: const Text(
                         'ลบบัญชี FundFlow',
                         style: TextStyle(
                           fontSize: 16,
-                          color: Color(0xFF5A5A5A), // สีดำสำหรับ "อีเมล"
+                          color: AppColors.lightBlack, // สีดำสำหรับ "อีเมล"
                         ),
                       ),
                       onTap: () {
@@ -177,12 +176,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading:
-                          const Icon(Icons.logout, color: Color(0xFF5A5A5A)),
+                          const Icon(Icons.logout, color: AppColors.lightBlack),
                       title: const Text(
                         'ออกจากระบบ',
                         style: TextStyle(
                           fontSize: 16,
-                          color: Color(0xFF5A5A5A), // สีดำสำหรับ "อีเมล"
+                          color: AppColors.lightBlack, // สีดำสำหรับ "อีเมล"
                         ),
                       ),
                       onTap: () {
@@ -196,7 +195,7 @@ class _SettingsPageState extends State<SettingsPage> {
               } else if (state is UserProfileError) {
                 return Center(child: Text('Error: ${state.error}'));
               } else {
-                return Center(child: Text('Error: Unknown state'));
+                return const Center(child: const Text('Error: Unknown state'));
               }
             },
           ),
@@ -212,7 +211,7 @@ class _SettingsPageState extends State<SettingsPage> {
       builder: (BuildContext modalContext) {
         return BlocProvider.value(
           value: changeAvatarBloc,
-          child: AvatarSelectionModal(),
+          child: const AvatarSelectionModal(),
         );
       },
     );

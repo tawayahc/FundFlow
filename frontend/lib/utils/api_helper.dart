@@ -6,14 +6,6 @@ class ApiHelper {
   final Dio dio;
   final FlutterSecureStorage storage = const FlutterSecureStorage();
 
-  // // Singleton pattern (optional, based on your app's needs)
-  // static ApiHelper? _instance;
-
-  // factory ApiHelper({required String baseUrl}) {
-  //   _instance ??= ApiHelper._internal(baseUrl);
-  //   return _instance!;
-  // }
-
   ApiHelper({required String baseUrl})
       : dio = Dio(BaseOptions(
           baseUrl: baseUrl,
@@ -58,6 +50,4 @@ class ApiHelper {
       },
     ));
   }
-
-  // Optional: Add methods for specific API needs, e.g., upload, download, etc.
 }

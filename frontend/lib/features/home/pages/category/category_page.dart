@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/home/category_balance_box.dart';
 import 'package:fundflow/core/widgets/management/transaction_card_for_category.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
 import 'package:fundflow/features/home/models/category.dart' as categories;
-import '../../home/bloc/transaction/transaction_bloc.dart';
-import '../../home/bloc/transaction/transaction_state.dart';
-import '../../home/models/transaction.dart';
-import '../../home/pages/category/edit_category_page.dart';
-import '../../../core/widgets/management/delete_transaction_page.dart';
+import '../../bloc/transaction/transaction_bloc.dart';
+import '../../bloc/transaction/transaction_state.dart';
+import '../../models/transaction.dart';
+import 'edit_category_page.dart';
+import '../../../../core/widgets/management/delete_transaction_page.dart';
 
 class CategoryPage extends StatefulWidget {
   final categories.Category category;
@@ -48,7 +49,7 @@ class _CategoryPageState extends State<CategoryPage>
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios),
               iconSize: 20,
-              color: const Color(0xFF414141),
+              color: AppColors.darkGrey,
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
@@ -61,7 +62,7 @@ class _CategoryPageState extends State<CategoryPage>
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF414141),
+                color: AppColors.darkGrey,
               ),
             ),
             centerTitle: true,
@@ -139,24 +140,24 @@ class _CategoryPageState extends State<CategoryPage>
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 45.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'ประวัติการทำรายการ',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF414141),
+                    color: AppColors.darkGrey,
                   ),
                 ),
-                Row( 
+                Row(
                   children: [
                     Icon(
-                      Icons.info_outline, 
+                      Icons.info_outline,
                       size: 16,
                       color: Color(0xFFB2B2B2),
                     ),
-                    SizedBox(width: 4), 
+                    SizedBox(width: 4),
                     Text(
                       'แตะที่รายการเพื่อลบ',
                       style: TextStyle(
@@ -188,80 +189,85 @@ class _CategoryPageState extends State<CategoryPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-            Expanded(
-              child: BlocBuilder<TransactionBloc, TransactionState>(
-                builder: (context, transactionState) {
-                  if (transactionState is TransactionsLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (transactionState is TransactionsLoaded) {
-                    final categoryTransactions = transactionState
-                        .transactions
-                        .where((transaction) =>
-                            transaction.categoryId == widget.category.id &&
-                            transaction.type == 'expense')
-                        .toList();
+                  Expanded(
+                    child: BlocBuilder<TransactionBloc, TransactionState>(
+                      builder: (context, transactionState) {
+                        if (transactionState is TransactionsLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (transactionState is TransactionsLoaded) {
+                          final categoryTransactions = transactionState
+                              .transactions
+                              .where((transaction) =>
+                                  transaction.categoryId ==
+                                      widget.category.id &&
+                                  transaction.type == 'expense')
+                              .toList();
 
-                    if (categoryTransactions.isEmpty) {
-                      return const Center(
-                        child: Text('ไม่มีรายการสำหรับหมวดหมู่นี้'),
-                      );
-                    }
+                          if (categoryTransactions.isEmpty) {
+                            return const Center(
+                              child: Text('ไม่มีรายการสำหรับหมวดหมู่นี้'),
+                            );
+                          }
 
-                    final sortedTransactions = List.from(categoryTransactions)
-                      ..sort((a, b) => DateTime.parse(b.createdAt)
-                          .compareTo(DateTime.parse(a.createdAt)));
+                          final sortedTransactions =
+                              List.from(categoryTransactions)
+                                ..sort((a, b) => DateTime.parse(b.createdAt)
+                                    .compareTo(DateTime.parse(a.createdAt)));
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 12),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 45.0),
-                          child: Text(
-                            'รายจ่าย',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF414141),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8.0), 
-                        Expanded(
-                          child: ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                            itemCount: sortedTransactions.length,
-                            itemBuilder: (context, index) {
-                              final transaction = sortedTransactions[index];
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _showDeleteTransactionModal(context, transaction);
-                                  },
-                                  child: TransactionCardForCategory(
-                                    transaction: transaction,
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 12),
+                              const Padding(
+                                padding: EdgeInsets.only(left: 45.0),
+                                child: Text(
+                                  'รายจ่าย',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.darkGrey,
                                   ),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                              const SizedBox(height: 8.0),
+                              Expanded(
+                                child: ListView.builder(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25.0),
+                                  itemCount: sortedTransactions.length,
+                                  itemBuilder: (context, index) {
+                                    final transaction =
+                                        sortedTransactions[index];
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          _showDeleteTransactionModal(
+                                              context, transaction);
+                                        },
+                                        child: TransactionCardForCategory(
+                                          transaction: transaction,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          );
+                        } else if (transactionState is TransactionsLoadError) {
+                          return Center(
+                            child: Text(transactionState.message),
+                          );
+                        } else {
+                          return const Center(child: Text('Unknown error'));
+                        }
+                      },
                     ),
-              ],
-            );
-          } else if (transactionState is TransactionsLoadError) {
-            return Center(
-              child: Text(transactionState.message),
-            );
-          } else {
-            return const Center(child: Text('Unknown error'));
-          }
-        },
-      ),
-    ),
-
+                  ),
                 ],
               ),
             ),

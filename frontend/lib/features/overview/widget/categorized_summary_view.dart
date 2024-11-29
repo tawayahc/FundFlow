@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/overview/summary_card.dart';
 import 'package:fundflow/features/overview/model/categorized_summary.dart';
 import 'package:fundflow/features/overview/model/category_model.dart';
-import 'package:fundflow/features/overview/ui_test/categorize_summary_screen.dart';
 import 'package:fundflow/features/overview/widget/pie_chart.dart';
 import 'package:fundflow/features/overview/widget/category_summary.dart';
 import 'categorized_filter_view.dart';
-import 'package:fl_chart/fl_chart.dart'; // Assuming you use fl_chart for charts
 
 class CategorizedSummaryView extends StatelessWidget {
   final List<CategoryModel> categories;
@@ -33,7 +31,9 @@ class CategorizedSummaryView extends StatelessWidget {
       child: Column(
         children: [
           // Chart Section
-          CategorizedPieChart(categorizedSummaries: categorizedSummaries, categories: categories),
+          CategorizedPieChart(
+              categorizedSummaries: categorizedSummaries,
+              categories: categories),
           const SizedBox(height: 10),
           // Summary Cards
           Padding(
@@ -62,23 +62,22 @@ class CategorizedSummaryView extends StatelessWidget {
 
           Container(
             decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 7,
-                    offset: Offset(0, 5),
-                  ),
-                ],
+              color: Colors.white,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 7,
+                  offset: Offset(0, 5),
+                ),
+              ],
+            ),
             child: Column(
               children: [
-                
                 // Filter View
                 CategorizedFilterView(
                   categories: categories,
@@ -90,7 +89,8 @@ class CategorizedSummaryView extends StatelessWidget {
                       ? ListView.builder(
                           itemCount: categorizedSummaries.length,
                           itemBuilder: (context, index) {
-                            final categoryKey = categorizedSummaries.keys.elementAt(index);
+                            final categoryKey =
+                                categorizedSummaries.keys.elementAt(index);
                             final summary = categorizedSummaries[categoryKey]!;
 
                             return CategorySummaryItem(
@@ -98,97 +98,21 @@ class CategorizedSummaryView extends StatelessWidget {
                               categoryColor: summary.categoryColor,
                               totalIn: summary.totalIncome,
                               totalOut: summary.totalExpense,
-                              balance: summary.totalIncome - summary.totalExpense,
+                              balance:
+                                  summary.totalIncome - summary.totalExpense,
                             );
-                            /*GestureDetector(
-                              onTap: () {
-                                // Navigate to detailed category screen
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CategorizedSummaryScreen(
-                                      categoryName: summary.category,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Card(
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 8.0),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                color: summary.categoryColor.withOpacity(0.1),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        summary.category,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: summary.categoryColor,
-                                        ),
-                                      ),
-                                      const Divider(),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Total Income",
-                                              style: TextStyle(
-                                                  color: summary.categoryColor)),
-                                          Text(summary.totalIncome.toStringAsFixed(2),
-                                              style: TextStyle(
-                                                  color: summary.categoryColor,
-                                                  fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Total Expense",
-                                              style: TextStyle(
-                                                  color: summary.categoryColor)),
-                                          Text(summary.totalExpense.toStringAsFixed(2),
-                                              style: TextStyle(
-                                                  color: summary.categoryColor,
-                                                  fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Net Total",
-                                              style: TextStyle(
-                                                  color: summary.categoryColor)),
-                                          Text(
-                                              (summary.totalIncome - summary.totalExpense)
-                                                  .toStringAsFixed(2),
-                                              style: TextStyle(
-                                                  color: summary.categoryColor,
-                                                  fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );*/
                           },
                         )
                       : const Center(
-                          child: Text('No categories found for the selected criteria.'),
+                          child: Text(
+                              'No categories found for the selected criteria.'),
                         ),
                 ),
               ],
             ),
           ),
-
-          
         ],
       ),
     );
   }
-
 }

@@ -5,8 +5,6 @@ import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/features/home/models/transaction.dart';
 import 'package:fundflow/utils/api_helper.dart';
 
-//http://localhost:8080/categories/all
-//localhost:8080/categories/create
 class CategoryRepository {
   final Dio dio;
 
@@ -20,8 +18,6 @@ class CategoryRepository {
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
 
-        // You can calculate 'cashBox' here if needed (if the logic for 'cashBox' is still valid)
-        // For example, you can calculate the sum of amounts of the categories if that makes sense:
         final cashBoxData =
             data.firstWhere((item) => item['id'] == 0, orElse: () => {});
         final categoriesData = data.where((item) => item['id'] != 0).toList();

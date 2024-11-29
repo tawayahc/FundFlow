@@ -6,7 +6,6 @@ import 'package:fundflow/app.dart';
 import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_event.dart';
 import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_state.dart';
 import 'package:fundflow/features/image_upload/repository/image_repository.dart';
-import 'package:fundflow/features/image_upload/repository/slip_repository.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
 import 'package:fundflow/features/transaction/model/create_transaction_request_model.dart';
 import 'package:fundflow/features/transaction/model/transaction.dart';

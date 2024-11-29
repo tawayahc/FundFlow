@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
-import 'package:fundflow/core/widgets/global_padding.dart';
-import 'package:flutter/src/widgets/editable_text.dart';
 import 'package:intl/intl.dart';
 
 class TransferCard extends StatefulWidget {
@@ -60,12 +57,6 @@ class _TransferCardState extends State<TransferCard> {
     });
   }
 
-  /*void _updateNoteText() {
-    setState(() {
-      _noteText = widget.note.text;
-    });
-  }*/
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -80,17 +71,6 @@ class _TransferCardState extends State<TransferCard> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          /*Text(
-            'ย้ายเงินไป',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: widget.fromBank != null
-              ? Colors.white
-              : Colors.black,
-            ),
-          ) ,
-          const SizedBox(height: 8),*/
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -100,10 +80,10 @@ class _TransferCardState extends State<TransferCard> {
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2), 
-                      spreadRadius: 2, 
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 2,
                       blurRadius: 5,
-                      offset: Offset(0, 0), 
+                      offset: Offset(0, 0),
                     ),
                   ],
                 ),
@@ -113,9 +93,9 @@ class _TransferCardState extends State<TransferCard> {
                     height: 51,
                     width: 51,
                     fit: BoxFit.fitWidth,
-                    ),
                   ),
-            ),
+                ),
+              ),
               Icon(Icons.arrow_forward),
               Container(
                 decoration: BoxDecoration(
@@ -123,10 +103,10 @@ class _TransferCardState extends State<TransferCard> {
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2), 
-                      spreadRadius: 2, 
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 2,
                       blurRadius: 5,
-                      offset: Offset(0, 0), 
+                      offset: Offset(0, 0),
                     ),
                   ],
                 ),
@@ -136,83 +116,11 @@ class _TransferCardState extends State<TransferCard> {
                     height: 51,
                     width: 51,
                     fit: BoxFit.fitWidth,
-                    ),
                   ),
-            ),
-              /*ClipOval(
-                child: Image.asset(
-                  widget.toBank?.image ?? 'lib/images/logo.png',
-                  height: 51,
-                  width: 51,
-                  fit: BoxFit.fitWidth,
-                )
-              ),*/
-              /*Text(
-                widget.selectedBank?.name ?? 'ธนาคาร',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  color: widget.selectedBank != null
-                      ? Colors.white
-                      : Colors.black,
                 ),
               ),
-              Text(
-                '฿ $_amountText',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: widget.selectedBank != null
-                      ? Colors.white
-                      : Colors.black,
-                ),
-              ),*/
             ],
           ),
-          /*const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'ย้ายเงินไป',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: widget.fromBank != null
-                      ? Colors.white
-                      : Colors.black,
-                ),
-              ),
-              Text(
-                '฿ $_amountText',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: widget.fromBank != null
-                      ? Colors.white
-                      : Colors.black,
-                ),
-              ),
-              /*Text(
-                _noteText,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: widget.selectedBank != null
-                      ? Colors.white
-                      : Colors.black,
-                ),
-              ),*/
-              /*Text(
-                _formatTime(widget.selectedTime),
-                style: TextStyle(
-                  fontSize: 10,
-                  color: widget.fromBank != null
-                      ? Colors.white
-                      : Colors.black,
-                ),
-              ),*/
-            ],
-          ),*/
         ],
       ),
     );

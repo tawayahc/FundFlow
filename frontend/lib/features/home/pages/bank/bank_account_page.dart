@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/home/bank_balance_box.dart';
 import 'package:fundflow/core/widgets/management/delete_transaction_page.dart';
 import 'package:fundflow/core/widgets/management/transaction_card.dart';
@@ -15,7 +16,7 @@ import 'package:fundflow/features/home/models/transaction.dart';
 import 'package:fundflow/features/home/pages/bank/edit_bank_page.dart';
 import 'package:fundflow/utils/bank_color_util.dart';
 import 'package:fundflow/utils/bank_logo_util.dart';
-import '../../home/models/bank.dart';
+import '../../models/bank.dart';
 
 class BankAccountPage extends StatefulWidget {
   final Bank bank;
@@ -61,7 +62,7 @@ class _BankAccountPageState extends State<BankAccountPage>
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
-          color: const Color(0xFF414141),
+          color: AppColors.darkGrey,
           onPressed: () => Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const BottomNavBar()),
@@ -72,7 +73,7 @@ class _BankAccountPageState extends State<BankAccountPage>
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF414141),
+            color: AppColors.darkGrey,
           ),
         ),
         centerTitle: true,
@@ -195,7 +196,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF414141),
+                    color: AppColors.darkGrey,
                   ),
                 ),
                 Row(
@@ -242,11 +243,11 @@ class _BankAccountPageState extends State<BankAccountPage>
                       controller: _tabController,
                       indicatorSize: TabBarIndicatorSize.tab,
                       indicator: BoxDecoration(
-                        color: const Color(0xFF41486D),
+                        color: AppColors.darkBlue,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       labelColor: Colors.white,
-                      unselectedLabelColor: const Color(0xFF41486D),
+                      unselectedLabelColor: AppColors.darkBlue,
                       tabs: const [
                         Tab(text: 'รายรับ'),
                         Tab(text: 'รายจ่าย'),

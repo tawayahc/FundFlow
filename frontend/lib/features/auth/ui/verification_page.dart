@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/features/auth/bloc/repassword/repassword_bloc.dart';
 import 'package:fundflow/features/auth/bloc/repassword/repassword_event.dart';
@@ -81,15 +82,15 @@ class _VerificationPageState extends State<VerificationPage> {
           contentPadding: const EdgeInsets.all(8),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Color(0xFFD0D0D0), width: 2),
+            borderSide: const BorderSide(color: AppColors.icon, width: 2),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Color(0xFFD0D0D0), width: 2),
+            borderSide: const BorderSide(color: AppColors.icon, width: 2),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Color(0xFF41486D), width: 3),
+            borderSide: const BorderSide(color: AppColors.darkBlue, width: 3),
           ),
         ),
         onChanged: (value) {
@@ -159,7 +160,7 @@ class _VerificationPageState extends State<VerificationPage> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF414141),
+                  color: AppColors.darkGrey,
                 ),
               ),
               const SizedBox(height: 12),
@@ -183,10 +184,10 @@ class _VerificationPageState extends State<VerificationPage> {
                     width: double.infinity,
                     child: Center(
                         child: isLoading
-                            ? SizedBox(
+                            ? const SizedBox(
                                 height: 20,
                                 width: 20,
-                                child: CircularProgressIndicator(
+                                child: const CircularProgressIndicator(
                                   color: Colors.white,
                                   strokeWidth: 2,
                                 ),

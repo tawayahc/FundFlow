@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_password_input_box.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
@@ -22,7 +23,7 @@ class ChangePasswordPage extends StatelessWidget {
               children: [
                 IconButton(
                   icon: const Icon(Icons.arrow_back_ios),
-                  color: Color(0xFF414141),
+                  color: AppColors.darkGrey,
                   iconSize: 20,
                   onPressed: () {
                     Navigator.pop(
@@ -37,7 +38,7 @@ class ChangePasswordPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF414141),
+                color: AppColors.darkGrey,
               ),
             ),
           ),
@@ -107,7 +108,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF414141)),
+                  color: AppColors.darkGrey),
             ),
             const SizedBox(height: 12),
             CustomPasswordInputBox(

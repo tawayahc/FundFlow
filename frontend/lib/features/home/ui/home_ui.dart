@@ -32,7 +32,7 @@ class HomeUI extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF414141)),
+                        color: AppColors.darkGrey),
                   ),
                   CustomTextButton(
                     text: 'เพิ่มบัญชีธนาคาร +',
@@ -55,7 +55,7 @@ class HomeUI extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF414141)),
+                        color: AppColors.darkGrey),
                   ),
                   CustomTextButton(
                     text: 'เพิ่มประเภทค่าใช้จ่าย +',

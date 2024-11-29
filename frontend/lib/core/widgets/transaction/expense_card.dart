@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/features/transaction/model/category_model.dart';
-import 'package:fundflow/core/widgets/global_padding.dart';
-import 'package:flutter/src/widgets/editable_text.dart';
 import 'package:intl/intl.dart';
 
 class ExpenseCard extends StatefulWidget {

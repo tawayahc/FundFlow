@@ -68,19 +68,6 @@ class TransactionAddRepository {
     }
   }
 
-  // Future<List<TransactionAllModel>> fetchTransactions() async {
-  //   try {
-  //     final response = await dio.get('/transactions/all');
-  //     logger.d('API Response: ${response.data}');
-  //     final List<dynamic> data = response.data;
-  //     return data
-  //         .map((transaction) => TransactionAllModel.fromJson(transaction))
-  //         .toList();
-  //   } catch (e) {
-  //     logger.e('Failed to load transactions: $e');
-  //     throw Exception('Failed to load transactions: $e');
-  //   }
-  // }
   Future<List<TransactionAllModel>> fetchOnlyExpense() async {
     try {
       // Fetch transactions
@@ -113,8 +100,6 @@ class TransactionAddRepository {
     }
   }
 
-  /// Fetches all transactions and combines them with category details,
-  /// skipping transactions with categoryId 0 (Uncategorized) or missing categories.
   Future<List<TransactionAllModel>> fetchCombinedTransactions() async {
     try {
       // Fetch transactions
@@ -222,8 +207,8 @@ class TransactionAddRepository {
       if (startDate != null && endDate != null) {
         filtered = filtered
             .where((tx) =>
-        tx.createdAt
-            .isAfter(startDate.subtract(const Duration(seconds: 1))) &&
+                tx.createdAt
+                    .isAfter(startDate.subtract(const Duration(seconds: 1))) &&
                 tx.createdAt.isBefore(endDate.add(const Duration(days: 1))))
             .toList();
       }
@@ -247,21 +232,19 @@ class TransactionAddRepository {
       List<TransactionAllModel> expenseFiltered = allTransactions;
       if (expenseType != null && expenseType == "income") {
         expenseFiltered = expenseFiltered
-            .where((tx) =>
-        tx.type.toLowerCase() == expenseType.toLowerCase())
+            .where((tx) => tx.type.toLowerCase() == expenseType.toLowerCase())
             .toList();
       } else if (expenseType != null && expenseType == "expense") {
         expenseFiltered = expenseFiltered
-            .where((tx) =>
-        tx.type.toLowerCase() == expenseType.toLowerCase())
+            .where((tx) => tx.type.toLowerCase() == expenseType.toLowerCase())
             .toList();
       }
 
       if (startDate != null && endDate != null) {
         expenseFiltered = expenseFiltered
             .where((tx) =>
-        tx.createdAt
-            .isAfter(startDate.subtract(const Duration(seconds: 1))) &&
+                tx.createdAt
+                    .isAfter(startDate.subtract(const Duration(seconds: 1))) &&
                 tx.createdAt.isBefore(endDate.add(const Duration(days: 1))))
             .toList();
       }

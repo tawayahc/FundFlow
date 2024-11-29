@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_tab.dart';
-import 'package:fundflow/core/widgets/global_padding.dart';
-import 'package:fundflow/features/home/models/transaction.dart';
 import 'package:fundflow/features/overview/bloc/overview/overview_bloc.dart';
 import 'package:fundflow/features/overview/bloc/overview/overview_event.dart';
 import 'package:fundflow/features/overview/ui_test/tab_categorized.dart';
@@ -53,10 +51,8 @@ class OverviewPageState extends State<OverviewPage>
       appBar: AppBar(
         title: const Text(
           'สรุปรายรับรายจ่าย',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold
-          ),),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: NestedScrollView(

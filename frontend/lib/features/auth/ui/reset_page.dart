@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_password_input_box.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
@@ -74,7 +75,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF5A5A5A)),
+                        color: AppColors.lightBlack),
                   ),
                   const SizedBox(height: 12),
                   CustomPasswordInputBox(

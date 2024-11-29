@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fundflow/app.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_input_box.dart';
 import 'package:fundflow/core/widgets/custom_password_input_box.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
@@ -89,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text(
                       'เข้าสู่ระบบ',
                       style: TextStyle(
-                        color: Color(0xFF41486D),
+                        color: AppColors.darkBlue,
                         fontSize: 34,
                         fontWeight: FontWeight.bold,
                       ),
@@ -105,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                           labelText: 'ชื่อบัญชีผู้ใช้',
                           prefixIcon: const Icon(
                             Icons.person,
-                            color: Color(0xFFD0D0D0),
+                            color: AppColors.icon,
                           ),
                           controller: _usernameController,
                           validator: (value) {
@@ -177,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                             const Text(
                               'มีบัญชีแล้วหรือยัง?',
                               style: TextStyle(
-                                color: Color(0xFF5A5A5A),
+                                color: AppColors.lightBlack,
                                 fontSize: 12,
                               ),
                             ),

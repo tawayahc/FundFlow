@@ -1,9 +1,7 @@
 // ui/transaction_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fundflow/app.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
-import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/image_upload/ui/image_upload_page.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
 import 'package:fundflow/features/transaction/model/category_model.dart';
@@ -203,7 +201,7 @@ class _TransactionPageState extends State<TransactionPage>
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          backgroundColor: const Color(0xFF41486D),
+                          backgroundColor: AppColors.darkBlue,
                         ),
                         child: const Text(
                           'เพิ่มธนาคาร',
@@ -340,7 +338,7 @@ class _TransactionPageState extends State<TransactionPage>
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       InkWell(
@@ -348,12 +346,13 @@ class _TransactionPageState extends State<TransactionPage>
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ImageUploadPage()));
+                                  builder: (context) =>
+                                      const ImageUploadPage()));
                         },
                         child: Container(
                           padding: const EdgeInsets.all(16.0),
                           decoration: BoxDecoration(
-                            color: Color(0xFF41486d),
+                            color: AppColors.primary,
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: const Row(
@@ -376,31 +375,9 @@ class _TransactionPageState extends State<TransactionPage>
                       const SizedBox(
                         height: 22,
                       ),
-                      Divider(
-                        color: const Color.fromARGB(255, 199, 198, 198),
+                      const Divider(
+                        color: Color.fromARGB(255, 199, 198, 198),
                       ),
-                      /*Row(
-                        children: [
-                          ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            ImageUploadPage()));
-                              },
-                              child: Text('image')),
-                          //FIX: Remove the gallery button
-                          // ElevatedButton(
-                          //     onPressed: () {
-                          //       Navigator.push(
-                          //           context,
-                          //           MaterialPageRoute(
-                          //               builder: (context) => GalleryPage()));
-                          //     },
-                          //     child: Text('gallery')),
-                        ],
-                      ),*/
                       ExpenseForm(
                         key: ValueKey(_banks.toString() +
                             _categories.toString()), // Unique Key

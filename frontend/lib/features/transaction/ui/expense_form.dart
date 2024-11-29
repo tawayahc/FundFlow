@@ -224,7 +224,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
               labelText: 'ระบุจำนวนเงิน',
               prefixIcon: const Icon(
                 Icons.account_balance_wallet,
-                color: Color(0xFFD0D0D0),
+                color: AppColors.icon,
               ),
               controller: _amountController,
               keyboardType:
@@ -290,7 +290,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 labelText: 'โน้ต',
                 prefixIcon: const Icon(
                   Icons.note,
-                  color: Color(0xFFD0D0D0),
+                  color: AppColors.icon,
                 ),
                 controller: _noteController),
             const SizedBox(height: 16),

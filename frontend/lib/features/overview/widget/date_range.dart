@@ -13,8 +13,6 @@ class DateRangeDropdown extends StatefulWidget {
 class _DateRangeDropdownState extends State<DateRangeDropdown> {
   String? _selectedDateRange;
 
-  
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -35,14 +33,9 @@ class _DateRangeDropdownState extends State<DateRangeDropdown> {
       child: Container(
         width: 143,
         height: 30,
-        //padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        padding: EdgeInsets.only(left: 2, right: 2, top: 10, bottom: 4),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              width: 1,
-              color: Colors.grey)
-          ),
+        padding: const EdgeInsets.only(left: 2, right: 2, top: 10, bottom: 4),
+        decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(width: 1, color: Colors.grey)),
           //borderRadius: BorderRadius.circular(8),
           color: Colors.white,
         ),
@@ -56,11 +49,7 @@ class _DateRangeDropdownState extends State<DateRangeDropdown> {
                 color: _selectedDateRange == null ? Colors.grey : Colors.black,
               ),
             ),
-            const Icon(
-              Icons.calendar_today,
-              color: Colors.grey,
-              size: 15
-            ),
+            const Icon(Icons.calendar_today, color: Colors.grey, size: 15),
           ],
         ),
       ),

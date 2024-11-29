@@ -1,9 +1,8 @@
-// features/overview/ui/monthly_summary_view.dart
 import 'package:flutter/material.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/features/overview/widget/routine_summary_item.dart';
-//import 'package:fundflow/features/overview/widget/expense_type_dropdown.dart';
 import 'package:fundflow/features/overview/widget/date_range.dart';
 import '../../../app.dart';
 import '../bloc/overview/overview_bloc.dart';
@@ -50,10 +49,10 @@ class _MonthlySummaryViewState extends State<MonthlySummaryView> {
 
     if (picked != null && picked != selectedDateRange) {
       setState(() {
-            selectedDateRange = picked;
-            _selectedDateRange =
-                '${picked.start.toLocal().toShortDateString()} - ${picked.end.toLocal().toShortDateString()}';
-          });
+        selectedDateRange = picked;
+        _selectedDateRange =
+            '${picked.start.toLocal().toShortDateString()} - ${picked.end.toLocal().toShortDateString()}';
+      });
       logger.d('Selected Date Range: ${picked.start} - ${picked.end}');
     }
   }
@@ -168,13 +167,15 @@ class _MonthlySummaryViewState extends State<MonthlySummaryView> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 12,),
+                  const SizedBox(
+                    height: 12,
+                  ),
                   Container(
                     width: 143,
                     height: 30,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF41486d),
+                        backgroundColor: AppColors.primary,
                       ),
                       onPressed: _applyFilters,
                       child: const Text(
@@ -194,17 +195,15 @@ class _MonthlySummaryViewState extends State<MonthlySummaryView> {
                 children: [
                   const Text('ช่วงเวลา'),
                   GestureDetector(
-                    onTap: ()=>_selectDateRange(context),
+                    onTap: () => _selectDateRange(context),
                     child: Container(
                       width: 143,
                       height: 30,
-                      //padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                      padding: EdgeInsets.only(
+                      padding: const EdgeInsets.only(
                           left: 2, right: 2, top: 10, bottom: 4),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         border: Border(
                             bottom: BorderSide(width: 1, color: Colors.grey)),
-                        //borderRadius: BorderRadius.circular(8),
                         color: Colors.white,
                       ),
                       child: Row(
@@ -225,7 +224,9 @@ class _MonthlySummaryViewState extends State<MonthlySummaryView> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 12,),
+                  const SizedBox(
+                    height: 12,
+                  ),
                   Container(
                     width: 143,
                     height: 30,
@@ -233,7 +234,7 @@ class _MonthlySummaryViewState extends State<MonthlySummaryView> {
                       onPressed: _clearFilters,
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(
-                          color: Color(0xFF41486d),
+                          color: AppColors.primary,
                           width: 1.0,
                         ),
                       ),
@@ -246,15 +247,6 @@ class _MonthlySummaryViewState extends State<MonthlySummaryView> {
                       ),
                     ),
                   ),
-
-                  // Implement Date Picker here
-                  /*ElevatedButton.icon(
-                    onPressed: () => _selectDateRange(context),
-                    icon: const Icon(Icons.date_range),
-                    label: Text(selectedDateRange == null
-                        ? 'Select Date Range'
-                        : '${selectedDateRange!.start.toLocal().toString().split(' ')[0]} - ${selectedDateRange!.end.toLocal().toString().split(' ')[0]}'),
-                  ),*/
                 ],
               ),
             ],

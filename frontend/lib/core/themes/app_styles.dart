@@ -7,11 +7,13 @@ class AppColors {
   static const Color primaryVariant = Color(0xFF006666);
   static const Color secondary = Color(0xFFFFA500); // Orange Accent
   static const Color secondaryVariant = Color(0xFFFF8C00);
+  static const Color icon = Color(0xFFD0D0D0);
 
   // Neutral Colors
   static const Color white = Colors.white;
   static const Color black = Colors.black;
   static const Color grey = Colors.grey;
+  static const Color lightBlack = Color(0xFF5A5A5A);
   static const Color darkGrey = Color(0xFF414141);
   static const Color lightGrey = Color(0xFFE0E0E0);
   static const Color darkBlue = Color(0xFF41486D);

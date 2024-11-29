@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_input_box.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
@@ -91,7 +92,7 @@ class _ForgetPageState extends State<ForgetPage> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF5A5A5A),
+                          color: AppColors.lightBlack,
                         ),
                       ),
                     ),
@@ -100,7 +101,7 @@ class _ForgetPageState extends State<ForgetPage> {
                       labelText: 'อีเมล',
                       prefixIcon: const Icon(
                         Icons.email,
-                        color: Color(0xFFD0D0D0),
+                        color: AppColors.icon,
                       ),
                       controller: _emailController,
                     ),
