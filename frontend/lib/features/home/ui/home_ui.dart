@@ -20,7 +20,9 @@ class HomeUI extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 15),
-              ProfileSection(pageController: pageController,),
+              ProfileSection(
+                pageController: pageController,
+              ),
               const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
