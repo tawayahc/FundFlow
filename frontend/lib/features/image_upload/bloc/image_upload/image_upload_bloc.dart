@@ -77,8 +77,10 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
       final userBanks = await _transactionAddRepository.fetchBanks();
       final categories = await _transactionAddRepository.fetchCategories();
 
-      // Initialize list to collect transactions that need user confirmation
+      // Initialize lists to collect transactions
       List<TransactionResponse> transactionsToNotify = [];
+      List<TransactionResponse> successfulTransactions = [];
+      List<TransactionResponse> failedTransactions = [];
 
       // Process each transaction
       for (var transaction in transactions) {
@@ -128,12 +130,21 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
             memo: transaction.memo,
             metadata: transaction.metadata,
           );
-          // log Instance of 'createTransactionRequest' to console by mapping each transaction to json
+          // Log the transaction request
           logger.d(
               'createTransactionRequest: ${jsonEncode(createTransactionRequest.toJson())}');
-          await _transactionAddRepository
-              .addTransaction(createTransactionRequest);
-          logger.i('Transaction added successfully');
+          // Note: Im trying to handle with fail transactions
+          try {
+            await _transactionAddRepository
+                .addTransaction(createTransactionRequest);
+            successfulTransactions.add(transaction);
+            logger.d(
+                'Transaction added successfully for metadata: ${transaction.metadata}');
+          } catch (e) {
+            logger.e(
+                'Failed to add transaction for metadata ${transaction.metadata}: $e');
+            failedTransactions.add(transaction);
+          }
         }
       }
 
@@ -141,45 +152,65 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
       if (transactionsToNotify.isNotEmpty) {
         // Store transactions in local storage as notifications
         await _storeNotificationsLocally(transactionsToNotify);
-        // log Instance of 'TransactionResponse' to console by mapping each transaction to json
+        // Log stored notifications
         logger.d(
             'Notifications stored locally: ${transactionsToNotify.map((transaction) => jsonEncode(transaction.toJson()))}');
-
-        emit(ImageSendSuccess(transactions: transactions));
-      } else {
-        // All transactions processed successfully
-        emit(ImageSendSuccess(transactions: transactions));
       }
+
+      // Emit success state with details
+      emit(ImageSendSuccess(
+        allTransactions: transactions,
+        successful: successfulTransactions,
+        failed: failedTransactions,
+        notifications: transactionsToNotify,
+      ));
     } catch (e) {
       logger.e('Error sending images: $e');
       emit(ImageOperationFailure(e.toString()));
     }
   }
 
-// Helper method to store notifications locally
   Future<void> _storeNotificationsLocally(
       List<TransactionResponse> transactions) async {
     final prefs = await SharedPreferences.getInstance();
     List<String> existingNotifications =
         prefs.getStringList('notifications') ?? [];
 
-    // Convert transactions to JSON strings
-    List<String> newNotifications = transactions.map((transaction) {
+    // Convert existing notifications from JSON strings to TransactionResponse objects
+    List<TransactionResponse> existingTransactions =
+        existingNotifications.map((jsonString) {
+      return TransactionResponse.fromJson(jsonDecode(jsonString));
+    }).toList();
+
+    // Create a set of existing metadata for quick lookup
+    Set<String> existingMetadata = existingTransactions
+        .where((tx) => tx.metadata != null)
+        .map((tx) => tx.metadata)
+        .toSet();
+
+    // Filter out transactions that already exist based on metadata
+    List<TransactionResponse> uniqueTransactions = transactions.where((tx) {
+      return tx.metadata != null && !existingMetadata.contains(tx.metadata);
+    }).toList();
+
+    // Convert unique transactions to JSON strings
+    List<String> newNotifications = uniqueTransactions.map((transaction) {
       return jsonEncode(transaction.toJson());
     }).toList();
 
     // Combine existing and new notifications
-    existingNotifications.addAll(newNotifications);
+    List<String> updatedNotifications =
+        existingNotifications + newNotifications;
 
     // Save back to SharedPreferences
-    await prefs.setStringList('notifications', existingNotifications);
+    await prefs.setStringList('notifications', updatedNotifications);
   }
-}
 
-int _getBankIdByName(String bankName, List<Bank> userBanks) {
-  final bank = userBanks.firstWhere(
-    (bank) => bank.bankName.toLowerCase() == bankName.toLowerCase(),
-    orElse: () => throw Exception('Bank not found: $bankName'),
-  );
-  return bank.id;
+  int _getBankIdByName(String bankName, List<Bank> userBanks) {
+    final bank = userBanks.firstWhere(
+      (bank) => bank.bankName.toLowerCase() == bankName.toLowerCase(),
+      orElse: () => throw Exception('Bank not found: $bankName'),
+    );
+    return bank.id;
+  }
 }

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/features/home/bloc/notification/notification_bloc.dart';
+import 'package:fundflow/features/home/bloc/notification/notification_state.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_bloc.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_state.dart';
+import 'package:fundflow/features/home/pages/notification/notification.dart';
 
 class ProfileSection extends StatefulWidget {
   final PageController pageController;
@@ -89,24 +92,62 @@ class _ProfileSectionState extends State<ProfileSection> {
               ),
               Row(
                 children: [
-                  IconButton(
-                    icon: Icon(
-                      isNotificationActive
-                          ? Icons.notifications
-                          : Icons.notifications_outlined,
-                      color: isNotificationActive
-                          ? AppColors.darkBlue
-                          : AppColors.darkGrey,
-                    ),
-                    iconSize: 28,
-                    onPressed: () {
-                      setState(() {
-                        isNotificationActive = !isNotificationActive;
-                      });
+                  // Notification Icon with Badge
+                  BlocBuilder<NotificationBloc, NotificationState>(
+                    builder: (context, notificationState) {
+                      int unreadCount = 0;
+                      if (notificationState is NotificationsLoaded) {
+                        unreadCount = notificationState.notifications
+                            .where((notification) => !notification.isRead)
+                            .length;
+                      }
 
-                      // ทำงานแล้วรีเซ็ตสถานะ
-                      Navigator.pushNamed(context, '/notification')
-                          .then((_) => resetState());
+                      return Stack(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.notifications_outlined,
+                              color: Colors.grey[800],
+                            ),
+                            iconSize: 28,
+                            onPressed: () {
+                              // Navigate to NotificationPage
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const NotificationPage(),
+                                ),
+                              ).then((_) =>
+                                  setState(() {})); // Refresh after returning
+                            },
+                          ),
+                          if (unreadCount > 0)
+                            Positioned(
+                              right: 6,
+                              top: 6,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 14,
+                                  minHeight: 14,
+                                ),
+                                child: Text(
+                                  '$unreadCount',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 8,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
                     },
                   ),
                   const SizedBox(width: 0),

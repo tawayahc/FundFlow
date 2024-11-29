@@ -53,12 +53,21 @@ class _TransactionPageState extends State<TransactionPage>
     });
 
     context.read<TransactionAddBloc>().add(FetchBanksAndCategories());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleTabLogic();
+    });
   }
 
   @override
   void _handleTabLogic() {
     // Ensure modals are shown based on updated banks/categories
-    if (_type == 'income' && _banks.isEmpty && !_dialogShown['income']!) {
+    if (_banks.isEmpty) {
+      _showNotEnoughBanksDialog(
+          'คุณยังไม่มีบัญชีธนาคาร\nกรุณากดเพิ่มธนาคาร', 'income');
+    } else if (_type == 'income' &&
+        _banks.isEmpty &&
+        !_dialogShown['income']!) {
       _showNotEnoughBanksDialog(
           'คุณยังไม่มีบัญชีธนาคาร\nกรุณากดเพิ่มธนาคาร', 'income');
     } else if (_type == 'expense' &&

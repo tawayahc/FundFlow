@@ -7,6 +7,7 @@ import 'package:fundflow/features/home/bloc/notification/notification_bloc.dart'
 import 'package:fundflow/features/home/bloc/notification/notification_event.dart';
 import 'package:fundflow/features/home/bloc/notification/notification_state.dart';
 import 'edit_transaction_page.dart';
+import 'package:fundflow/app.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -15,10 +16,31 @@ class NotificationPage extends StatefulWidget {
   State<NotificationPage> createState() => _NotificationPageState();
 }
 
-class _NotificationPageState extends State<NotificationPage> {
+class _NotificationPageState extends State<NotificationPage> with RouteAware {
   @override
   void initState() {
     super.initState();
+    context.read<NotificationBloc>().add(LoadNotifications());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      routeObserver.subscribe(this, route); // Safely cast to PageRoute
+    }
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    // Called when this page becomes visible again
     context.read<NotificationBloc>().add(LoadNotifications());
   }
 
@@ -38,7 +60,7 @@ class _NotificationPageState extends State<NotificationPage> {
           ),
           centerTitle: true,
           title: const Text(
-            'Notifications',
+            'การแจ้งเตือน',
             style: TextStyle(color: Colors.black),
           ),
         ),
@@ -50,33 +72,38 @@ class _NotificationPageState extends State<NotificationPage> {
               final notifications = state.notifications;
 
               if (notifications.isEmpty) {
-                return const Center(child: Text('No notifications.'));
+                return const Center(child: Text('ไม่มีการแจ้งเตือน'));
               }
 
-              return ListView.builder(
-                itemCount: notifications.length,
-                itemBuilder: (context, index) {
-                  final notification = notifications[index];
-                  return GestureDetector(
-                    onTap: () async {
-                      final updatedTransaction = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditTransactionPage(
-                            transaction: notification,
-                          ),
-                        ),
-                      );
-                      if (updatedTransaction != null) {
-                        context.read<NotificationBloc>().add(
-                              UpdateNotification(
-                                  transaction: updatedTransaction),
-                            );
-                      }
-                    },
-                    child: NotificationCard(transaction: notification),
-                  );
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<NotificationBloc>().add(LoadNotifications());
                 },
+                child: ListView.builder(
+                  itemCount: notifications.length,
+                  itemBuilder: (context, index) {
+                    final transaction = notifications[index];
+                    return GestureDetector(
+                      onTap: () async {
+                        final updatedTransaction = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditTransactionPage(
+                              transaction: transaction,
+                            ),
+                          ),
+                        );
+                        if (updatedTransaction != null) {
+                          context.read<NotificationBloc>().add(
+                                UpdateNotification(
+                                    transaction: updatedTransaction),
+                              );
+                        }
+                      },
+                      child: NotificationCard(transaction: transaction),
+                    );
+                  },
+                ),
               );
             } else if (state is NotificationsError) {
               return Center(child: Text('Error: ${state.error}'));

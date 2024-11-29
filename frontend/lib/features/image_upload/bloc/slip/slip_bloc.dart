@@ -1,4 +1,3 @@
-// bloc/slip_bloc.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/image_upload/repository/slip_repository.dart';

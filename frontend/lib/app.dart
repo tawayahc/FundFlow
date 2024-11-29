@@ -59,6 +59,8 @@ final logger = Logger(
   ),
 );
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -174,6 +176,7 @@ class MyApp extends StatelessWidget {
                   )),
         ],
         child: MaterialApp(
+          navigatorObservers: [routeObserver],
           title: 'FundFlow',
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,

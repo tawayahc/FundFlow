@@ -128,8 +128,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   @override
   Widget build(BuildContext context) {
-    bool isFormEnabled = widget.categories.isNotEmpty;
-
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
@@ -185,7 +183,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
               displayItem: (Bank bank) => bank.name,
               validator: (value) => value == null ? 'กรุณาเลือกธนาคาร' : null,
             ),
-
             const SizedBox(height: 16),
             // Category Dropdown
             const Align(
@@ -211,7 +208,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
               displayItem: (Category category) => category.name,
               validator: (value) => value == null ? 'กรุณาเลือกหมวดหมู่' : null,
             ),
-
             const SizedBox(height: 16),
             // Amount Field
             const Align(
@@ -261,7 +257,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 labelText: "${_selectedDate.toLocal()}".split(' ')[0],
                 onTap: _selectDate),
             const SizedBox(height: 16),
-
+            // Time Picker
             const Align(
               alignment: Alignment.centerLeft,
               child: const Text(
@@ -278,7 +274,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
                     ? _selectedTime!.format(context)
                     : 'กรอกเวลา(ไม่จำเป็น)',
                 onTap: _selectTime),
-
             const SizedBox(height: 16),
             // Note Field
             const Align(
@@ -298,7 +293,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
                   color: AppColors.icon,
                 ),
                 controller: _noteController),
-
             const SizedBox(height: 16),
             CustomButton(text: 'ยืนยัน', onPressed: _submit),
           ],

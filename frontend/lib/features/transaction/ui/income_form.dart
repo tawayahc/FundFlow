@@ -138,7 +138,7 @@ class _IncomeFormState extends State<IncomeForm> {
           ),
           const Align(
             alignment: Alignment.centerLeft,
-            child: const Text(
+            child: Text(
               'ระบุธนาคาร',
               style: TextStyle(
                 fontSize: 18,
@@ -165,7 +165,7 @@ class _IncomeFormState extends State<IncomeForm> {
 
           const Align(
             alignment: Alignment.centerLeft,
-            child: const Text(
+            child: Text(
               'ระบุจำนวนเงิน',
               style: TextStyle(
                 fontSize: 18,
@@ -195,7 +195,7 @@ class _IncomeFormState extends State<IncomeForm> {
 
           const Align(
             alignment: Alignment.centerLeft,
-            child: const Text(
+            child: Text(
               'ระบุวันที่',
               style: TextStyle(
                 fontSize: 18,
@@ -210,7 +210,7 @@ class _IncomeFormState extends State<IncomeForm> {
           const SizedBox(height: 16),
           const Align(
             alignment: Alignment.centerLeft,
-            child: const Text(
+            child: Text(
               'ระบุเวลา',
               style: TextStyle(
                 fontSize: 18,
@@ -230,7 +230,7 @@ class _IncomeFormState extends State<IncomeForm> {
 
           const Align(
             alignment: Alignment.centerLeft,
-            child: const Text(
+            child: Text(
               'โน้ตเพิ่มเติม',
               style: TextStyle(
                 fontSize: 18,
