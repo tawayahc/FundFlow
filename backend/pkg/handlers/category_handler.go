@@ -22,7 +22,7 @@ func GetCategory(c *gin.Context) {
 
 	category, err := services.GetCategory(uint(categoryID), claims.UserID)
 	if err != nil {
-		
+
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -90,12 +90,6 @@ func DeleteCategory(c *gin.Context) {
 	categoryID, err := strconv.ParseUint(c.Param("category_id"), 10, 32)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid category ID"})
-		return
-	}
-
-	var category models.DeleteCategoryRequest
-	if err := c.ShouldBindJSON(&category); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
