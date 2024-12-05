@@ -6,11 +6,11 @@ class ProfileLoading extends ProfileState {}
 
 class ProfileLoaded extends ProfileState {
   final User userProfile;
-  final double cashBox;
+  final double totalAmount;
 
   ProfileLoaded({
     required this.userProfile,
-    required this.cashBox,
+    required this.totalAmount,
   });
 }
 

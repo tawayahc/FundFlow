@@ -13,7 +13,7 @@ class BankCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat.currency(locale: 'th_TH', symbol: '฿');
-    // Normalize bank name before lookup
+
     final normalizedBankName = normalizeBankName(bank.bankName);
     Color color = BankColorUtil.getBankColor(normalizedBankName);
 
@@ -31,7 +31,7 @@ class BankCard extends StatelessWidget {
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
               spreadRadius: 1,
-              blurRadius: 4,
+              blurRadius: 1,
               offset: const Offset(0, 0),
             ),
           ],
