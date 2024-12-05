@@ -48,15 +48,16 @@ class _TransactionPageState extends State<TransactionPage>
           _type = ['income', 'expense', 'transfer'][_tabController.index];
         });
 
-        _handleTabLogic();
+        _handleTabLogic(); // This is fine here
       }
     });
 
     context.read<TransactionAddBloc>().add(FetchBanksAndCategories());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _handleTabLogic();
-    });
+    // Remove this initial call
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   _handleTabLogic();
+    // });
   }
 
   @override
@@ -194,7 +195,12 @@ class _TransactionPageState extends State<TransactionPage>
                       width: 200,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/addBank');
+                          if (text ==
+                              'คุณยังไม่มีบัญชีหมมวดหมู่\nกรุณากดเพิ่มหมวดหมู่') {
+                            Navigator.pushNamed(context, '/addCategory');
+                          } else {
+                            Navigator.pushNamed(context, '/addBank');
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -203,10 +209,12 @@ class _TransactionPageState extends State<TransactionPage>
                           ),
                           backgroundColor: AppColors.darkBlue,
                         ),
-                        child: const Text(
-                          'เพิ่มธนาคาร',
-                          style:
-                              TextStyle(fontSize: 16, color: Color(0xffffffff)),
+                        child: Text(
+                          text == 'คุณยังไม่มีบัญชีหมมวดหมู่\nกรุณากดเพิ่มหมวดหมู่'
+                              ? 'เพิ่มหมวดหมู่'
+                              : 'เพิ่มธนาคาร',
+                          style: const TextStyle(
+                              fontSize: 16, color: Color(0xffffffff)),
                         ),
                       ),
                     ),
@@ -247,20 +255,13 @@ class _TransactionPageState extends State<TransactionPage>
                 SnackBar(content: Text('Error: ${state.error}')),
               );
             } else if (state is BanksAndCategoriesLoaded) {
-              final previousBanks = _banks.length;
-              final previousCategories = _categories.length;
-
               setState(() {
                 _banks = state.banks;
                 _categories = state.categories;
               });
 
-              if (_banks.length > previousBanks ||
-                  _categories.length > previousCategories) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  _handleTabLogic();
-                });
-              }
+              // Call _handleTabLogic after data is loaded
+              _handleTabLogic();
             }
           },
           child: BlocBuilder<TransactionAddBloc, TransactionState>(
