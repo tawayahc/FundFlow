@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fundflow/features/auth/bloc/repassword/repassword_bloc.dart';
-import 'package:fundflow/features/auth/repository/repassword_repo.dart';
+import 'package:fundflow/features/auth/repository/repassword_repository.dart';
 
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/auth/ui/auth_wrapper.dart';
