@@ -88,10 +88,7 @@ class _EditTransactionPageState extends State<EditTransactionPage> {
         transaction.possibleBanks = matchingBanks;
       });
     } catch (e) {
-      // Handle error, possibly by showing a snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to fetch banks: $e')),
-      );
+      logger.e('Failed to fetch possible banks: $e');
     }
   }
 

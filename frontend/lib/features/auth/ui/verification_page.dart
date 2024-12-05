@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
 import 'package:fundflow/features/auth/bloc/repassword/repassword_bloc.dart';
 import 'package:fundflow/features/auth/bloc/repassword/repassword_event.dart';
 import 'package:fundflow/features/auth/bloc/repassword/repassword_state.dart';
@@ -46,13 +47,32 @@ class _VerificationPageState extends State<VerificationPage> {
     _otp = _controllers.map((controller) => controller.text).join();
   }
 
+  bool _isDialogShowing = false;
+
+  void _showModal(BuildContext context, String text) {
+    if (_isDialogShowing) {
+      return;
+    }
+
+    _isDialogShowing = true;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.1),
+      builder: (BuildContext context) {
+        return CustomModal(text: text);
+      },
+    ).then((_) {
+      _isDialogShowing = false;
+    });
+  }
+
   // Method to handle OTP submission
   void _verifyOTP() {
     _collectOTP();
     if (_otp.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter all 6 digits of the OTP')),
-      );
+      _showModal(context, 'กรุณาใส่รหัส OTP ทั้งหมด');
+
       return;
     }
     // Dispatch VerifyOTPEvent with collected OTP
@@ -146,9 +166,7 @@ class _VerificationPageState extends State<VerificationPage> {
                 ),
               );
             } else if (state is RepasswordFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
-              );
+              _showModal(context, 'รหัส OTP ไม่ถูกต้อง');
             }
           },
           child: Column(

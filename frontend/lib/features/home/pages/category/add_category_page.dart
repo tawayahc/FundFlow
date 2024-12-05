@@ -80,11 +80,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                   context,
                   MaterialPageRoute(builder: (context) => const BottomNavBar()),
                 );
-              } else if (state is CategoryError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Failed to load categories')),
-                );
-              }
+              } else if (state is CategoryError) {}
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
