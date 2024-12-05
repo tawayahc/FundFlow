@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/home/custom_text_button.dart';
 import 'package:fundflow/features/home/ui/bank_section.dart';
 import 'package:fundflow/features/home/ui/category_section.dart';
 import 'package:fundflow/features/home/ui/profile_section.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/features/image_upload/bloc/slip/slip_bloc.dart';
+import 'package:fundflow/features/image_upload/bloc/slip/slip_event.dart';
 
 class HomeUI extends StatelessWidget {
   final PageController pageController;
@@ -11,13 +14,15 @@ class HomeUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<SlipBloc>().add(DetectAndUploadSlips());
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.all(16),
             children: [
               const SizedBox(height: 15),
               ProfileSection(
@@ -68,7 +73,7 @@ class HomeUI extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 5),
-              const CategorySection(),
+              const CategorySection()
             ],
           ),
         ),
