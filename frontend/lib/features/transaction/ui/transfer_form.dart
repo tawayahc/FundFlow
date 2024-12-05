@@ -96,6 +96,9 @@ class _TransferFormState extends State<TransferForm> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
+      if (_fromBank == null) {
+        return;
+      }
       final data = CreateTransferData(
         fromBank: _fromBank!,
         toBank: _toBank!,

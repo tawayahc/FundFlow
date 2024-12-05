@@ -334,6 +334,9 @@ class _TransactionPageState extends State<TransactionPage>
                         banks: _banks,
                         onSubmit: _onIncomeSubmit,
                       ),
+                      const SizedBox(
+                        height: 100,
+                      ),
                     ] else if (_type == 'expense') ...[
                       const SizedBox(height: AppSpacing.medium),
                       const Align(
@@ -401,6 +404,9 @@ class _TransactionPageState extends State<TransactionPage>
                         key: ValueKey(_banks),
                         banks: _banks,
                         onSubmit: _onTransferSubmit,
+                      ),
+                      const SizedBox(
+                        height: 100,
                       ),
                     ],
                   ],

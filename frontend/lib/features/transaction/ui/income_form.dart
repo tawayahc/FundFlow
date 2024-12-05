@@ -102,6 +102,9 @@ class _IncomeFormState extends State<IncomeForm> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
+      if (_selectedBank == null) {
+        return;
+      }
       final data = CreateIncomeData(
         bank: _selectedBank!,
         amount: double.parse(_amountController.text),

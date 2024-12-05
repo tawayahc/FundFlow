@@ -107,6 +107,9 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
+      if (_selectedBank == null) {
+        return;
+      }
       final data = CreateExpenseData(
         bank: _selectedBank!,
         category: _selectedCategory!,
