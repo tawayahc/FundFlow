@@ -49,9 +49,13 @@ class OverviewPageState extends State<OverviewPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'สรุปรายรับรายจ่าย',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        automaticallyImplyLeading: false,
+        title: const Padding(
+          padding: EdgeInsets.only(top: 16.0),
+          child: Text(
+            'สรุปรายรับรายจ่าย',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
         ),
         centerTitle: true,
       ),
