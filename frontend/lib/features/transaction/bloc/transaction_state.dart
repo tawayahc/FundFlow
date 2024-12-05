@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:fundflow/features/transaction/model/bank_model.dart';
+import 'package:fundflow/models/bank_model.dart';
 import 'package:fundflow/features/transaction/model/category_model.dart';
 
 abstract class TransactionState extends Equatable {

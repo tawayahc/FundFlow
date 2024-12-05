@@ -6,8 +6,14 @@ class Bank {
   final int id;
   final String name;
   final String bankName;
+  final double amount;
 
-  Bank({required this.id, required this.name, required this.bankName});
+  Bank({
+    required this.id,
+    required this.name,
+    required this.bankName,
+    required this.amount,
+  });
 
   @override
   bool operator ==(Object other) {
@@ -24,6 +30,7 @@ class Bank {
       id: json['id'],
       name: json['name'],
       bankName: json['bank_name'],
+      amount: (json['amount'] as num).toDouble(),
     );
   }
 

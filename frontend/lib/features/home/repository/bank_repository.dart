@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:fundflow/app.dart';
-import 'package:fundflow/features/home/models/bank.dart';
 import 'package:fundflow/features/home/models/transaction.dart';
 import 'package:fundflow/features/home/models/transfer.dart';
+import 'package:fundflow/models/bank_model.dart';
 import 'package:fundflow/utils/api_helper.dart';
 
 class BankRepository {
@@ -20,7 +20,7 @@ class BankRepository {
             .map((item) => Bank(
                 id: item['id'],
                 name: item['name'],
-                bank_name: item['bank_name'],
+                bankName: item['bank_name'],
                 amount: (item['amount'] as num).toDouble()))
             .toList();
         return {'banks': banks};
@@ -54,7 +54,7 @@ class BankRepository {
     try {
       final response = await dio.post("/banks/create", data: {
         'name': bank.name,
-        'bank_name': bank.bank_name,
+        'bank_name': bank.bankName,
         'amount': bank.amount,
       });
 
@@ -70,9 +70,9 @@ class BankRepository {
 
   Future<void> editBank(Bank originalBank, Bank bank) async {
     try {
-      logger.i('Editing bank: ${bank.amount} ${bank.name} ${bank.bank_name}');
+      logger.i('Editing bank: ${bank.amount} ${bank.name} ${bank.bankName}');
       logger.i(
-          'Edit original bank: ${originalBank.amount} ${originalBank.name} ${originalBank.bank_name} ');
+          'Edit original bank: ${originalBank.amount} ${originalBank.name} ${originalBank.bankName} ');
 
       // Initialize the payload
       Map<String, dynamic> data = {};
@@ -84,8 +84,8 @@ class BankRepository {
       if (bank.amount != originalBank.amount) {
         data['new_amount'] = bank.amount;
       }
-      if (bank.bank_name != originalBank.bank_name) {
-        data['new_bank_name'] = bank.bank_name;
+      if (bank.bankName != originalBank.bankName) {
+        data['new_bank_name'] = bank.bankName;
       }
 
       // If nothing has changed, we can skip the API call
