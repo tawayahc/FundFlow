@@ -17,12 +17,7 @@ class CategorySection extends StatelessWidget {
     return BlocConsumer<CategoryBloc, CategoryState>(
       listener: (context, state) {
         if (state is CategoriesLoaded) {
-        } else if (state is CategoryError) {
-          // Handle error state, show a SnackBar for example
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to load categories')),
-          );
-        }
+        } else if (state is CategoryError) {}
       },
       builder: (context, state) {
         if (state is CategoriesLoading) {

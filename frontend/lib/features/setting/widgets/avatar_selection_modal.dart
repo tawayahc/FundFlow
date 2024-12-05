@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
 import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 
 class AvatarSelectionModal extends StatelessWidget {
@@ -18,10 +19,7 @@ class AvatarSelectionModal extends StatelessWidget {
             Navigator.pop(context);
             BlocProvider.of<UserProfileBloc>(context).add(FetchUserProfile());
           } else if (state is AvatarChangeFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text('Failed to change avatar: ${state.message}')),
-            );
+            _showModal(context, 'เปลี่ยนรูปภาพไม่สำเร็จ');
             Navigator.pop(context);
             BlocProvider.of<UserProfileBloc>(context).add(FetchUserProfile());
           }
@@ -61,4 +59,24 @@ class AvatarSelectionModal extends StatelessWidget {
       ),
     );
   }
+}
+
+bool _isDialogShowing = false;
+
+void _showModal(BuildContext context, String text) {
+  if (_isDialogShowing) {
+    return;
+  }
+
+  _isDialogShowing = true;
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    barrierColor: Colors.black.withOpacity(0.1),
+    builder: (BuildContext context) {
+      return CustomModal(text: text);
+    },
+  ).then((_) {
+    _isDialogShowing = false;
+  });
 }

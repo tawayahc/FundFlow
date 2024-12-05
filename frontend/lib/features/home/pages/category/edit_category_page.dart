@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/home/category_card.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
@@ -79,6 +80,26 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
     super.dispose();
   }
 
+  bool _isDialogShowing = false;
+
+  void _showModal(BuildContext context, String text) {
+    if (_isDialogShowing) {
+      return;
+    }
+
+    _isDialogShowing = true;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.1),
+      builder: (BuildContext context) {
+        return CustomModal(text: text);
+      },
+    ).then((_) {
+      _isDialogShowing = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GlobalPadding(
@@ -118,9 +139,7 @@ class _EditCategoryPageState extends State<EditCategoryPage> {
                   MaterialPageRoute(builder: (context) => const BottomNavBar()),
                 );
               } else if (state is CategoryError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Failed to update category')),
-                );
+                _showModal(context, 'แก้ไขหมวดหมู่ไม่สำเร็จ');
               }
             },
             child: Column(

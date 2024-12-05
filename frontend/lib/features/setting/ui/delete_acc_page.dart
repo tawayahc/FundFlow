@@ -57,14 +57,9 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
     return BlocListener<DeleteAccountBloc, DeleteAccountState>(
         listener: (context, state) {
           if (state is DeleteAccountSuccess) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(const SnackBar(content: Text('Account deleted')));
             Navigator.pushNamedAndRemoveUntil(
                 context, '/login', (route) => false);
-          } else if (state is DeleteAccountFailure) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(state.error)));
-          }
+          } else if (state is DeleteAccountFailure) {}
         },
         child: Padding(
           padding: const EdgeInsets.all(16.0),

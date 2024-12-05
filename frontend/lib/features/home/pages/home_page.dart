@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
 import 'package:fundflow/features/auth/bloc/auth_bloc.dart';
 import 'package:fundflow/features/auth/bloc/auth_state.dart';
 import 'package:fundflow/features/auth/ui/login_page.dart';
@@ -56,6 +57,26 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  bool _isDialogShowing = false;
+
+  void _showModal(BuildContext context, String text) {
+    if (_isDialogShowing) {
+      return;
+    }
+
+    _isDialogShowing = true;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.1),
+      builder: (BuildContext context) {
+        return CustomModal(text: text);
+      },
+    ).then((_) {
+      _isDialogShowing = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -88,14 +109,7 @@ class _HomePageState extends State<HomePage> {
                   (route) => false,
                 );
               } else if (state is AuthenticationFailure) {
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(
-                      content: Text(state.error),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
+                _showModal(context, 'ไม่สามารถเข้าสู่ระบบได้');
               }
             },
           ),
@@ -106,25 +120,20 @@ class _HomePageState extends State<HomePage> {
                 final images = state.images;
                 context.read<ImageBloc>().add(SendImages(images: images));
               } else if (state is SlipFailure) {
-                // Show error message when slip upload fails
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text('Failed to upload slips: ${state.error}')),
-                );
                 if (state.error.contains('No slip images detected')) {
                   // Prompt the user to manually upload slips
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text('No Slips Detected'),
-                      content: const Text(
-                          'Would you like to create a slip manually?'),
+                      title: const Text('ไม่พบ slip'),
+                      content:
+                          const Text('คุณต้องการเพิ่ม slip ด้วยตนเองหรือไม่?'),
                       actions: [
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop(); // Close the dialog
                           },
-                          child: const Text('Cancel'),
+                          child: const Text('ยกเลิก'),
                         ),
                         TextButton(
                           onPressed: () {
@@ -132,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.pushNamed(context,
                                 '/transaction'); // Navigate to manual upload page
                           },
-                          child: const Text('Create Manually'),
+                          child: const Text('เพิ่มด้วยตนเอง'),
                         ),
                       ],
                     ),

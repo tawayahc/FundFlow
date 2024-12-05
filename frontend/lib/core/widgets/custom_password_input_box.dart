@@ -32,6 +32,11 @@ class _CustomPasswordInputBoxState extends State<CustomPasswordInputBox> {
           validator: widget.validator,
           decoration: InputDecoration(
             labelText: widget.labelText,
+            labelStyle: const TextStyle(
+              color: AppColors.icon,
+              fontSize: 14,
+              fontWeight: FontWeight.normal,
+            ),
             prefixIcon: const Icon(
               Icons.lock_outline,
               color: AppColors.icon,

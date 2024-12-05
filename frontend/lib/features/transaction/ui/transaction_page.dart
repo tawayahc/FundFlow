@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
 import 'package:fundflow/features/image_upload/ui/image_upload_page.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
 import 'package:fundflow/features/transaction/model/category_model.dart';
@@ -49,19 +50,13 @@ class _TransactionPageState extends State<TransactionPage>
           _type = ['income', 'expense', 'transfer'][_tabController.index];
         });
 
-        _handleTabLogic(); // This is fine here
+        _handleTabLogic();
       }
     });
 
     context.read<TransactionAddBloc>().add(FetchBanksAndCategories());
-
-    // Remove this initial call
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   _handleTabLogic();
-    // });
   }
 
-  @override
   void _handleTabLogic() {
     // Ensure modals are shown based on updated banks/categories
 
@@ -227,6 +222,26 @@ class _TransactionPageState extends State<TransactionPage>
     }
   }
 
+  bool _isDialogShowing = false;
+
+  void _showModal(BuildContext context, String text) {
+    if (_isDialogShowing) {
+      return;
+    }
+
+    _isDialogShowing = true;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.1),
+      builder: (BuildContext context) {
+        return CustomModal(text: text);
+      },
+    ).then((_) {
+      _isDialogShowing = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -244,13 +259,8 @@ class _TransactionPageState extends State<TransactionPage>
         body: BlocListener<TransactionAddBloc, TransactionState>(
           listener: (context, state) {
             if (state is TransactionSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Transaction added successfully')),
-              );
             } else if (state is TransactionFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Error: ${state.error}')),
-              );
+              _showModal(context, 'เพิ่มรายการไม่สำเร็จ');
             } else if (state is BanksAndCategoriesLoaded) {
               setState(() {
                 _banks = state.banks;

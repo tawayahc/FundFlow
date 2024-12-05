@@ -18,14 +18,7 @@ class ImageUploadPage extends StatelessWidget {
     return BlocConsumer<ImageBloc, ImageState>(
       listener: (context, state) {
         if (state is ImageOperationFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error)),
-          );
-        } else if (state is ImageSendSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Images sent successfully!')),
-          );
-        }
+        } else if (state is ImageSendSuccess) {}
       },
       builder: (context, state) {
         List<XFile> images = [];
