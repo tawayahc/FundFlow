@@ -119,7 +119,6 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 12),
                         CustomPasswordInputBox(
                           labelText: 'รหัสผ่าน',
-                          focusNode: FocusNode(),
                           controller: _passwordController,
                           validator: (value) {
                             String result = validatePassword(value ?? '');

@@ -118,7 +118,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     // Input for Password
                     CustomPasswordInputBox(
                       labelText: 'รหัสผ่าน',
-                      focusNode: FocusNode(),
                       controller: _passwordController,
                       validator: (value) {
                         String result = validatePassword(value ?? '');

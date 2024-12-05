@@ -57,32 +57,9 @@ class ChangePasswordForm extends StatefulWidget {
 }
 
 class _ChangePasswordFormState extends State<ChangePasswordForm> {
-  final FocusNode _oldPasswordFocusNode = FocusNode();
-  final FocusNode _newPasswordFocusNode = FocusNode();
-
   // Controllers for text fields
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _oldPasswordFocusNode.addListener(_onFocusChange);
-    _newPasswordFocusNode.addListener(_onFocusChange);
-  }
-
-  @override
-  void dispose() {
-    _oldPasswordFocusNode.removeListener(_onFocusChange);
-    _newPasswordFocusNode.removeListener(_onFocusChange);
-    _oldPasswordFocusNode.dispose();
-    _newPasswordFocusNode.dispose();
-    super.dispose();
-  }
-
-  void _onFocusChange() {
-    setState(() {}); // Rebuild UI on focus change
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,13 +90,11 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
             const SizedBox(height: 12),
             CustomPasswordInputBox(
               labelText: 'รหัสผ่านเดิม',
-              focusNode: _oldPasswordFocusNode,
               controller: _oldPasswordController,
             ),
             const SizedBox(height: 12),
             CustomPasswordInputBox(
               labelText: 'รหัสผ่านใหม่',
-              focusNode: _newPasswordFocusNode,
               controller: _newPasswordController,
             ),
             const SizedBox(height: 30),

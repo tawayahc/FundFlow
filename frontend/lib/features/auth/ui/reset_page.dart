@@ -80,7 +80,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   const SizedBox(height: 12),
                   CustomPasswordInputBox(
                     labelText: 'รหัสผ่านใหม่',
-                    focusNode: FocusNode(),
                     controller: _passwordController,
                   ),
                   const SizedBox(height: 30),

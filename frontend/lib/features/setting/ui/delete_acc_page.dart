@@ -49,17 +49,8 @@ class DeleteAccountForm extends StatefulWidget {
 
 class _DeleteAccountFormState extends State<DeleteAccountForm> {
   bool _isOldPasswordVisible = false; // สำหรับจัดการการแสดงรหัสผ่านเดิม
-  final FocusNode _oldPasswordFocusNode = FocusNode(); // สำหรับการจัดการ focus
-  final FocusNode _newPasswordFocusNode = FocusNode(); // สำหรับการจัดการ focus
 
   final TextEditingController _passwordController = TextEditingController();
-
-  @override
-  void dispose() {
-    _oldPasswordFocusNode.dispose();
-    _newPasswordFocusNode.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +83,7 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
               // รหัสผ่านเดิม
               TextFormField(
                 obscureText: !_isOldPasswordVisible, // ซ่อนรหัสผ่าน
-                focusNode: _oldPasswordFocusNode,
+
                 controller: _passwordController,
                 decoration: InputDecoration(
                   labelText: 'รหัสผ่าน',
@@ -100,25 +91,22 @@ class _DeleteAccountFormState extends State<DeleteAccountForm> {
                     Icons.lock_outline,
                     color: AppColors.icon,
                   ),
-                  suffixIcon: _oldPasswordFocusNode
-                          .hasFocus // ตรวจสอบว่ามีโฟกัสอยู่หรือไม่
-                      ? IconButton(
-                          icon: Icon(
-                            _isOldPasswordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: _isOldPasswordVisible
-                                ? AppColors.darkBlue // สีเมื่อแสดงรหัสผ่าน
-                                : AppColors.icon, // สีเมื่อซ่อนรหัสผ่าน
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isOldPasswordVisible =
-                                  !_isOldPasswordVisible; // สลับสถานะ
-                            });
-                          },
-                        )
-                      : null, // ไม่แสดงไอคอนหากไม่มีโฟกัส
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isOldPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: _isOldPasswordVisible
+                          ? AppColors.darkBlue // สีเมื่อแสดงรหัสผ่าน
+                          : AppColors.icon, // สีเมื่อซ่อนรหัสผ่าน
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isOldPasswordVisible =
+                            !_isOldPasswordVisible; // สลับสถานะ
+                      });
+                    },
+                  ), // ไม่แสดงไอคอนหากไม่มีโฟกัส
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
