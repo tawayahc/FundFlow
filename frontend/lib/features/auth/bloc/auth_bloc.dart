@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
-import 'package:fundflow/features/setting/models/user_profile.dart';
+import 'package:fundflow/models/user_model.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'auth_event.dart';
@@ -34,7 +34,7 @@ class AuthenticationBloc
       final String? token = await authenticationRepository.getStoredToken();
       if (token != null) {
         logger.d('Token found, user is authenticated');
-        final UserProfile user = await settingsRepository.fetchUserProfile();
+        final User user = await settingsRepository.fetchUserProfile();
         emit(
           Authenticated(token: token, userProfile: user),
         );
@@ -63,7 +63,7 @@ class AuthenticationBloc
         logger.d('Token is $token');
         throw Exception('Invalid username or password');
       }
-      final UserProfile user = await settingsRepository.fetchUserProfile();
+      final User user = await settingsRepository.fetchUserProfile();
       emit(
         Authenticated(token: token, userProfile: user),
       );
@@ -84,7 +84,7 @@ class AuthenticationBloc
         password: event.password,
         username: event.username,
       );
-      final UserProfile user = await settingsRepository.fetchUserProfile();
+      final User user = await settingsRepository.fetchUserProfile();
       emit(
         Authenticated(token: token, userProfile: user),
       );
@@ -118,7 +118,7 @@ class AuthenticationBloc
     try {
       final String? token = await authenticationRepository.getStoredToken();
       if (token != null) {
-        final UserProfile user = await settingsRepository.fetchUserProfile();
+        final User user = await settingsRepository.fetchUserProfile();
         emit(
           Authenticated(token: token, userProfile: user),
         );

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/features/auth/bloc/repassword/repassword_event.dart';
 import 'package:fundflow/features/auth/bloc/repassword/repassword_state.dart';
-import 'package:fundflow/features/auth/repository/repassword_repo.dart';
+import 'package:fundflow/features/auth/repository/repassword_repository.dart';
 
 class RepasswordBloc extends Bloc<RepasswordEvent, RepasswordState> {
   final RepasswordRepository repasswordRepository;

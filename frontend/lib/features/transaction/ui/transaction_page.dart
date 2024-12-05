@@ -1,6 +1,7 @@
 // ui/transaction_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/app.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/features/image_upload/ui/image_upload_page.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
@@ -53,21 +54,13 @@ class _TransactionPageState extends State<TransactionPage>
     });
 
     context.read<TransactionAddBloc>().add(FetchBanksAndCategories());
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _handleTabLogic();
-    });
   }
 
   @override
   void _handleTabLogic() {
     // Ensure modals are shown based on updated banks/categories
-    if (_banks.isEmpty) {
-      _showNotEnoughBanksDialog(
-          'คุณยังไม่มีบัญชีธนาคาร\nกรุณากดเพิ่มธนาคาร', 'income');
-    } else if (_type == 'income' &&
-        _banks.isEmpty &&
-        !_dialogShown['income']!) {
+
+    if (_type == 'income' && _banks.isEmpty && !_dialogShown['income']!) {
       _showNotEnoughBanksDialog(
           'คุณยังไม่มีบัญชีธนาคาร\nกรุณากดเพิ่มธนาคาร', 'income');
     } else if (_type == 'expense' &&

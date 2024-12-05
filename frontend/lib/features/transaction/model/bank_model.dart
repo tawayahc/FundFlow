@@ -32,6 +32,6 @@ class Bank {
   }
 
   String get image {
-    return BankLogoUtil.getBankLogo(bankName) ?? 'lib/images/GSB.png';
+    return BankLogoUtil.getBankLogo(bankName);
   }
 }

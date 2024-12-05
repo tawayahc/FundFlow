@@ -6,7 +6,7 @@ import 'package:fundflow/app.dart';
 import 'package:fundflow/features/setting/models/change_email_request.dart';
 import 'package:fundflow/features/setting/models/change_password_request.dart';
 import 'package:fundflow/features/setting/models/delete_account_request.dart';
-import 'package:fundflow/features/setting/models/user_profile.dart';
+import 'package:fundflow/models/user_model.dart';
 import 'package:fundflow/utils/api_helper.dart';
 
 class SettingsRepository {
@@ -59,11 +59,11 @@ class SettingsRepository {
     }
   }
 
-  Future<UserProfile> fetchUserProfile() async {
+  Future<User> fetchUserProfile() async {
     try {
       final response = await dio.get('/profile');
       // logger.d('Fetched user profile: ${response.data}');
-      return UserProfile.fromJson(response.data);
+      return User.fromJson(response.data);
     } on DioException catch (e) {
       logger.e('Failed to fetch user profile: ${e.response?.data}');
       throw Exception('Failed to fetch user profile');

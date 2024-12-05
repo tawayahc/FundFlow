@@ -1,11 +1,11 @@
-import 'package:fundflow/features/setting/models/user_profile.dart';
+import 'package:fundflow/models/user_model.dart';
 
 abstract class ProfileState {}
 
 class ProfileLoading extends ProfileState {}
 
 class ProfileLoaded extends ProfileState {
-  final UserProfile userProfile;
+  final User userProfile;
   final double cashBox;
 
   ProfileLoaded({
