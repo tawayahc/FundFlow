@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fundflow/features/transaction/model/bank_model.dart';
+import 'package:fundflow/models/bank_model.dart';
 import 'package:intl/intl.dart';
 
 class IncomeCard extends StatefulWidget {

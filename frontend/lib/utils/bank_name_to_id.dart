@@ -1,4 +1,4 @@
-import 'package:fundflow/features/transaction/model/bank_model.dart';
+import 'package:fundflow/models/bank_model.dart';
 
 int _getBankIdByName(String bankName, List<Bank> userBanks) {
   final bank = userBanks.firstWhere(

@@ -7,7 +7,7 @@ import 'package:fundflow/core/widgets/custom_input_inkwell.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_dropdown.dart';
 import 'package:fundflow/core/widgets/transaction/transfer_card.dart';
-import '../model/bank_model.dart';
+import '../../../models/bank_model.dart';
 
 class TransferForm extends StatefulWidget {
   final List<Bank> banks;
@@ -96,6 +96,9 @@ class _TransferFormState extends State<TransferForm> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
+      if (_fromBank == null) {
+        return;
+      }
       final data = CreateTransferData(
         fromBank: _fromBank!,
         toBank: _toBank!,

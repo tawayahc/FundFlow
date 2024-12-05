@@ -1,11 +1,11 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:fundflow/models/category_model.dart';
 
 import '../model/categorized_summary.dart';
-import '../model/category_model.dart';
 
 class CategorizedPieChart extends StatefulWidget {
-  final List<CategoryModel> categories;
+  final List<Category> categories;
   final Map<String, CategorizedSummary> categorizedSummaries;
 
   const CategorizedPieChart({
@@ -46,11 +46,9 @@ class PieChartState extends State<CategorizedPieChart> {
             child: Align(
               alignment: Alignment.topLeft,
               child: Text(
-                  'เงินเข้า-เงินออก', 
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold
-                  ),),
+                'เงินเข้า-เงินออก',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
           Expanded(
@@ -67,15 +65,15 @@ class PieChartState extends State<CategorizedPieChart> {
                           touchedIndex = -1;
                           return;
                         }
-                        touchedIndex =
-                            pieTouchResponse.touchedSection!.touchedSectionIndex;
+                        touchedIndex = pieTouchResponse
+                            .touchedSection!.touchedSectionIndex;
                       });
                     },
                   ),
                   borderData: FlBorderData(show: true),
                   sectionsSpace: 1.2,
                   centerSpaceRadius: 0,
-            
+
                   //Data part
                   sections: showingSections(),
                 ),
@@ -123,10 +121,10 @@ class PieChartState extends State<CategorizedPieChart> {
           // Find the corresponding CategoryModel based on the name
           final categoryModel = widget.categories.firstWhere(
             (category) => category.name == summary.category,
-            orElse: () => CategoryModel(
+            orElse: () => Category(
               id: -1,
               name: 'Undefined',
-              colorCode: '#FFFFFFFF',
+              color: Colors.white,
               amount: 0,
             ),
           );
@@ -180,7 +178,12 @@ class PieChartState extends State<CategorizedPieChart> {
                 ],
               ),
               padding: EdgeInsets.all(widgetSize * .15),
-              child: Center(child: Text(categoryModel.name[0],style: TextStyle(fontSize: fontSize + 2,),
+              child: Center(
+                  child: Text(
+                categoryModel.name[0],
+                style: TextStyle(
+                  fontSize: fontSize + 2,
+                ),
               )),
             ),
           );

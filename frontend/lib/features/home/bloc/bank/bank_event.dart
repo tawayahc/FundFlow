@@ -1,5 +1,6 @@
 // bank_event.dart
-import 'package:fundflow/features/home/models/bank.dart';
+
+import 'package:fundflow/models/bank_model.dart';
 
 abstract class BankEvent {}
 

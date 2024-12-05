@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
 import 'package:fundflow/core/widgets/home/bank_balance_box.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
+import 'package:fundflow/models/bank_model.dart';
 import 'package:fundflow/utils/bank_color_util.dart';
 import 'package:fundflow/utils/bank_logo_util.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/core/widgets/custom_text_ip.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
-import 'package:fundflow/features/home/models/bank.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
@@ -35,7 +36,7 @@ class _EditBankPageState extends State<EditBankPage> {
   void initState() {
     super.initState();
     bankName = widget.bank.name;
-    selectedBank = widget.bank.bank_name;
+    selectedBank = widget.bank.bankName;
     bankNameController = TextEditingController(text: bankName);
     bankAmountController = TextEditingController(
       text: widget.bank.amount.toStringAsFixed(2),
@@ -47,6 +48,26 @@ class _EditBankPageState extends State<EditBankPage> {
     bankNameController.dispose();
     bankAmountController.dispose();
     super.dispose();
+  }
+
+  bool _isDialogShowing = false;
+
+  void _showModal(BuildContext context, String text) {
+    if (_isDialogShowing) {
+      return;
+    }
+
+    _isDialogShowing = true;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.1),
+      builder: (BuildContext context) {
+        return CustomModal(text: text);
+      },
+    ).then((_) {
+      _isDialogShowing = false;
+    });
   }
 
   @override
@@ -81,10 +102,7 @@ class _EditBankPageState extends State<EditBankPage> {
                   MaterialPageRoute(builder: (context) => const BottomNavBar()),
                 );
               } else if (state is BankError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text('Failed to update bank details')),
-                );
+                _showModal(context, 'แก้ไขธนาคารไม่สำเร็จ');
               }
             },
             child: Column(
@@ -111,11 +129,11 @@ class _EditBankPageState extends State<EditBankPage> {
                       ),
                       child: ClipOval(
                         child: Image.asset(
-                          BankLogoUtil.getBankLogo(widget.bank.bank_name),
+                          BankLogoUtil.getBankLogo(widget.bank.bankName),
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             debugPrint(
-                                'Error loading image for ${widget.bank.bank_name}');
+                                'Error loading image for ${widget.bank.bankName}');
                             return const Icon(Icons.error, color: Colors.red);
                           },
                         ),
@@ -137,7 +155,7 @@ class _EditBankPageState extends State<EditBankPage> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            widget.bank.bank_name,
+                            widget.bank.bankName,
                             style: const TextStyle(
                               color: AppColors.darkGrey,
                               fontSize: 16,
@@ -157,7 +175,7 @@ class _EditBankPageState extends State<EditBankPage> {
                     child: BankBalanceBox(
                       title: 'ยอดเงินคงเหลือ',
                       amount: widget.bank.amount,
-                      color: BankColorUtil.getBankColor(widget.bank.bank_name),
+                      color: BankColorUtil.getBankColor(widget.bank.bankName),
                     ),
                   ),
                 ),
@@ -192,7 +210,7 @@ class _EditBankPageState extends State<EditBankPage> {
                     final updatedBank = Bank(
                       id: widget.bank.id,
                       name: bankName,
-                      bank_name: selectedBank,
+                      bankName: selectedBank,
                       amount: double.tryParse(bankAmountController.text) ?? 0.0,
                     );
 

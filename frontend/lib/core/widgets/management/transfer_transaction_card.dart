@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
-import 'package:fundflow/features/home/models/bank.dart';
+import 'package:fundflow/models/bank_model.dart';
 import 'package:fundflow/utils/bank_logo_util.dart';
 import 'package:intl/intl.dart';
 import 'package:fundflow/features/home/models/transfer.dart';
@@ -19,15 +19,15 @@ class TransferTransactionCard extends StatelessWidget {
 
   String _mapBankName(String bankName) {
     final bank = banks.firstWhere(
-      (b) => b.name == bankName || b.bank_name == bankName,
+      (b) => b.name == bankName || b.bankName == bankName,
       orElse: () => Bank(
         id: 0,
         name: 'Unknown',
-        bank_name: 'Unknown Bank',
+        bankName: 'Unknown Bank',
         amount: 0.0,
       ),
     );
-    return bank.bank_name;
+    return bank.bankName;
   }
 
   @override

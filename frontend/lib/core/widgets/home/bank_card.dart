@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fundflow/features/home/models/bank.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fundflow/models/bank_model.dart';
 import 'package:fundflow/utils/bank_color_util.dart';
 import 'package:fundflow/utils/bank_logo_util.dart';
 import 'package:intl/intl.dart';
@@ -13,8 +13,8 @@ class BankCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat.currency(locale: 'th_TH', symbol: '฿');
-    // Normalize bank name before lookup
-    final normalizedBankName = normalizeBankName(bank.bank_name);
+
+    final normalizedBankName = normalizeBankName(bank.bankName);
     Color color = BankColorUtil.getBankColor(normalizedBankName);
 
     debugPrint('Normalized Bank Name: "$normalizedBankName", Color: $color');
@@ -31,7 +31,7 @@ class BankCard extends StatelessWidget {
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
               spreadRadius: 1,
-              blurRadius: 4,
+              blurRadius: 1,
               offset: const Offset(0, 0),
             ),
           ],
@@ -82,7 +82,7 @@ class BankCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         AutoSizeText(
-                          bank.bank_name,
+                          bank.bankName,
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,

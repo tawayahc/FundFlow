@@ -1,6 +1,6 @@
 // bank_state.dart
-import 'package:fundflow/features/home/models/bank.dart';
 import 'package:fundflow/features/home/models/transfer.dart';
+import 'package:fundflow/models/bank_model.dart';
 
 abstract class BankState {}
 

@@ -15,7 +15,7 @@ class ExpenseBarChart extends StatefulWidget {
 
 class ExpenseBarChartState extends State<ExpenseBarChart> {
   final double barWidth = 30;
-  final double heightPartition = 100;
+  late double heightPartition;
 
   late List<BarChartGroupData> rawBarGroups;
   late List<BarChartGroupData> showingBarGroups;
@@ -30,14 +30,25 @@ class ExpenseBarChartState extends State<ExpenseBarChart> {
     final sortedSummaries = widget.monthlySummaries.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
 
+    final maxIncome = sortedSummaries
+        .map((entry) => entry.value.totalIncome)
+        .fold<double>(0, (prev, element) => element > prev ? element : prev);
+    final maxExpense = sortedSummaries
+        .map((entry) => entry.value.totalExpense)
+        .fold<double>(0, (prev, element) => element > prev ? element : prev);
+    final maxValue = maxIncome > maxExpense ? maxIncome : maxExpense;
+
+    heightPartition = 100;
+    final scale = maxValue > 0 ? heightPartition / maxValue : 1;
+
     // Generate BarChartGroupData from sorted summaries
     rawBarGroups = sortedSummaries.asMap().entries.map((entry) {
       final index = entry.key; // Index for the x-axis
       final monthlySummary = entry.value.value; // DailySummary object
       return makeGroupData(
         index,
-        monthlySummary.totalIncome,
-        monthlySummary.totalExpense,
+        monthlySummary.totalIncome * scale,
+        monthlySummary.totalExpense * scale,
       );
     }).toList();
 

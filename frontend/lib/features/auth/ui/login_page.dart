@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_input_box.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
 import 'package:fundflow/core/widgets/custom_password_input_box.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
@@ -34,6 +35,26 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> getToken() async {
     var value = await storage.read(key: 'token');
     logger.d(value);
+  }
+
+  bool _isDialogShowing = false;
+
+  void _showModal(BuildContext context, String text) {
+    if (_isDialogShowing) {
+      return;
+    }
+
+    _isDialogShowing = true;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.1),
+      builder: (BuildContext context) {
+        return CustomModal(text: text);
+      },
+    ).then((_) {
+      _isDialogShowing = false;
+    });
   }
 
   @override
@@ -119,7 +140,6 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 12),
                         CustomPasswordInputBox(
                           labelText: 'รหัสผ่าน',
-                          focusNode: FocusNode(),
                           controller: _passwordController,
                           validator: (value) {
                             String result = validatePassword(value ?? '');
@@ -149,11 +169,11 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 12),
                         if (state is AuthenticationFailure)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 16.0),
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 16.0),
                             child: Text(
-                              state.error,
-                              style: const TextStyle(
+                              'อีเมลหรือรหัสผ่านไม่ถูกต้อง',
+                              style: TextStyle(
                                 color: Colors.red,
                                 fontSize: 14,
                               ),

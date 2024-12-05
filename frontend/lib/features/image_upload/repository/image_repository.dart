@@ -2,7 +2,7 @@
 import 'package:archive/archive_io.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fundflow/app.dart';
-import 'package:fundflow/features/transaction/model/transaction.dart';
+import 'package:fundflow/features/transaction/model/transaction_reponse.dart';
 import 'package:fundflow/utils/api_helper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';

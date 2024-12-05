@@ -11,11 +11,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(ProfileLoading());
       try {
         final profile = await profileRepository.getUserProfile();
-        final cashBox = await profileRepository.getCashBox();
+        final banks = await profileRepository.getBanks();
+
+        double totalAmount = 0;
+        banks['banks'].forEach((bank) {
+          totalAmount += bank.amount;
+        });
 
         emit(ProfileLoaded(
           userProfile: profile,
-          cashBox: cashBox['cashBox'],
+          totalAmount: totalAmount,
         ));
       } catch (error) {
         emit(ProfileError(message: "Failed to load profile"));

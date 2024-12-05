@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
-import 'package:fundflow/features/home/models/category.dart';
+import 'package:fundflow/models/category_model.dart';
 import 'package:fundflow/core/widgets/custom_text_ip.dart';
 
 class TransferCategoryAmount extends StatelessWidget {
@@ -41,11 +42,7 @@ class TransferCategoryAmount extends StatelessWidget {
                     builder: (context) => const BottomNavBar(),
                   ),
                 );
-              } else if (state is CategoryError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Failed to load categories')),
-                );
-              }
+              } else if (state is CategoryError) {}
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -218,11 +215,6 @@ class TransferCategoryAmount extends StatelessWidget {
                           ),
                         );
                       }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('กรุณากรอกจำนวนเงินที่ถูกต้อง')),
-                      );
                     }
                   },
                   child: const Text(
@@ -241,4 +233,24 @@ class TransferCategoryAmount extends StatelessWidget {
       ),
     );
   }
+}
+
+bool _isDialogShowing = false;
+
+void _showModal(BuildContext context, String text) {
+  if (_isDialogShowing) {
+    return;
+  }
+
+  _isDialogShowing = true;
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    barrierColor: Colors.black.withOpacity(0.1),
+    builder: (BuildContext context) {
+      return CustomModal(text: text);
+    },
+  ).then((_) {
+    _isDialogShowing = false;
+  });
 }

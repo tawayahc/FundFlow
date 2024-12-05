@@ -11,7 +11,7 @@ import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
-import '../../../transaction/model/transaction.dart';
+import '../../../transaction/model/transaction_reponse.dart';
 import '../../bloc/notification/notification_bloc.dart';
 import '../../bloc/notification/notification_event.dart';
 import '../../../transaction/repository/transaction_repository.dart'; // For fetching banks
@@ -88,10 +88,7 @@ class _EditTransactionPageState extends State<EditTransactionPage> {
         transaction.possibleBanks = matchingBanks;
       });
     } catch (e) {
-      // Handle error, possibly by showing a snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to fetch banks: $e')),
-      );
+      logger.e('Failed to fetch possible banks: $e');
     }
   }
 

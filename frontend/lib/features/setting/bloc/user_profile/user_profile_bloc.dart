@@ -3,7 +3,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fundflow/features/setting/models/change_email_request.dart';
-import 'package:fundflow/features/setting/models/user_profile.dart';
+import 'package:fundflow/models/user_model.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
 
 part 'user_profile_event.dart';

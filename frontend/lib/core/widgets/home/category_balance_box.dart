@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
-import 'package:fundflow/features/home/models/category.dart';
+import 'package:fundflow/models/category_model.dart';
 import 'package:intl/intl.dart'; // Import intl package
 
 class CategoryBalanceBox extends StatelessWidget {

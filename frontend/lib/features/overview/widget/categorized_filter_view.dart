@@ -4,13 +4,14 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
+import 'package:fundflow/models/category_model.dart';
 import 'package:fundflow/features/overview/bloc/categorized/categorized_bloc.dart';
 import 'package:fundflow/features/overview/bloc/categorized/categorized_event.dart';
 import 'package:fundflow/features/overview/widget/date_range.dart';
-import 'package:fundflow/features/overview/model/category_model.dart';
 
 class CategorizedFilterView extends StatefulWidget {
-  final List<CategoryModel> categories;
+  final List<Category> categories;
 
   const CategorizedFilterView({
     super.key,
@@ -19,6 +20,26 @@ class CategorizedFilterView extends StatefulWidget {
 
   @override
   State<CategorizedFilterView> createState() => _CategorizedFilterViewState();
+}
+
+bool _isDialogShowing = false;
+
+void _showModal(BuildContext context, String text) {
+  if (_isDialogShowing) {
+    return;
+  }
+
+  _isDialogShowing = true;
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    barrierColor: Colors.black.withOpacity(0.1),
+    builder: (BuildContext context) {
+      return CustomModal(text: text);
+    },
+  ).then((_) {
+    _isDialogShowing = false;
+  });
 }
 
 class _CategorizedFilterViewState extends State<CategorizedFilterView> {
@@ -67,9 +88,8 @@ class _CategorizedFilterViewState extends State<CategorizedFilterView> {
     final DateTime? endDate = selectedDateRange?.end;
 
     if (startDate == null || endDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a valid date range')),
-      );
+      _showModal(context, 'กรุณาเลือกช่วงเวลาที่ถูกต้อง');
+
       return;
     }
 

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_input_box.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/setting/bloc/user_profile/user_profile_bloc.dart';
 import 'package:fundflow/features/setting/repository/settings_repository.dart';
@@ -46,6 +47,26 @@ class EditEmailPage extends StatelessWidget {
   }
 }
 
+bool _isDialogShowing = false;
+
+void _showModal(BuildContext context, String text) {
+  if (_isDialogShowing) {
+    return;
+  }
+
+  _isDialogShowing = true;
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    barrierColor: Colors.black.withOpacity(0.1),
+    builder: (BuildContext context) {
+      return CustomModal(text: text);
+    },
+  ).then((_) {
+    _isDialogShowing = false;
+  });
+}
+
 class EditEmailForm extends StatefulWidget {
   const EditEmailForm({super.key});
 
@@ -60,14 +81,9 @@ class _EditEmailFormState extends State<EditEmailForm> {
     return BlocListener<UserProfileBloc, UserProfileState>(
       listener: (context, state) {
         if (state is UserProfileLoaded) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Email changed successfully')),
-          );
           Navigator.pop(context);
         } else if (state is UserProfileError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error)),
-          );
+          _showModal(context, 'เปลี่ยนอีเมลไม่สำเร็จ');
         }
       },
       child: Padding(
@@ -108,10 +124,7 @@ class _EditEmailFormState extends State<EditEmailForm> {
                             SubmitChangeEmailEvent(newEmail),
                           );
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Please enter a valid email')),
-                      );
+                      _showModal(context, 'กรุณากรอกอีเมลให้ถูกต้อง');
                     }
                   },
                 );

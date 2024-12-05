@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fundflow/features/transaction/model/bank_model.dart';
-import 'package:fundflow/features/transaction/model/category_model.dart';
+import 'package:fundflow/models/category_model.dart';
+import 'package:fundflow/models/bank_model.dart';
 
 class CreateIncomeData {
   final Bank bank;

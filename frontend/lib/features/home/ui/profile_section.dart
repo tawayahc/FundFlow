@@ -35,7 +35,7 @@ class _ProfileSectionState extends State<ProfileSection> {
           return const Center(child: CircularProgressIndicator());
         } else if (state is ProfileLoaded) {
           final userProfile = state.userProfile;
-          final cashBox = state.cashBox;
+          final totalAmount = state.totalAmount;
 
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,7 +69,7 @@ class _ProfileSectionState extends State<ProfileSection> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            formatter.format(cashBox),
+                            formatter.format(totalAmount),
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,

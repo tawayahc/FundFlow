@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_bloc.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_state.dart';
@@ -9,19 +10,16 @@ import 'package:fundflow/features/home/models/transaction.dart';
 class DeleteTransactionPage extends StatelessWidget {
   final Transaction transaction;
 
-  const DeleteTransactionPage({Key? key, required this.transaction})
-      : super(key: key);
+  const DeleteTransactionPage({super.key, required this.transaction});
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<TransactionBloc, TransactionState>(
       listener: (context, state) {
         if (state is TransactionDeleted) {
-          Navigator.of(context).pop(); // ปิด Modal เมื่อสำเร็จ
+          Navigator.of(context).pop();
         } else if (state is TransactionsLoadError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message ?? 'Error occurred')),
-          );
+          _showModal(context, 'ลบรายการไม่สำเร็จ');
         }
       },
       child: Dialog(
@@ -67,16 +65,16 @@ class DeleteTransactionPage extends StatelessWidget {
                     DeleteTransaction(transactionId: transaction.id),
                   );
                 },
-                child: const Text(
-                  'ลบรายการ',
-                  style: TextStyle(color: Colors.white),
-                ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFFF5C5C),
+                  backgroundColor: const Color(0xFFFF5C5C),
                   minimumSize: const Size(213, 40),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(22),
                   ),
+                ),
+                child: const Text(
+                  'ลบรายการ',
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],
@@ -85,4 +83,24 @@ class DeleteTransactionPage extends StatelessWidget {
       ),
     );
   }
+}
+
+bool _isDialogShowing = false;
+
+void _showModal(BuildContext context, String text) {
+  if (_isDialogShowing) {
+    return;
+  }
+
+  _isDialogShowing = true;
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    barrierColor: Colors.black.withOpacity(0.1),
+    builder: (BuildContext context) {
+      return CustomModal(text: text);
+    },
+  ).then((_) {
+    _isDialogShowing = false;
+  });
 }

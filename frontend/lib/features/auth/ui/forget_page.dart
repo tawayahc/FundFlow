@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_input_box.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/auth/bloc/repassword/repassword_bloc.dart';
 import 'package:fundflow/features/auth/bloc/repassword/repassword_event.dart';
@@ -17,6 +18,26 @@ class ForgetPage extends StatefulWidget {
   State<ForgetPage> createState() => _ForgetPageState();
 }
 
+bool _isDialogShowing = false;
+
+void _showModal(BuildContext context, String text) {
+  if (_isDialogShowing) {
+    return;
+  }
+
+  _isDialogShowing = true;
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    barrierColor: Colors.black.withOpacity(0.1),
+    builder: (BuildContext context) {
+      return CustomModal(text: text);
+    },
+  ).then((_) {
+    _isDialogShowing = false;
+  });
+}
+
 class _ForgetPageState extends State<ForgetPage> {
   final TextEditingController _emailController = TextEditingController();
 
@@ -26,9 +47,7 @@ class _ForgetPageState extends State<ForgetPage> {
       BlocProvider.of<RepasswordBloc>(context)
           .add(GenerateOTPEvent(OTPRequest(email: email)));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('กรุณากรอกอีเมลให้ถูกต้อง')),
-      );
+      _showModal(context, 'กรุณากรอกอีเมลให้ถูกต้อง');
     }
   }
 
@@ -60,7 +79,6 @@ class _ForgetPageState extends State<ForgetPage> {
         body: BlocListener<RepasswordBloc, RepasswordState>(
           listener: (context, state) {
             if (state is RepasswordOTPSent) {
-              // Navigate to VerificationPage if OTP is sent successfully
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -69,10 +87,8 @@ class _ForgetPageState extends State<ForgetPage> {
                 ),
               );
             } else if (state is RepasswordFailure) {
-              // Show error message
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
-              );
+              _showModal(context,
+                  'กรุณากรอกอีเมลให้ถูกต้อง หรือ รอ 5 นาทีก่อนที่จะขอรหัส OTP อีกครั้ง');
             }
           },
           child: SingleChildScrollView(

@@ -6,7 +6,7 @@ import 'package:fundflow/core/widgets/home/category_card.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
-import 'package:fundflow/features/home/models/category.dart';
+import 'package:fundflow/models/category_model.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_text_ip.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
@@ -80,11 +80,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                   context,
                   MaterialPageRoute(builder: (context) => const BottomNavBar()),
                 );
-              } else if (state is CategoryError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Failed to load categories')),
-                );
-              }
+              } else if (state is CategoryError) {}
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

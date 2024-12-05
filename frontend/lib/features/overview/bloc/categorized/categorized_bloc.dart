@@ -1,7 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
+import 'package:fundflow/models/category_model.dart';
 import 'package:fundflow/features/overview/model/categorized_summary.dart';
-import 'package:fundflow/features/overview/model/category_model.dart';
 import 'package:fundflow/features/overview/model/transaction_all_model.dart';
 import 'package:fundflow/features/transaction/repository/transaction_repository.dart';
 import 'categorized_event.dart';
@@ -41,26 +43,25 @@ class CategorizedBloc extends Bloc<CategorizedEvent, CategorizedState> {
     }
   }
 
-  List<CategoryModel> _extractCategories(
-      List<TransactionAllModel> transactions) {
+  List<Category> _extractCategories(List<TransactionAllModel> transactions) {
     final categorySet = <String>{};
     for (var tx in transactions) {
       categorySet.add(tx.categoryName.toLowerCase());
     }
     // Assuming category names are unique; otherwise, adjust accordingly
     return categorySet
-        .map((category) => CategoryModel(
+        .map((category) => Category(
               id: 0, // Placeholder since id isn't used here
               name: category,
-              colorCode:
-                  '0xFF000000', // Placeholder, actual color is in TransactionAllModel
+              color: Color(int.parse(
+                  '0xFF000000')), // Placeholder, actual color is in TransactionAllModel
               amount: 0.0, // Placeholder
             ))
         .toList();
   }
 
   Map<String, CategorizedSummary> _calculateCategorizedSummaries(
-      List<TransactionAllModel> transactions, List<CategoryModel> categories) {
+      List<TransactionAllModel> transactions, List<Category> categories) {
     Map<String, CategorizedSummary> summaryMap = {};
 
     for (var tx in transactions) {

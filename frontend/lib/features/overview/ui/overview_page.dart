@@ -4,8 +4,8 @@ import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_tab.dart';
 import 'package:fundflow/features/overview/bloc/overview/overview_bloc.dart';
 import 'package:fundflow/features/overview/bloc/overview/overview_event.dart';
-import 'package:fundflow/features/overview/ui_test/tab_categorized.dart';
-import 'package:fundflow/features/overview/ui_test/tab_overview.dart';
+import 'package:fundflow/features/overview/ui/tab_categorized.dart';
+import 'package:fundflow/features/overview/ui/tab_overview.dart';
 
 class OverviewPage extends StatefulWidget {
   const OverviewPage({super.key});
@@ -49,9 +49,13 @@ class OverviewPageState extends State<OverviewPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'สรุปรายรับรายจ่าย',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        automaticallyImplyLeading: false,
+        title: const Padding(
+          padding: EdgeInsets.only(top: 16.0),
+          child: Text(
+            'สรุปรายรับรายจ่าย',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
         ),
         centerTitle: true,
       ),

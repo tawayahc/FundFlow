@@ -1,4 +1,4 @@
-import 'package:fundflow/features/home/models/category.dart';
+import 'package:fundflow/models/category_model.dart';
 
 abstract class CategoryEvent {}
 

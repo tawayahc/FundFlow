@@ -14,9 +14,9 @@ import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_state.dart';
 import 'package:fundflow/features/home/models/transaction.dart';
 import 'package:fundflow/features/home/pages/bank/edit_bank_page.dart';
+import 'package:fundflow/models/bank_model.dart';
 import 'package:fundflow/utils/bank_color_util.dart';
 import 'package:fundflow/utils/bank_logo_util.dart';
-import '../../models/bank.dart';
 
 class BankAccountPage extends StatefulWidget {
   final Bank bank;
@@ -56,7 +56,7 @@ class _BankAccountPageState extends State<BankAccountPage>
   @override
   Widget build(BuildContext context) {
     context.read<TransactionBloc>().add(LoadTransactions());
-    Color color = BankColorUtil.getBankColor(widget.bank.bank_name);
+    Color color = BankColorUtil.getBankColor(widget.bank.bankName);
 
     return Scaffold(
       appBar: AppBar(
@@ -99,7 +99,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                   ),
                   child: ClipOval(
                     child: Image.asset(
-                      BankLogoUtil.getBankLogo(widget.bank.bank_name),
+                      BankLogoUtil.getBankLogo(widget.bank.bankName),
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return const Icon(Icons.error, color: Colors.red);
@@ -126,7 +126,7 @@ class _BankAccountPageState extends State<BankAccountPage>
                         children: [
                           Expanded(
                             child: Text(
-                              widget.bank.bank_name,
+                              widget.bank.bankName,
                               style: const TextStyle(
                                 color: Colors.grey,
                                 fontSize: 16,

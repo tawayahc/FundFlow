@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fundflow/features/transaction/model/bank_model.dart';
+import 'package:fundflow/models/bank_model.dart';
 import 'package:intl/intl.dart';
 
 class TransferCard extends StatefulWidget {
@@ -89,7 +89,7 @@ class _TransferCardState extends State<TransferCard> {
                 ),
                 child: ClipOval(
                   child: Image.asset(
-                    widget.fromBank?.image ?? 'lib/images/logo.png',
+                    widget.fromBank?.image ?? 'assets/logo.png',
                     height: 51,
                     width: 51,
                     fit: BoxFit.fitWidth,
@@ -112,7 +112,7 @@ class _TransferCardState extends State<TransferCard> {
                 ),
                 child: ClipOval(
                   child: Image.asset(
-                    widget.toBank?.image ?? 'lib/images/logo.png',
+                    widget.toBank?.image ?? 'assets/logo.png',
                     height: 51,
                     width: 51,
                     fit: BoxFit.fitWidth,

@@ -69,9 +69,14 @@ class _NotificationPageState extends State<NotificationPage> with RouteAware {
             if (state is NotificationsLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is NotificationsLoaded) {
-              final notifications = state.notifications;
+              final unreadNotifications = state.notifications
+                  .where((notification) => !notification.isRead)
+                  .toList();
+              final readNotifications = state.notifications
+                  .where((notification) => notification.isRead)
+                  .toList();
 
-              if (notifications.isEmpty) {
+              if (state.notifications.isEmpty) {
                 return const Center(child: Text('ไม่มีการแจ้งเตือน'));
               }
 
@@ -79,30 +84,119 @@ class _NotificationPageState extends State<NotificationPage> with RouteAware {
                 onRefresh: () async {
                   context.read<NotificationBloc>().add(LoadNotifications());
                 },
-                child: ListView.builder(
-                  itemCount: notifications.length,
-                  itemBuilder: (context, index) {
-                    final transaction = notifications[index];
-                    return GestureDetector(
-                      onTap: () async {
-                        final updatedTransaction = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditTransactionPage(
-                              transaction: transaction,
+                child: ListView(
+                  children: [
+                    if (unreadNotifications.isNotEmpty) ...[
+                      const Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'แจ้งเตือนใหม่',
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
                             ),
-                          ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.info_outline,
+                                  size: 15,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  'คลิ๊กเพื่อแก้ไข',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Divider(color: Colors.grey),
+                      ...unreadNotifications.map((notification) {
+                        return GestureDetector(
+                          onTap: () async {
+                            final updatedTransaction = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditTransactionPage(
+                                  transaction: notification,
+                                ),
+                              ),
+                            );
+                            if (updatedTransaction != null) {
+                              context.read<NotificationBloc>().add(
+                                    UpdateNotification(
+                                        transaction: updatedTransaction),
+                                  );
+                            }
+                          },
+                          child: NotificationCard(transaction: notification),
                         );
-                        if (updatedTransaction != null) {
-                          context.read<NotificationBloc>().add(
-                                UpdateNotification(
-                                    transaction: updatedTransaction),
-                              );
-                        }
-                      },
-                      child: NotificationCard(transaction: transaction),
-                    );
-                  },
+                      }),
+                    ],
+                    if (readNotifications.isNotEmpty) ...[
+                      const Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'แจ้งเตือนเก่า',
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                            Row(
+                              children: const [
+                                Icon(
+                                  Icons.info_outline,
+                                  size: 15,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  'คลิ๊กเพื่อแก้ไข',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Divider(color: Colors.grey),
+                      ...readNotifications.map((notification) {
+                        return GestureDetector(
+                          onTap: () async {
+                            final updatedTransaction = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditTransactionPage(
+                                  transaction: notification,
+                                ),
+                              ),
+                            );
+                            if (updatedTransaction != null) {
+                              context.read<NotificationBloc>().add(
+                                    UpdateNotification(
+                                        transaction: updatedTransaction),
+                                  );
+                            }
+                          },
+                          child: NotificationCard(transaction: notification),
+                        );
+                      }),
+                    ],
+                  ],
                 ),
               );
             } else if (state is NotificationsError) {

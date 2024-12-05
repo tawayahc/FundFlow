@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_input_box.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
 import 'package:fundflow/core/widgets/custom_password_input_box.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/global_padding.dart';
@@ -26,6 +27,25 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   // Key for form validation
   final _formKey = GlobalKey<FormState>();
+  bool _isDialogShowing = false;
+
+  void _showModal(BuildContext context, String text) {
+    if (_isDialogShowing) {
+      return;
+    }
+
+    _isDialogShowing = true;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.1),
+      builder: (BuildContext context) {
+        return CustomModal(text: text);
+      },
+    ).then((_) {
+      _isDialogShowing = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,18 +57,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
         body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is Authenticated) {
-              // Navigate to home page
               Navigator.of(context).pushReplacementNamed('/home');
             } else if (state is AuthenticationFailure) {
-              // Show error message
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
-              );
+              _showModal(context, 'มีบัญชีนี้อยู่แล้ว');
             }
           },
           builder: (context, state) {
             if (state is AuthenticationLoading) {
-              // Show loading indicator
               return const Center(child: CircularProgressIndicator());
             }
 
@@ -118,7 +133,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     // Input for Password
                     CustomPasswordInputBox(
                       labelText: 'รหัสผ่าน',
-                      focusNode: FocusNode(),
                       controller: _passwordController,
                       validator: (value) {
                         String result = validatePassword(value ?? '');

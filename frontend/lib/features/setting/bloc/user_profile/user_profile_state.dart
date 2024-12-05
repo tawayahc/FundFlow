@@ -22,7 +22,7 @@ class ChangeEmailLoading extends UserProfileState {}
 class AvatarPresetsLoading extends UserProfileState {}
 
 class UserProfileLoaded extends UserProfileState {
-  final UserProfile userProfile;
+  final User userProfile;
 
   const UserProfileLoaded(this.userProfile);
 

@@ -1,10 +1,12 @@
 // ui/transaction_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/app.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
+import 'package:fundflow/models/category_model.dart';
 import 'package:fundflow/features/image_upload/ui/image_upload_page.dart';
-import 'package:fundflow/features/transaction/model/bank_model.dart';
-import 'package:fundflow/features/transaction/model/category_model.dart';
+import 'package:fundflow/models/bank_model.dart';
 import 'package:fundflow/features/transaction/model/create_transfer_request.dart';
 import 'package:fundflow/features/transaction/widgets/tab_item.dart';
 import 'package:intl/intl.dart';
@@ -53,21 +55,12 @@ class _TransactionPageState extends State<TransactionPage>
     });
 
     context.read<TransactionAddBloc>().add(FetchBanksAndCategories());
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _handleTabLogic();
-    });
   }
 
-  @override
   void _handleTabLogic() {
     // Ensure modals are shown based on updated banks/categories
-    if (_banks.isEmpty) {
-      _showNotEnoughBanksDialog(
-          'คุณยังไม่มีบัญชีธนาคาร\nกรุณากดเพิ่มธนาคาร', 'income');
-    } else if (_type == 'income' &&
-        _banks.isEmpty &&
-        !_dialogShown['income']!) {
+
+    if (_type == 'income' && _banks.isEmpty && !_dialogShown['income']!) {
       _showNotEnoughBanksDialog(
           'คุณยังไม่มีบัญชีธนาคาร\nกรุณากดเพิ่มธนาคาร', 'income');
     } else if (_type == 'expense' &&
@@ -194,7 +187,12 @@ class _TransactionPageState extends State<TransactionPage>
                       width: 200,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/addBank');
+                          if (text ==
+                              'คุณยังไม่มีบัญชีหมมวดหมู่\nกรุณากดเพิ่มหมวดหมู่') {
+                            Navigator.pushNamed(context, '/addCategory');
+                          } else {
+                            Navigator.pushNamed(context, '/addBank');
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -203,10 +201,12 @@ class _TransactionPageState extends State<TransactionPage>
                           ),
                           backgroundColor: AppColors.darkBlue,
                         ),
-                        child: const Text(
-                          'เพิ่มธนาคาร',
-                          style:
-                              TextStyle(fontSize: 16, color: Color(0xffffffff)),
+                        child: Text(
+                          text == 'คุณยังไม่มีบัญชีหมมวดหมู่\nกรุณากดเพิ่มหมวดหมู่'
+                              ? 'เพิ่มหมวดหมู่'
+                              : 'เพิ่มธนาคาร',
+                          style: const TextStyle(
+                              fontSize: 16, color: Color(0xffffffff)),
                         ),
                       ),
                     ),
@@ -220,6 +220,26 @@ class _TransactionPageState extends State<TransactionPage>
         });
       });
     }
+  }
+
+  bool _isDialogShowing = false;
+
+  void _showModal(BuildContext context, String text) {
+    if (_isDialogShowing) {
+      return;
+    }
+
+    _isDialogShowing = true;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.1),
+      builder: (BuildContext context) {
+        return CustomModal(text: text);
+      },
+    ).then((_) {
+      _isDialogShowing = false;
+    });
   }
 
   @override
@@ -239,28 +259,16 @@ class _TransactionPageState extends State<TransactionPage>
         body: BlocListener<TransactionAddBloc, TransactionState>(
           listener: (context, state) {
             if (state is TransactionSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Transaction added successfully')),
-              );
             } else if (state is TransactionFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Error: ${state.error}')),
-              );
+              _showModal(context, 'เพิ่มรายการไม่สำเร็จ');
             } else if (state is BanksAndCategoriesLoaded) {
-              final previousBanks = _banks.length;
-              final previousCategories = _categories.length;
-
               setState(() {
                 _banks = state.banks;
                 _categories = state.categories;
               });
 
-              if (_banks.length > previousBanks ||
-                  _categories.length > previousCategories) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  _handleTabLogic();
-                });
-              }
+              // Call _handleTabLogic after data is loaded
+              _handleTabLogic();
             }
           },
           child: BlocBuilder<TransactionAddBloc, TransactionState>(
@@ -325,6 +333,9 @@ class _TransactionPageState extends State<TransactionPage>
                         key: ValueKey(_banks), // Use ValueKey with banks list
                         banks: _banks,
                         onSubmit: _onIncomeSubmit,
+                      ),
+                      const SizedBox(
+                        height: 100,
                       ),
                     ] else if (_type == 'expense') ...[
                       const SizedBox(height: AppSpacing.medium),
@@ -393,6 +404,9 @@ class _TransactionPageState extends State<TransactionPage>
                         key: ValueKey(_banks),
                         banks: _banks,
                         onSubmit: _onTransferSubmit,
+                      ),
+                      const SizedBox(
+                        height: 100,
                       ),
                     ],
                   ],
