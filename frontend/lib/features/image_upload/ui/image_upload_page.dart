@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
 import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_bloc.dart';
 import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_event.dart';
 import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_state.dart';
@@ -15,10 +16,35 @@ class ImageUploadPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDialogShowing = false;
+
+    void showModal(BuildContext context, String text,
+        {Color? color, Icon? icon}) {
+      if (isDialogShowing) {
+        return;
+      }
+
+      isDialogShowing = true;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        barrierColor: Colors.black.withOpacity(0.1),
+        builder: (BuildContext context) {
+          return CustomModal(text: text, color: color, icon: icon);
+        },
+      ).then((_) {
+        isDialogShowing = false;
+      });
+    }
+
     return BlocConsumer<ImageBloc, ImageState>(
       listener: (context, state) {
         if (state is ImageOperationFailure) {
-        } else if (state is ImageSendSuccess) {}
+          showModal(context, 'Error: ${state.error}');
+        } else if (state is ImageSendSuccess) {
+          showModal(context, 'Images uploaded successfully',
+              color: Colors.green, icon: const Icon(Icons.check));
+        }
       },
       builder: (context, state) {
         List<XFile> images = [];
