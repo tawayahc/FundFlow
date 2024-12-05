@@ -70,8 +70,10 @@ class AuthenticationRepository {
         final token = response.data['token'] as String?;
         if (token != null) {
           await _secureStorage.write(key: 'token', value: token);
+          logger.d('Token stored successfully.');
           return token;
         } else {
+          logger.e('Token not found or empty in the response.');
           throw Exception('Token not found in the response');
         }
       } else {

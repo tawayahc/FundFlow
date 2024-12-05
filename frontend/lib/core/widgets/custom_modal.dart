@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class CustomModal extends StatelessWidget {
   final String text;
+  final Color? color;
+  final Icon? icon;
 
-  const CustomModal({super.key, required this.text});
+  const CustomModal({super.key, required this.text, this.color, this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +23,16 @@ class CustomModal extends StatelessWidget {
               alignment: Alignment.topRight,
               child: GestureDetector(
                 onTap: () => Navigator.of(context).pop(),
-                child: const Icon(
+                child: Icon(
                   Icons.close,
-                  color: Color(0xFF414141), // Use AppColors.darkGrey if defined
+                  color: color ?? const Color(0xFF414141),
                 ),
               ),
             ),
             const SizedBox(height: 10),
-            const Icon(
-              Icons.warning,
-              color: Color(0xFFFF5C5C),
+            Icon(
+              icon?.icon ?? Icons.warning,
+              color: color ?? const Color(0xFFFF5C5C),
               size: 50,
             ),
             const SizedBox(height: 20),
@@ -49,7 +51,7 @@ class CustomModal extends StatelessWidget {
                 Navigator.of(context).pop(); // Close the modal
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFF5C5C),
+                backgroundColor: color ?? const Color(0xFFFF5C5C),
                 minimumSize: const Size(213, 40),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(22),
