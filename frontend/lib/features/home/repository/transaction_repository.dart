@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fundflow/app.dart';
-import 'package:fundflow/features/home/models/bank.dart';
 import 'package:fundflow/features/home/models/category.dart';
 import 'package:fundflow/features/home/models/transaction.dart';
+import 'package:fundflow/models/bank_model.dart';
 import 'package:fundflow/utils/api_helper.dart';
 
 class TransactionRepository {
@@ -89,7 +89,7 @@ class TransactionRepository {
         final bank = Bank(
           id: data['id'],
           name: data['name'],
-          bank_name: data['bank_name'],
+          bankName: data['bank_name'],
           amount: (data['amount'] as num).toDouble(),
         );
         return bank;

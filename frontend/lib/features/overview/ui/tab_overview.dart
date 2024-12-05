@@ -6,8 +6,8 @@ import 'package:fundflow/core/widgets/overview/summary_card.dart';
 import 'package:fundflow/features/overview/bloc/overview/overview_event.dart';
 
 import 'package:fundflow/features/overview/widget/bar_chart.dart';
-import 'package:fundflow/features/overview/ui_test/daily_summary_screen.dart';
-import 'package:fundflow/features/overview/ui_test/monthly_summary_screen.dart';
+import 'package:fundflow/features/overview/ui/daily_summary_screen.dart';
+import 'package:fundflow/features/overview/ui/monthly_summary_screen.dart';
 import 'package:fundflow/features/overview/widget/daily_summary_view.dart';
 import 'package:fundflow/features/overview/widget/monthly_summary_view.dart';
 import 'package:logger/logger.dart';

@@ -33,17 +33,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late SlipBloc _slipBloc;
-
   _HomePageState();
 
   @override
   void initState() {
     super.initState();
-    _slipBloc = BlocProvider.of<SlipBloc>(context);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _slipBloc.add(DetectAndUploadSlips());
-    });
   }
 
   // Note: Open the gallery app on Android
@@ -110,43 +104,6 @@ class _HomePageState extends State<HomePage> {
                 );
               } else if (state is AuthenticationFailure) {
                 _showModal(context, 'ไม่สามารถเข้าสู่ระบบได้');
-              }
-            },
-          ),
-          // Listener for SlipBloc to handle slip upload states
-          BlocListener<SlipBloc, SlipState>(
-            listener: (context, state) {
-              if (state is SlipSuccess) {
-                final images = state.images;
-                context.read<ImageBloc>().add(SendImages(images: images));
-              } else if (state is SlipFailure) {
-                if (state.error.contains('No slip images detected')) {
-                  // Prompt the user to manually upload slips
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('ไม่พบ slip'),
-                      content:
-                          const Text('คุณต้องการเพิ่ม slip ด้วยตนเองหรือไม่?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(); // Close the dialog
-                          },
-                          child: const Text('ยกเลิก'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(); // Close the dialog
-                            Navigator.pushNamed(context,
-                                '/transaction'); // Navigate to manual upload page
-                          },
-                          child: const Text('เพิ่มด้วยตนเอง'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
               }
             },
           ),

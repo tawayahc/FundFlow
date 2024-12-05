@@ -4,8 +4,8 @@ import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_tab.dart';
 import 'package:fundflow/features/overview/bloc/overview/overview_bloc.dart';
 import 'package:fundflow/features/overview/bloc/overview/overview_event.dart';
-import 'package:fundflow/features/overview/ui_test/tab_categorized.dart';
-import 'package:fundflow/features/overview/ui_test/tab_overview.dart';
+import 'package:fundflow/features/overview/ui/tab_categorized.dart';
+import 'package:fundflow/features/overview/ui/tab_overview.dart';
 
 class OverviewPage extends StatefulWidget {
   const OverviewPage({super.key});

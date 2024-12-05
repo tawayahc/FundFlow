@@ -6,9 +6,9 @@ import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_event.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
-import 'package:fundflow/features/home/models/bank.dart';
 import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_text_ip.dart';
+import 'package:fundflow/models/bank_model.dart';
 
 class AddBankPage extends StatefulWidget {
   const AddBankPage({super.key});
@@ -177,7 +177,7 @@ class _AddBankPageState extends State<AddBankPage> {
                       final newBank = Bank(
                         id: -1,
                         name: bankName,
-                        bank_name: 'ธนาคาร$selectedBank',
+                        bankName: 'ธนาคาร$selectedBank',
                         amount: bankAmount,
                       );
 

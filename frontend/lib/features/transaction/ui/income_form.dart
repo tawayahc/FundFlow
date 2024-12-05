@@ -7,7 +7,7 @@ import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_dropdown.dart';
 import 'package:fundflow/core/widgets/custom_input_transaction_box.dart';
 import 'package:fundflow/core/widgets/transaction/income_card.dart';
-import '../model/bank_model.dart';
+import '../../../models/bank_model.dart';
 import '../model/form_model.dart';
 
 class IncomeForm extends StatefulWidget {

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/features/overview/model/category_model.dart';
 import 'package:fundflow/features/overview/model/transaction_all_model.dart';
-import 'package:fundflow/features/transaction/model/bank_model.dart';
+import 'package:fundflow/models/bank_model.dart';
 import 'package:fundflow/features/transaction/model/category_model.dart';
 import 'package:fundflow/features/transaction/model/create_transfer_request.dart';
 import 'package:fundflow/utils/api_helper.dart';
