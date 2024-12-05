@@ -16,15 +16,15 @@ class AuthenticationWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool _isDialogShowing = false;
+    bool isDialogShowing = false;
 
-    void _showModal(BuildContext context, String text,
+    void showModal(BuildContext context, String text,
         {Color? color, Icon? icon}) {
-      if (_isDialogShowing) {
+      if (isDialogShowing) {
         return;
       }
 
-      _isDialogShowing = true;
+      isDialogShowing = true;
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -33,7 +33,7 @@ class AuthenticationWrapper extends StatelessWidget {
           return CustomModal(text: text, color: color, icon: icon);
         },
       ).then((_) {
-        _isDialogShowing = false;
+        isDialogShowing = false;
       });
     }
 
@@ -50,10 +50,10 @@ class AuthenticationWrapper extends StatelessWidget {
               if (slipState is SlipSuccess) {
                 final images = slipState.images;
                 context.read<ImageBloc>().add(SendImages(images: images));
-                _showModal(context, 'Slips detected and uploaded successfully',
+                showModal(context, 'Slips detected and uploaded successfully',
                     color: Colors.green, icon: const Icon(Icons.check));
               } else if (slipState is SlipFailure) {
-                _showModal(context, 'Error: ${slipState.error}');
+                showModal(context, 'Error: ${slipState.error}');
                 if (slipState.error.contains('No slip images detected')) {
                   // Prompt the user to manually upload slips
                   showDialog(
