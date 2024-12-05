@@ -11,7 +11,7 @@ import 'package:fundflow/core/widgets/global_padding.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_event.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
-import '../../../transaction/model/transaction.dart';
+import '../../../transaction/model/transaction_reponse.dart';
 import '../../bloc/notification/notification_bloc.dart';
 import '../../bloc/notification/notification_event.dart';
 import '../../../transaction/repository/transaction_repository.dart'; // For fetching banks

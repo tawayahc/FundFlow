@@ -8,7 +8,7 @@ import 'package:fundflow/features/image_upload/bloc/image_upload/image_upload_st
 import 'package:fundflow/features/image_upload/repository/image_repository.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
 import 'package:fundflow/features/transaction/model/create_transaction_request_model.dart';
-import 'package:fundflow/features/transaction/model/transaction.dart';
+import 'package:fundflow/features/transaction/model/transaction_reponse.dart';
 import 'package:fundflow/features/transaction/repository/transaction_repository.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';

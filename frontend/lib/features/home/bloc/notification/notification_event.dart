@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../../transaction/model/transaction.dart';
+import '../../../transaction/model/transaction_reponse.dart';
 
 abstract class NotificationEvent extends Equatable {
   const NotificationEvent();

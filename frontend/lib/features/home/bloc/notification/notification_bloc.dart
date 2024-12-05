@@ -3,7 +3,7 @@ import 'package:fundflow/app.dart';
 import 'package:fundflow/features/transaction/model/bank_model.dart';
 import 'package:fundflow/features/transaction/model/create_transaction_request_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../transaction/model/transaction.dart';
+import '../../../transaction/model/transaction_reponse.dart';
 import '../../../transaction/repository/transaction_repository.dart';
 import 'notification_event.dart';
 import 'notification_state.dart';

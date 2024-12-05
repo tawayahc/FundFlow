@@ -1,4 +1,4 @@
-import 'package:fundflow/features/transaction/model/transaction.dart';
+import 'package:fundflow/features/transaction/model/transaction_reponse.dart';
 import 'package:image_picker/image_picker.dart';
 
 abstract class ImageState {}
