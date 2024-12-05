@@ -4,7 +4,7 @@ import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/home/category_card.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
-import 'package:fundflow/features/home/models/category.dart';
+import 'package:fundflow/models/category_model.dart';
 import 'package:fundflow/core/widgets/home/cash_box.dart';
 import 'package:fundflow/features/home/pages/category/transfer_category_amount.dart';
 import 'package:fundflow/features/home/pages/category/category_page.dart';

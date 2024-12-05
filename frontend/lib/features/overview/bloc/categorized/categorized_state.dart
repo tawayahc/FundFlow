@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:fundflow/models/category_model.dart';
 import 'package:fundflow/features/overview/model/categorized_summary.dart';
-import 'package:fundflow/features/overview/model/category_model.dart';
 
 abstract class CategorizedState extends Equatable {
   const CategorizedState();
@@ -14,7 +14,7 @@ class CategorizedInitial extends CategorizedState {}
 class CategorizedLoading extends CategorizedState {}
 
 class CategorizedLoaded extends CategorizedState {
-  final List<CategoryModel> categories;
+  final List<Category> categories;
   final Map<String, CategorizedSummary> categorizedSummaries;
 
   const CategorizedLoaded({

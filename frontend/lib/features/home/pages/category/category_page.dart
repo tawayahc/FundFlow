@@ -5,7 +5,7 @@ import 'package:fundflow/core/widgets/home/category_balance_box.dart';
 import 'package:fundflow/core/widgets/management/transaction_card_for_category.dart';
 import 'package:fundflow/core/widgets/navBar/main_layout.dart';
 import 'package:fundflow/features/home/bloc/transaction/transaction_event.dart';
-import 'package:fundflow/features/home/models/category.dart' as categories;
+import 'package:fundflow/models/category_model.dart' as categories;
 import '../../bloc/transaction/transaction_bloc.dart';
 import '../../bloc/transaction/transaction_state.dart';
 import '../../models/transaction.dart';

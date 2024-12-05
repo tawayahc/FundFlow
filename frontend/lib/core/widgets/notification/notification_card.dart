@@ -4,7 +4,7 @@ import 'package:fundflow/app.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/features/home/bloc/category/category_bloc.dart';
 import 'package:fundflow/features/home/bloc/category/category_state.dart';
-import 'package:fundflow/features/home/models/category.dart';
+import 'package:fundflow/models/category_model.dart';
 import 'package:fundflow/features/transaction/model/transaction_reponse.dart';
 
 class NotificationCard extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fundflow/app.dart';
-import 'package:fundflow/features/home/models/category.dart';
+import 'package:fundflow/models/category_model.dart';
 import 'package:fundflow/features/home/models/transaction.dart';
 import 'package:fundflow/utils/api_helper.dart';
 

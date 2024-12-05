@@ -1,9 +1,10 @@
+import 'dart:ui';
+
 import 'package:dio/dio.dart';
 import 'package:fundflow/app.dart';
-import 'package:fundflow/features/overview/model/category_model.dart';
+import 'package:fundflow/models/category_model.dart';
 import 'package:fundflow/features/overview/model/transaction_all_model.dart';
 import 'package:fundflow/models/bank_model.dart';
-import 'package:fundflow/features/transaction/model/category_model.dart';
 import 'package:fundflow/features/transaction/model/create_transfer_request.dart';
 import 'package:fundflow/utils/api_helper.dart';
 import '../model/create_transaction_request_model.dart';
@@ -111,10 +112,10 @@ class TransactionAddRepository {
       final categoryMap = {for (var cat in categories) cat.id: cat};
 
       // Define a default 'Income' category for income transactions without a valid categoryId
-      final CategoryModel incomeCategory = CategoryModel(
+      final Category incomeCategory = Category(
         id: -1, // Assign a unique ID that doesn't conflict with existing categories
         name: 'Income',
-        colorCode: '0xFF00FF00', // Green color for income
+        color: Color(int.parse('0xFF00FF00')), // Green color for income
         amount: 0.0,
       );
 
@@ -137,7 +138,7 @@ class TransactionAddRepository {
               return null;
             }
 
-            final CategoryModel? category = categoryMap[categoryId];
+            final Category? category = categoryMap[categoryId];
             if (category == null) {
               // If category not found, skip this transaction
               return null;
@@ -153,14 +154,13 @@ class TransactionAddRepository {
   }
 
   /// Fetches all categories.
-  Future<List<CategoryModel>> fetchAllCategories() async {
+  Future<List<Category>> fetchAllCategories() async {
     try {
       final response =
           await dio.get('/categories/all'); // Adjust endpoint as needed
       final List<dynamic> data = response.data;
       return data
-          .map<CategoryModel>(
-              (categoryJson) => CategoryModel.fromJson(categoryJson))
+          .map<Category>((categoryJson) => Category.fromJson(categoryJson))
           .toList();
     } catch (e) {
       throw Exception('Failed to load categories: $e');

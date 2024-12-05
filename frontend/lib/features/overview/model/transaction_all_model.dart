@@ -1,6 +1,6 @@
 // features/overview/model/transaction_model.dart
 import 'package:flutter/material.dart';
-import 'package:fundflow/features/overview/model/category_model.dart';
+import 'package:fundflow/models/category_model.dart';
 
 class TransactionAllModel {
   final int id;
@@ -32,7 +32,7 @@ class TransactionAllModel {
   });
 
   factory TransactionAllModel.fromJson(
-      Map<String, dynamic> json, CategoryModel category) {
+      Map<String, dynamic> json, Category category) {
     return TransactionAllModel(
       id: json['id'],
       bankId: json['bank_id'],

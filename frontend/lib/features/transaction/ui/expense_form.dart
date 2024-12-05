@@ -6,8 +6,8 @@ import 'package:fundflow/core/widgets/custom_button.dart';
 import 'package:fundflow/core/widgets/custom_dropdown.dart';
 import 'package:fundflow/core/widgets/custom_input_transaction_box.dart';
 import 'package:fundflow/core/widgets/transaction/expense_card.dart';
+import 'package:fundflow/models/category_model.dart';
 import '../../../models/bank_model.dart';
-import '../model/category_model.dart';
 import '../model/form_model.dart';
 
 class ExpenseForm extends StatefulWidget {

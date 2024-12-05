@@ -5,13 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/app.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
 import 'package:fundflow/core/widgets/custom_modal.dart';
+import 'package:fundflow/models/category_model.dart';
 import 'package:fundflow/features/overview/bloc/categorized/categorized_bloc.dart';
 import 'package:fundflow/features/overview/bloc/categorized/categorized_event.dart';
 import 'package:fundflow/features/overview/widget/date_range.dart';
-import 'package:fundflow/features/overview/model/category_model.dart';
 
 class CategorizedFilterView extends StatefulWidget {
-  final List<CategoryModel> categories;
+  final List<Category> categories;
 
   const CategorizedFilterView({
     super.key,

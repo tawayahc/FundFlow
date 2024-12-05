@@ -1,14 +1,14 @@
 // features/categorized/ui/categorized_summary_view.dart
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/widgets/overview/summary_card.dart';
+import 'package:fundflow/models/category_model.dart';
 import 'package:fundflow/features/overview/model/categorized_summary.dart';
-import 'package:fundflow/features/overview/model/category_model.dart';
 import 'package:fundflow/features/overview/widget/pie_chart.dart';
 import 'package:fundflow/features/overview/widget/category_summary.dart';
 import 'categorized_filter_view.dart';
 
 class CategorizedSummaryView extends StatelessWidget {
-  final List<CategoryModel> categories;
+  final List<Category> categories;
   final Map<String, CategorizedSummary> categorizedSummaries;
 
   const CategorizedSummaryView({

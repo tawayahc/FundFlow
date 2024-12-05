@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'package:fundflow/models/category_model.dart';
 import 'package:fundflow/models/bank_model.dart';
-import 'package:fundflow/features/transaction/model/category_model.dart';
 
 class TransactionResponse {
   String metadata;
