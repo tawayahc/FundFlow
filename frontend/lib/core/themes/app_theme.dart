@@ -4,7 +4,7 @@ import 'app_styles.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
-    const colorScheme = ColorScheme(
+    var colorScheme = ColorScheme(
       primary: AppColors.primary,
       primaryContainer: AppColors.primaryVariant,
       secondary: AppColors.secondary,
@@ -72,7 +72,7 @@ class AppTheme {
   }
 
   static ThemeData get darkTheme {
-    const colorScheme = ColorScheme(
+    var colorScheme = ColorScheme(
       primary: AppColors.primaryVariant,
       primaryContainer: AppColors.primary,
       secondary: AppColors.secondaryVariant,
