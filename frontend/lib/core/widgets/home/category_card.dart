@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
-import 'package:fundflow/core/widgets/layout.dart';
+import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/models/category_model.dart';
 
 class CategoryCard extends StatelessWidget {
-  final String categoryName;
-  final double amount;
-  final Color color;
+  final Category category;
+  final double width;
+  final double height;
+  final double fontSize;
+  final double amountFontSize;
 
-  const CategoryCard({
-    super.key,
-    required this.categoryName,
-    required this.amount,
-    required this.color,
-  });
+  const CategoryCard(
+      {super.key,
+      required this.category,
+      this.width = double.infinity,
+      this.height = 102.0, // Default height, adjust as needed
+      this.fontSize = 12,
+      this.amountFontSize = 16});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
+      width: width,
+      height: height, // Set height to make the card taller
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
@@ -35,16 +40,16 @@ class CategoryCard extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(top: 15),
-            height: 10,
+            height: 15,
             decoration: BoxDecoration(
-              color: color,
+              color: category.color,
             ),
           ),
           Container(
             margin: const EdgeInsets.only(top: 2),
             height: 2,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.5),
+              color: category.color.withOpacity(0.5),
             ),
           ),
           Padding(
@@ -53,25 +58,48 @@ class CategoryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  categoryName,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black,
-                  ),
+                  category.name,
+                  style: TextStyle(
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.normal,
+                      color: AppColors.darkGrey),
                 ),
                 Text(
-                  '฿ ${formatter.format(amount)}',
+                  '฿ ${formatter.format(category.amount)}', // No formatter needed
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: amountFontSize,
                     fontWeight: FontWeight.w600,
-                    color: color,
+                    color: category.color,
                   ),
                 ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CategoryWhenDragging extends StatelessWidget {
+  final double width;
+  final double height;
+
+  const CategoryWhenDragging({
+    super.key,
+    this.width = double.infinity,
+    this.height = 90.0, // Default height, adjust as needed
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.grey.withOpacity(0.5),
+        border: Border.all(color: Colors.grey.shade300),
       ),
     );
   }

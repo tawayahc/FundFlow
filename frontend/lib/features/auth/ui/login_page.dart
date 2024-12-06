@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fundflow/app.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/custom_input_box.dart';
+import 'package:fundflow/core/widgets/custom_modal.dart';
+import 'package:fundflow/core/widgets/custom_password_input_box.dart';
+import 'package:fundflow/core/widgets/custom_button.dart';
+import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/utils/validator.dart';
 
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -14,83 +23,207 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   // Controllers for text fields
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   // Key for form validation
   final _formKey = GlobalKey<FormState>();
 
+  final storage = const FlutterSecureStorage();
+
+  // to get token from local storage
+  Future<void> getToken() async {
+    var value = await storage.read(key: 'token');
+    logger.d(value);
+  }
+
+  bool _isDialogShowing = false;
+
+  void _showModal(BuildContext context, String text) {
+    if (_isDialogShowing) {
+      return;
+    }
+
+    _isDialogShowing = true;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.1),
+      builder: (BuildContext context) {
+        return CustomModal(text: text);
+      },
+    ).then((_) {
+      _isDialogShowing = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // Listen to authentication state changes
-      body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
-        listener: (context, state) {
-          if (state is Authenticated) {
-            // Navigate to home page
-            Navigator.of(context).pushReplacementNamed('/home');
-          } else if (state is AuthenticationFailure) {
-            // Show error message
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error)),
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is AuthenticationLoading) {
-            // Show loading indicator
-            return const Center(child: CircularProgressIndicator());
-          }
+    // Check if the keyboard is visible
+    bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
 
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
+    return GlobalPadding(
+      child: Scaffold(
+        body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
+          listener: (context, state) {
+            if (state is Authenticated) {
+              Navigator.of(context).pushReplacementNamed('/home');
+              logger.d('Authenticated');
+            } else if (state is AuthenticationFailure) {
+              logger.e('AuthenticationFailure: ${state.error}');
+            } else {
+              logger.d('AuthenticationBloc state: Unknown $state');
+            }
+          },
+          builder: (context, state) {
+            if (state is AuthenticationLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            return SingleChildScrollView(
+              padding: const EdgeInsets.only(top: 40),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 100),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(labelText: 'Email'),
-                    validator: (value) => value != null && value.contains('@')
-                        ? null
-                        : 'Enter a valid email',
+                  const SizedBox(height: 70),
+
+                  // Adjust logo image based on keyboard visibility
+                  Align(
+                    alignment: isKeyboardVisible
+                        ? Alignment.centerLeft
+                        : Alignment.center,
+                    child: Image.asset(
+                      isKeyboardVisible
+                          ? 'assets/logo.png'
+                          : 'assets/logo_FundFlow.png',
+                      width: isKeyboardVisible
+                          ? 180
+                          : 240, // Smaller when keyboard is visible
+                      height: isKeyboardVisible ? 180 : 240,
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: const InputDecoration(labelText: 'Password'),
-                    obscureText: true,
-                    validator: (value) => value != null && value.length >= 6
-                        ? null
-                        : 'Password must be at least 6 characters',
+
+                  const SizedBox(height: 20),
+
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'เข้าสู่ระบบ',
+                      style: TextStyle(
+                        color: AppColors.darkBlue,
+                        fontSize: 34,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // Trigger login event
-                        context.read<AuthenticationBloc>().add(
-                              AuthenticationLoginRequested(
-                                email: _emailController.text,
-                                password: _passwordController.text,
+                  const SizedBox(height: 16),
+
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        CustomInputBox(
+                          labelText: 'ชื่อบัญชีผู้ใช้',
+                          prefixIcon: const Icon(
+                            Icons.person,
+                            color: AppColors.icon,
+                          ),
+                          controller: _usernameController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'กรุณากรอกชื่อบัญชีผู้ใช้';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        CustomPasswordInputBox(
+                          labelText: 'รหัสผ่าน',
+                          controller: _passwordController,
+                          validator: (value) {
+                            String result = validatePassword(value ?? '');
+                            return result.isEmpty ? null : result;
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushNamed('/forget1');
+                                },
+                                child: const Text(
+                                  'ลืมรหัสผ่านใช่ไหม?',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFFFF9595),
+                                  ),
+                                ),
                               ),
-                            );
-                      }
-                    },
-                    child: const Text('Login'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/register');
-                    },
-                    child: const Text('Don\'t have an account? Register'),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        if (state is AuthenticationFailure)
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 16.0),
+                            child: Text(
+                              'อีเมลหรือรหัสผ่านไม่ถูกต้อง',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        CustomButton(
+                          text: 'เข้าสู่ระบบ',
+                          onPressed: () {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              context.read<AuthenticationBloc>().add(
+                                    AuthenticationLoginRequested(
+                                      username: _usernameController.text,
+                                      password: _passwordController.text,
+                                    ),
+                                  );
+                            }
+                          },
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'มีบัญชีแล้วหรือยัง?',
+                              style: TextStyle(
+                                color: AppColors.lightBlack,
+                                fontSize: 12,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pushNamed('/register');
+                              },
+                              child: const Text(
+                                'สมัครสมาชิก',
+                                style: TextStyle(
+                                  color: Color(0xFFFF9595),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

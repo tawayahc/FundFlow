@@ -1,10 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/core/themes/app_styles.dart';
+import 'package:fundflow/core/widgets/global_padding.dart';
+import 'package:fundflow/features/home/bloc/notification/notification_bloc.dart';
+import 'package:fundflow/features/home/bloc/notification/notification_state.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_bloc.dart';
 import 'package:fundflow/features/home/bloc/profile/profile_state.dart';
+import 'package:fundflow/features/home/pages/notification/notification.dart';
 
-class ProfileSection extends StatelessWidget {
-  const ProfileSection({super.key});
+class ProfileSection extends StatefulWidget {
+  final PageController pageController;
+  const ProfileSection({super.key, required this.pageController});
+
+  @override
+  _ProfileSectionState createState() => _ProfileSectionState();
+}
+
+class _ProfileSectionState extends State<ProfileSection> {
+  bool isNotificationActive = false;
+  bool isSettingsActive = false;
+
+  void resetState() {
+    setState(() {
+      isNotificationActive = false;
+      isSettingsActive = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,57 +34,139 @@ class ProfileSection extends StatelessWidget {
         if (state is ProfileLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is ProfileLoaded) {
+          final userProfile = state.userProfile;
+          final totalAmount = state.totalAmount;
+
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
-                  // Profile Image
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: const BoxDecoration(
-                      color: Colors.grey,
-                      shape: BoxShape.circle,
-                    ),
+                  const SizedBox(height: 10),
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: userProfile.profileImageUrl?.isNotEmpty ==
+                            true
+                        ? NetworkImage(userProfile.profileImageUrl!)
+                        : const NetworkImage(
+                                'https://placehold.co/200x200/png?text=Select')
+                            as ImageProvider,
                   ),
                   const SizedBox(width: 10),
-                  // Username and Balance
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '฿ ${state.totalMoney.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const Text(
+                            '฿',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.darkBlue,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            formatter.format(totalAmount),
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.darkBlue,
+                            ),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 0),
                       Text(
-                        state.username,
+                        userProfile.username ?? 'Unknown User',
                         style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
+                          fontSize: 14,
+                          color: AppColors.darkGrey,
                         ),
                       ),
                     ],
                   ),
                 ],
               ),
-              // Notification and Settings Icons
               Row(
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.notifications, color: Colors.black),
-                    onPressed: () {
-                      // Handle notification icon press
+                  // Notification Icon with Badge
+                  BlocBuilder<NotificationBloc, NotificationState>(
+                    builder: (context, notificationState) {
+                      int unreadCount = 0;
+                      if (notificationState is NotificationsLoaded) {
+                        unreadCount = notificationState.notifications
+                            .where((notification) => !notification.isRead)
+                            .length;
+                      }
+
+                      return Stack(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.notifications_outlined,
+                              color: Colors.grey[800],
+                            ),
+                            iconSize: 28,
+                            onPressed: () {
+                              // Navigate to NotificationPage
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const NotificationPage(),
+                                ),
+                              ).then((_) =>
+                                  setState(() {})); // Refresh after returning
+                            },
+                          ),
+                          if (unreadCount > 0)
+                            Positioned(
+                              right: 6,
+                              top: 6,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 14,
+                                  minHeight: 14,
+                                ),
+                                child: Text(
+                                  '$unreadCount',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 8,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
                     },
                   ),
+                  const SizedBox(width: 0),
                   IconButton(
-                    icon: const Icon(Icons.settings, color: Colors.black),
+                    icon: Icon(
+                      isSettingsActive
+                          ? Icons.settings
+                          : Icons.settings_outlined,
+                      color: isSettingsActive
+                          ? AppColors.darkBlue
+                          : AppColors.darkGrey,
+                    ),
+                    iconSize: 28,
                     onPressed: () {
-                      // Handle settings icon press
+                      setState(() {
+                        isSettingsActive = !isSettingsActive;
+                      });
+
+                      widget.pageController.jumpToPage(3);
                     },
                   ),
                 ],
@@ -71,7 +174,7 @@ class ProfileSection extends StatelessWidget {
             ],
           );
         } else if (state is ProfileError) {
-          return Center(child: Text(state.message));
+          return Center(child: Text('Error: ${state.message}'));
         }
         return const Text('Unknown state');
       },

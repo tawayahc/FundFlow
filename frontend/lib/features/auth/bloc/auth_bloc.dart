@@ -1,64 +1,51 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fundflow/app.dart';
+import 'package:fundflow/models/user_model.dart';
+import 'package:fundflow/features/setting/repository/settings_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 import '../repository/auth_repository.dart';
-import '../models/user_model.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AuthenticationRepository authenticationRepository;
+  final SettingsRepository settingsRepository;
 
-  AuthenticationBloc({required this.authenticationRepository})
+  AuthenticationBloc(
+      {required this.authenticationRepository,
+      required this.settingsRepository})
       : super(AuthInitial()) {
     on<AppStarted>(_onAppStarted);
     on<AuthenticationLoginRequested>(_onLoginRequested);
     on<AuthenticationRegisterRequested>(_onRegisterRequested);
     on<AuthenticationLogoutRequested>(_onLogoutRequested);
+    on<AuthenticationRefreshRequested>(
+        _onAuthenticationRefreshRequested); // New event handler
   }
-
-  // Future<void> _onAppStarted(
-  //   AppStarted event,
-  //   Emitter<AuthenticationState> emit,
-  // ) async {
-  //   print('AppStarted event triggered');
-  //   emit(AuthenticationLoading());
-  //   try {
-  //     final User? user = await authenticationRepository.getCurrentUser();
-  //     if (user != null) {
-  //       print('User is authenticated: ${user.name}');
-  //       emit(Authenticated(user: user));
-  //     } else {
-  //       print('User is unauthenticated');
-  //       emit(Unauthenticated());
-  //     }
-  //   } catch (e) {
-  //     print('Error during AppStarted: $e');
-  //     emit(Unauthenticated());
-  //   }
-  // }
 
   Future<void> _onAppStarted(
     AppStarted event,
     Emitter<AuthenticationState> emit,
   ) async {
-    // Comment out the actual authentication logic for testing
-    // emit(AuthenticationLoading());
-
-    // Bypass the login check for testing purposes and emit an authenticated state
-    emit(Authenticated(
-        user: User(name: 'Test User', email: 'test@user.com', id: '')));
-
-    // Uncomment the below code when you want to restore the authentication logic
-    // try {
-    //   final User? user = await authenticationRepository.getCurrentUser();
-    //   if (user != null) {
-    //     emit(Authenticated(user: user));
-    //   } else {
-    //     emit(Unauthenticated());
-    //   }
-    // } catch (e) {
-    //   emit(Unauthenticated());
-    // }
+    logger.d('AppStarted event received');
+    emit(AuthenticationLoading());
+    try {
+      final String? token = await authenticationRepository.getStoredToken();
+      if (token != null) {
+        logger.d('Token found, user is authenticated');
+        final User user = await settingsRepository.fetchUserProfile();
+        emit(
+          Authenticated(token: token, userProfile: user),
+        );
+      } else {
+        logger.e('No token found, user is unauthenticated');
+        emit(Unauthenticated());
+      }
+    } catch (e) {
+      logger.e('Error: $e');
+      emit(AuthenticationFailure(error: e.toString()));
+    }
   }
 
   Future<void> _onLoginRequested(
@@ -67,12 +54,21 @@ class AuthenticationBloc
   ) async {
     emit(AuthenticationLoading());
     try {
-      final User user = await authenticationRepository.login(
-        email: event.email,
+      final String token = await authenticationRepository.login(
+        username: event.username,
         password: event.password,
       );
-      emit(Authenticated(user: user));
+
+      if (token.isEmpty) {
+        logger.d('Token is $token');
+        throw Exception('Invalid username or password');
+      }
+      final User user = await settingsRepository.fetchUserProfile();
+      emit(
+        Authenticated(token: token, userProfile: user),
+      );
     } catch (e) {
+      logger.e('Login Error: ${e.toString()}');
       emit(AuthenticationFailure(error: e.toString()));
     }
   }
@@ -83,13 +79,17 @@ class AuthenticationBloc
   ) async {
     emit(AuthenticationLoading());
     try {
-      final User user = await authenticationRepository.register(
+      final String token = await authenticationRepository.register(
         email: event.email,
         password: event.password,
-        name: event.name,
+        username: event.username,
       );
-      emit(Authenticated(user: user));
+      final User user = await settingsRepository.fetchUserProfile();
+      emit(
+        Authenticated(token: token, userProfile: user),
+      );
     } catch (e) {
+      logger.e('Register Error: ${e.toString()}');
       emit(AuthenticationFailure(error: e.toString()));
     }
   }
@@ -100,8 +100,31 @@ class AuthenticationBloc
   ) async {
     emit(AuthenticationLoading());
     try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('notifications');
       await authenticationRepository.logout();
       emit(Unauthenticated());
+    } catch (e) {
+      emit(AuthenticationFailure(error: e.toString()));
+    }
+  }
+
+  // New event handler to refresh user data
+  Future<void> _onAuthenticationRefreshRequested(
+    AuthenticationRefreshRequested event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    emit(AuthenticationLoading());
+    try {
+      final String? token = await authenticationRepository.getStoredToken();
+      if (token != null) {
+        final User user = await settingsRepository.fetchUserProfile();
+        emit(
+          Authenticated(token: token, userProfile: user),
+        );
+      } else {
+        emit(Unauthenticated());
+      }
     } catch (e) {
       emit(AuthenticationFailure(error: e.toString()));
     }

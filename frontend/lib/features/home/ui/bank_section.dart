@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fundflow/core/widgets/home/bank_card.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_bloc.dart';
 import 'package:fundflow/features/home/bloc/bank/bank_state.dart';
+import 'package:fundflow/features/home/pages/bank/bank_account_page.dart';
+import 'package:fundflow/models/bank_model.dart';
 
 class BankSection extends StatelessWidget {
   const BankSection({super.key});
@@ -14,19 +16,37 @@ class BankSection extends StatelessWidget {
         if (state is BanksLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is BanksLoaded) {
+          List<Bank> sortedBanks = List.from(state.banks)
+            ..sort((a, b) => a.id.compareTo(b.id));
           return SizedBox(
             height: 105,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: state.banks.length,
               itemBuilder: (context, index) {
-                final bank = state.banks[index];
-                return BankCard(bank: bank); // Use BankCard from separate file
+                final bank = sortedBanks[index];
+                return Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BankAccountPage(bank: bank)),
+                      );
+                    },
+                    child: BankCard(
+                      bank: bank,
+                    ),
+                  ),
+                );
               },
             ),
           );
+        } else if (state is BankError) {
+          return const Text('Failed to load banks');
         } else {
-          return const Center(child: Text('Error loading banks'));
+          return const Center(child: Text('Unknown error'));
         }
       },
     );

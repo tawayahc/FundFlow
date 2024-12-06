@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../models/user_model.dart';
+import 'package:fundflow/models/user_model.dart';
 
 abstract class AuthenticationState extends Equatable {
   const AuthenticationState();
@@ -16,12 +16,13 @@ class AuthenticationLoading extends AuthenticationState {
 }
 
 class Authenticated extends AuthenticationState {
-  final User user;
+  final String token;
+  final User userProfile;
 
-  const Authenticated({required this.user});
+  const Authenticated({required this.token, required this.userProfile});
 
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [token, userProfile];
 }
 
 class Unauthenticated extends AuthenticationState {

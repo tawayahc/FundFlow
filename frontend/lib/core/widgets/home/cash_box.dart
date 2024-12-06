@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:fundflow/core/themes/app_styles.dart';
-import 'package:fundflow/core/widgets/layout.dart';
+import 'package:fundflow/core/widgets/global_padding.dart';
 
 class CashBox extends StatelessWidget {
   final double cashBox;
+  final double width;
 
-  const CashBox({super.key, required this.cashBox});
+  const CashBox(
+      {super.key, required this.cashBox, this.width = double.infinity});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: width,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -30,9 +33,21 @@ class CashBox extends StatelessWidget {
           Container(
             width: 60,
             height: 60,
-            decoration: const BoxDecoration(
-              color: Colors.grey, // Placeholder for a profile or image
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
+              color: Colors.grey, // สำรองในกรณีไม่มีภาพ
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25), // สีเงา
+                  spreadRadius: 1, // ขยายเงา
+                  blurRadius: 2, // ความเบลอ
+                  offset: const Offset(0, 0), // การเลื่อนเงา (x, y)
+                ),
+              ],
+              image: const DecorationImage(
+                image: AssetImage('assets/CashBox.png'),
+                fit: BoxFit.cover, // ทำให้ภาพเต็มวงกลม
+              ),
             ),
           ),
           const SizedBox(width: 10),
@@ -72,6 +87,30 @@ class CashBox extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CashBoxWhenDragging extends StatelessWidget {
+  final double width;
+  final double height;
+
+  const CashBoxWhenDragging({
+    super.key,
+    this.width = double.infinity,
+    this.height = 94.0, // Set default height to match CategoryCard if needed
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.grey.withOpacity(0.5),
+        border: Border.all(color: Colors.grey.shade300),
       ),
     );
   }
