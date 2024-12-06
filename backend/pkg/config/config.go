@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"fundflow/pkg/models" // Import your models
 
@@ -39,9 +40,28 @@ func ConnectDB() {
 
 	// Open connection to the database
 	var err error
-	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
+		PrepareStmt: true, // Enable prepared statement cache
+	})
 	if err != nil {
 		log.Fatalf("Failed to connect to the database: %v", err)
+	}
+
+	// Get the underlying *sql.DB instance
+	sqlDB, err := DB.DB()
+	if err != nil {
+		log.Fatalf("Failed to get underlying *sql.DB: %v", err)
+	}
+
+	// Configure connection pool settings
+	sqlDB.SetMaxIdleConns(10)                  // Maximum number of idle connections
+	sqlDB.SetMaxOpenConns(100)                 // Maximum number of open connections
+	sqlDB.SetConnMaxLifetime(time.Hour)        // Maximum lifetime of a connection
+	sqlDB.SetConnMaxIdleTime(10 * time.Minute) // Maximum idle time for a connection
+
+	// Verify connection
+	if err := sqlDB.Ping(); err != nil {
+		log.Fatalf("Failed to ping database: %v", err)
 	}
 
 	// Run migrations for Book and User models
