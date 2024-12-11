@@ -51,18 +51,17 @@ go mod tidy
 ```
 
 3. Set up environment variables:
-   - Rename `.env-test` to `.env`
    - Configure the following variables:
    ```
-   DB_HOST=localhost
-   DB_USER=postgres
-   DB_PASSWORD=postgres
-   DB_NAME=fundflow_db
-   DB_PORT=5432
-   DB_SSLMODE=disable
-   JWT_SECRET=your_jwt_secret
-   MAILJET_API_KEY=your_mailjet_api_key
-   MAILJET_SECRET_KEY=your_mailjet_secret_key
+   DB_HOST=
+   DB_USER=
+   DB_PASSWORD=
+   DB_NAME=
+   DB_PORT=
+   DB_SSLMODE=
+   JWT_SECRET=
+   MAILJET_API_KEY=
+   MAILJET_SECRET_KEY=
    ```
 
 4. Run with Docker:
